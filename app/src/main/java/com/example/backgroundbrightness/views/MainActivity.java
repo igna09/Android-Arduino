@@ -70,15 +70,27 @@ public class MainActivity extends AppCompatActivity {
         workRequest =
                 new OneTimeWorkRequest.Builder(ArduinoWorker.class)
                         .build();
-        WorkManager.getInstance(context).enqueueUniqueWork("arduino_worker", ExistingWorkPolicy.KEEP, workRequest);
+        WorkManager.getInstance(context).enqueueUniqueWork("arduino_worker", ExistingWorkPolicy.REPLACE, workRequest);
     }
 
     public void display(final String message){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+//                Boolean shouldScroll = displayTextView.getLayout().getLineTop(displayTextView.getLineCount()) == displayTextView.getHeight();
+
                 displayTextView.append(message);
                 displayTextView.append("\n");
+
+                if(/*shouldScroll*/true) {
+                    // find the amount we need to scroll.  This works by
+                    // asking the TextView's internal layout for the position
+                    // of the final line and then subtracting the TextView's height
+                    final int scrollAmount = displayTextView.getLayout().getLineTop(displayTextView.getLineCount()) - displayTextView.getHeight();
+                    // if there is no need to scroll, scrollAmount will be <=0
+                    if (scrollAmount > 0)
+                        displayTextView.scrollTo(0, scrollAmount);
+                }
             }
         });
     }
