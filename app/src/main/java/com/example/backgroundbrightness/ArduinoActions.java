@@ -1,10 +1,12 @@
 package com.example.backgroundbrightness;
 
 import com.example.backgroundbrightness.receivers.BrightnessReceiver;
+import com.example.backgroundbrightness.workers.ArduinoWorker;
 
 public enum ArduinoActions {
     LOGGER("LOGGER", null),
-    BRIGHTNESS("BRIGHTNESS", BrightnessReceiver.class);
+    BRIGHTNESS("BRIGHTNESS", BrightnessReceiver.class),
+    SEND("SEND", null);
 
     private String action;
     private Class c;

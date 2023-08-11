@@ -46,7 +46,10 @@ public class MainActivity extends AppCompatActivity {
                 String editTextString =   editText.getText().toString();
                 editText.getText().clear();
 
-                Log.d("MainActivity", "Sent: " + editTextString);
+                Intent intent = new Intent();
+                intent.setAction("com.example.backgroundbrightness.SEND_ARDUINO_MESSAGE");
+                intent.putExtra("message", editTextString);
+                context.sendBroadcast(intent);
             }
         });
 

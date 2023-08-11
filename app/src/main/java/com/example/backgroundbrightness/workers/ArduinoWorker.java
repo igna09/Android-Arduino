@@ -6,8 +6,10 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,6 +33,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
     private NotificationManager notificationManager;
     private Arduino arduino;
     private Context appContext;
+    private BroadcastReceiver receiver;
 
     public ArduinoWorker(
             @NonNull Context context,
@@ -44,6 +47,20 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         arduino.setArduinoListener(this);
 
         appContext = context;
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.example.backgroundbrightness.SEND_ARDUINO_MESSAGE");
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String message = intent.getStringExtra("message");
+                assert message != null;
+                Log.d("ArduinoWorker", "sending " + message);
+                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, ArduinoActions.SEND + " --- " + message));
+                arduino.send(message.getBytes());
+            }
+        };
+        appContext.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
     }
 
     @Override
@@ -73,6 +90,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         Log.d("ArduinoWorker", "arduino worker stopped");
         arduino.close();
         arduino.unsetArduinoListener();
+        appContext.unregisterReceiver(receiver);
     }
 
     @NonNull
