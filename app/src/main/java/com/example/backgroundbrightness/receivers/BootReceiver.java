@@ -1,22 +1,16 @@
-package com.example.backgroundbrightness;
+package com.example.backgroundbrightness.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import com.example.backgroundbrightness.workers.ArduinoWorker;
 
-import me.aflak.arduino.Arduino;
-
-public class MyBroadcastReceiver extends BroadcastReceiver {
+public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

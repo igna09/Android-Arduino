@@ -1,8 +1,6 @@
-package com.example.backgroundbrightness;
+package com.example.backgroundbrightness.workers;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
-
-import static androidx.core.content.ContextCompat.startActivity;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -11,29 +9,20 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.lifecycle.Observer;
-import androidx.work.Data;
 import androidx.work.ForegroundInfo;
-import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.util.List;
+import com.example.backgroundbrightness.ArduinoActions;
+import com.example.backgroundbrightness.R;
+
 import java.util.Random;
 
 import me.aflak.arduino.Arduino;
@@ -59,7 +48,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 
     @Override
     public Result doWork() {
-        setForegroundAsync(createForegroundInfo("in corso"));
+        setForegroundAsync(createForegroundInfo());
 
         try {
             while(true) {
@@ -68,7 +57,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                     return Result.success();
                 } else {
                     //simulating arduino message receive
-                    onArduinoMessage(Integer.toString(new Random().nextInt(101)).getBytes());
+                    onArduinoMessage(("BRIGHTNESS;" + new Random().nextInt(101)).getBytes());
 
                     Thread.sleep(5000);
                 }
@@ -87,7 +76,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
     }
 
     @NonNull
-    private ForegroundInfo createForegroundInfo(@NonNull String progress) {
+    private ForegroundInfo createForegroundInfo() {
         String channelName = "Channel Name";
         String channelId = "Channel Id";
         NotificationChannel  channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
@@ -128,15 +117,27 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         String message = new String(bytes);
         Log.d("ArduinoWorker", "arduino message: " + message);
 
-        if(!Settings.System.canWrite(getApplicationContext())) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-            startActivity(getApplicationContext(), intent, null);
+        String[] keyValue = message.split(";");
+        if(keyValue.length < 2) {
+            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, message));
         } else {
-            Settings.System.putInt(appContext.getContentResolver(),
-                    Settings.System.SCREEN_BRIGHTNESS, Integer.parseInt(message));
+            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));
+            if(ArduinoActions.valueOf(keyValue[0]) != ArduinoActions.LOGGER) {
+                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
+            }
         }
+    }
 
-        setProgressAsync(new Data.Builder().putString("OUTPUT", message).build());
+    private Intent createIntent(ArduinoActions action, String message) {
+        Intent intent;
+        if(action.getC() != null) {
+            intent = new Intent(appContext, action.getC());
+        } else {
+            intent = new Intent();
+        }
+        intent.setAction("com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_" + action);
+        intent.putExtra("message", message);
+        return intent;
     }
 
     @Override
