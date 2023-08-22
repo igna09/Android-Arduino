@@ -2,6 +2,7 @@ package com.example.backgroundbrightness.workers;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -69,7 +70,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 
         try {
             while(true) {
-                if (isStopped()) {
+                if (this.isStopped()) {
                     Log.d("ArduinoWorker", "killing");
                     return Result.success();
                 } else {
@@ -86,11 +87,15 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 
     @Override
     public void onStopped() {
+        try {
+            Log.d("ArduinoWorker", "arduino worker stopped");
+            arduino.close();
+            arduino.unsetArduinoListener();
+            appContext.unregisterReceiver(receiver);
+        } catch (Exception e) {
+            Log.e("ArduinoWorker", e.getMessage());
+        }
         super.onStopped();
-        Log.d("ArduinoWorker", "arduino worker stopped");
-        arduino.close();
-        arduino.unsetArduinoListener();
-        appContext.unregisterReceiver(receiver);
     }
 
     @NonNull
@@ -100,8 +105,8 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         NotificationChannel  channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
         notificationManager.createNotificationChannel(channel);
 
-        String title = "Notification Title"; //context.getString(R.string.notification_title);
-        String cancel = "Cancel"; //context.getString(R.string.cancel_download);
+        String title = "Carduino running in background"; //context.getString(R.string.notification_title);
+        String cancel = "STOP"; //context.getString(R.string.cancel_download);
         // This PendingIntent can be used to cancel the worker
         PendingIntent intent = WorkManager.getInstance(appContext)
                 .createCancelPendingIntent(getId());
