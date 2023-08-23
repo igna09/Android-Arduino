@@ -18,7 +18,12 @@ public class BrightnessAction implements CanbusInterface {
         } else {
             Settings.System.putInt(context.getApplicationContext().getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS,
-                    Integer.parseInt(message));
+                    map(Integer.parseInt(message), 0, 5000, 0, 100));
         }
+    }
+
+    Integer map(Integer x, Integer in_min, Integer in_max, Integer out_min, Integer out_max)
+    {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 }

@@ -80,7 +80,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                     return Result.success();
                 } else {
                     //simulating arduino message receive
-                    onArduinoMessage(("BRIGHTNESS;" + new Random().nextInt(101)).getBytes());
+                    onArduinoMessage(("CANBUS;BRIGHTNESS;" + new Random().nextInt(5001)).getBytes());
 
                     Thread.sleep(5000);
                 }
