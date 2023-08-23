@@ -2,14 +2,15 @@ package com.example.carduino.shared.models;
 
 import android.content.IntentFilter;
 
-import com.example.carduino.receivers.BrightnessReceiver;
+import com.example.carduino.receivers.canbus.CanbusReceiver;
+import com.example.carduino.receivers.kline.KlineReceiver;
 
 public enum ArduinoActions {
 //    LOGGER("LOGGER", null),
-    BRIGHTNESS("BRIGHTNESS", BrightnessReceiver.class),
+//    BRIGHTNESS("BRIGHTNESS", CanbusReceiver.class),
     SEND("SEND", null),
-    CANBUS("CANBUS", null),
-    KLINE("KLINE", null);
+    CANBUS("CANBUS", CanbusReceiver.class),
+    KLINE("KLINE", KlineReceiver.class);
 
     private String action;
     private Class c;

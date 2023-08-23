@@ -37,12 +37,20 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receivers.BrightnessReceiver"
+            android:name=".receivers.canbus.CanbusReceiver"
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_BRIGHTNESS" />
+                <action android:name="com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_CANBUS" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".receivers.kline.KlineReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_KLINE" />
+            </intent-filter>
+    </receiver>
     </application>
 </manifest>
