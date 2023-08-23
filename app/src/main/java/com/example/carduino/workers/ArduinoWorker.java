@@ -60,7 +60,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                 String message = intent.getStringExtra("message");
                 assert message != null;
                 Log.d("ArduinoWorker", "sending " + message);
-                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, ArduinoActions.SEND + " --- " + message));
+                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.CANBUS, ArduinoActions.CANBUS + " --- " + message));
                 arduino.send(message.getBytes());
             }
         };
@@ -148,7 +148,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         String[] keyValue = message.split(";");
         if(keyValue.length < 2) {
 //            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.LOGGER, message));
-            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, message));
+//            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, message));
         } else {
 //            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));
             getApplicationContext().sendBroadcast(createIntent(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));

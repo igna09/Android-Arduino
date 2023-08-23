@@ -5,7 +5,7 @@ import android.content.IntentFilter;
 import com.example.carduino.receivers.BrightnessReceiver;
 
 public enum ArduinoActions {
-    LOGGER("LOGGER", null),
+//    LOGGER("LOGGER", null),
     BRIGHTNESS("BRIGHTNESS", BrightnessReceiver.class),
     SEND("SEND", null),
     CANBUS("CANBUS", null),
