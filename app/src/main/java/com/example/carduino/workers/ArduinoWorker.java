@@ -152,7 +152,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         Log.d("ArduinoWorker", "arduino message: " + message);
 
         String[] keyValue = message.split(";");
-        if(keyValue.length < 2) {
+        if(keyValue.length < 4) {
 //            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.LOGGER, message));
 //            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, message));
         } else {
@@ -173,6 +173,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
             intent = new Intent();
         }
         intent.setAction(action.getAction());
+        intent.putExtra("action", action.toString());
         intent.putExtra("key", key);
         intent.putExtra("value", value);
         intent.putExtra("unit", unit);
