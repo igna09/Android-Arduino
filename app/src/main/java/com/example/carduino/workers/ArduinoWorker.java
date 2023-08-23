@@ -17,13 +17,16 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.work.ForegroundInfo;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.carduino.ArduinoActions;
+import com.example.carduino.shared.models.ArduinoActions;
 import com.example.carduino.R;
+import com.example.carduino.shared.models.ArduinoMessageViewModel;
+import com.example.carduino.shared.singletons.MainActivitySingleton;
 
 import java.util.Random;
 
@@ -34,6 +37,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
     private Arduino arduino;
     private Context appContext;
     private BroadcastReceiver receiver;
+    private ArduinoMessageViewModel arduinoMessageViewModel;
 
     public ArduinoWorker(
             @NonNull Context context,
@@ -61,6 +65,8 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
             }
         };
         appContext.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
+
+        arduinoMessageViewModel = new ViewModelProvider(MainActivitySingleton.getInstance().getMainActivityContext()).get(ArduinoMessageViewModel.class);
     }
 
     @Override
@@ -141,12 +147,15 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 
         String[] keyValue = message.split(";");
         if(keyValue.length < 2) {
+//            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.LOGGER, message));
             getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, message));
         } else {
+//            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));
             getApplicationContext().sendBroadcast(createIntent(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));
-            if(ArduinoActions.valueOf(keyValue[0]) != ArduinoActions.LOGGER) {
-                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
-            }
+//            if(ArduinoActions.valueOf(keyValue[0]) != ArduinoActions.LOGGER) {
+//                this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
+//                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
+//            }
         }
     }
 
@@ -157,7 +166,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         } else {
             intent = new Intent();
         }
-        intent.setAction("com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_" + action);
+        intent.setAction(action.getAction());
         intent.putExtra("message", message);
         return intent;
     }

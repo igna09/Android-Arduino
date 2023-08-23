@@ -21,12 +21,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
+import com.example.carduino.shared.models.ArduinoActions;
+import com.example.carduino.shared.models.ArduinoMessageViewModel;
 
 public class Canbus extends Fragment {
     private TextView displayTextView;
     private EditText editText;
     private Button sendBtn;
     private BroadcastReceiver receiver;
+    private ArduinoMessageViewModel arduinoMessageViewModel;
 
     @Nullable
     @Override
@@ -59,19 +62,23 @@ public class Canbus extends Fragment {
             }
         });
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_LOGGER");
+        IntentFilter filter = ArduinoActions.CANBUS.getIntentFilter();
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String message = intent.getStringExtra("message");
                 if (message != null) {
-                    Log.d("MainActivity", "received message from arduino " + message);
+                    Log.d("Canbus", "received message from canbus: " + message);
                     display(message);
                 }
             }
         };
         getActivity().registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED);
+
+        /*arduinoMessageViewModel = new ViewModelProvider(requireActivity()).get(ArduinoMessageViewModel.class);
+        arduinoMessageViewModel.getMessages().observe(requireActivity(), messages -> {
+            display(messages.get(messages.size() - 1).getMessage());
+        });*/
     }
 
     public void display(final String message){

@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import com.example.carduino.R;
 import com.example.carduino.homepage.fragments.Homepage;
+import com.example.carduino.shared.singletons.MainActivitySingleton;
 import com.example.carduino.workers.ArduinoWorker;
 
 import java.util.List;
@@ -27,13 +28,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         thisActivity = this;
+        MainActivitySingleton.getInstance().setMainActivityContext(this);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_view, new Homepage()).commit();
 
         workRequest =
                 new OneTimeWorkRequest.Builder(ArduinoWorker.class)
                         .build();
-        Operation operation = WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork("arduino_worker", ExistingWorkPolicy.REPLACE, workRequest);
+        Operation operation = WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork("arduino_worker", ExistingWorkPolicy.KEEP, workRequest);
 
         WorkManager.getInstance(getApplicationContext()).getWorkInfosForUniqueWorkLiveData("arduino_worker").observe(this, new Observer<List<WorkInfo>>() {
             @Override
