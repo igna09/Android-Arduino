@@ -1,4 +1,4 @@
-package com.example.backgroundbrightness;
+package com.example.carduino;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.backgroundbrightness", appContext.getPackageName());
+        assertEquals("com.example.carduino", appContext.getPackageName());
     }
 }

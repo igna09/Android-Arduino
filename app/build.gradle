@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.backgroundbrightness'
+    namespace 'com.example.carduino'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.backgroundbrightness"
+        applicationId "com.example.carduino"
         minSdk 29
         targetSdk 33
         versionCode 1

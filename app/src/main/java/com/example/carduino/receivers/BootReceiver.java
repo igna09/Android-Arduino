@@ -1,4 +1,4 @@
-package com.example.backgroundbrightness.receivers;
+package com.example.carduino.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +8,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
-import com.example.backgroundbrightness.workers.ArduinoWorker;
+import com.example.carduino.workers.ArduinoWorker;
 
 public class BootReceiver extends BroadcastReceiver {
 

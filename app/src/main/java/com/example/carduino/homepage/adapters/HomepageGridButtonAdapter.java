@@ -1,8 +1,6 @@
-package com.example.backgroundbrightness.homepage.adapters;
+package com.example.carduino.homepage.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.backgroundbrightness.R;
-import com.example.backgroundbrightness.homepage.fragments.Homepage;
-import com.example.backgroundbrightness.homepage.models.HomepageGridButtonModel;
+import com.example.carduino.R;
+import com.example.carduino.homepage.models.HomepageGridButtonModel;
 
 import java.util.ArrayList;
 

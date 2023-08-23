@@ -1,4 +1,4 @@
-package com.example.backgroundbrightness.canbus.fragments;
+package com.example.carduino.canbus.fragments;
 
 import static android.content.Context.RECEIVER_NOT_EXPORTED;
 
@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.backgroundbrightness.R;
+import com.example.carduino.R;
 
 public class Canbus extends Fragment {
     private TextView displayTextView;

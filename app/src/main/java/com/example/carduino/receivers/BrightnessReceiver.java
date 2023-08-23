@@ -1,4 +1,4 @@
-package com.example.backgroundbrightness.receivers;
+package com.example.carduino.receivers;
 
 import static androidx.core.content.ContextCompat.startActivity;
 

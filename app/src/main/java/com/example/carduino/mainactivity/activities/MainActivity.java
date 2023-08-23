@@ -1,23 +1,19 @@
-package com.example.backgroundbrightness.mainactivity.activities;
+package com.example.carduino.mainactivity.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.work.ExistingWorkPolicy;
-import androidx.work.ListenableWorker;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.Operation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import android.os.Bundle;
-import android.util.Log;
 
-import com.example.backgroundbrightness.R;
-import com.example.backgroundbrightness.homepage.fragments.Homepage;
-import com.example.backgroundbrightness.workers.ArduinoWorker;
-import com.google.common.util.concurrent.ListenableFuture;
+import com.example.carduino.R;
+import com.example.carduino.homepage.fragments.Homepage;
+import com.example.carduino.workers.ArduinoWorker;
 
 import java.util.List;
 

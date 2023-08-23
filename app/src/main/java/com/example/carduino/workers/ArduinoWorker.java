@@ -1,8 +1,7 @@
-package com.example.backgroundbrightness.workers;
+package com.example.carduino.workers;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -23,8 +22,8 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.backgroundbrightness.ArduinoActions;
-import com.example.backgroundbrightness.R;
+import com.example.carduino.ArduinoActions;
+import com.example.carduino.R;
 
 import java.util.Random;
 

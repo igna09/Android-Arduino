@@ -1,7 +1,6 @@
-package com.example.backgroundbrightness;
+package com.example.carduino;
 
-import com.example.backgroundbrightness.receivers.BrightnessReceiver;
-import com.example.backgroundbrightness.workers.ArduinoWorker;
+import com.example.carduino.receivers.BrightnessReceiver;
 
 public enum ArduinoActions {
     LOGGER("LOGGER", null),

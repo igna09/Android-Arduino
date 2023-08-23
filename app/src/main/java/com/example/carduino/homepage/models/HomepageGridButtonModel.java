@@ -1,4 +1,4 @@
-package com.example.backgroundbrightness.homepage.models;
+package com.example.carduino.homepage.models;
 
 public class HomepageGridButtonModel {
     // string course_name for storing course_name

@@ -1,4 +1,4 @@
-package com.example.backgroundbrightness;
+package com.example.carduino;
 
 import org.junit.Test;
 

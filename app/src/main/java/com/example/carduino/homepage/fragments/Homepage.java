@@ -1,4 +1,4 @@
-package com.example.backgroundbrightness.homepage.fragments;
+package com.example.carduino.homepage.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.example.backgroundbrightness.R;
-import com.example.backgroundbrightness.canbus.fragments.Canbus;
-import com.example.backgroundbrightness.homepage.adapters.HomepageGridButtonAdapter;
-import com.example.backgroundbrightness.homepage.models.HomepageGridButtonModel;
+import com.example.carduino.R;
+import com.example.carduino.canbus.fragments.Canbus;
+import com.example.carduino.homepage.adapters.HomepageGridButtonAdapter;
+import com.example.carduino.homepage.models.HomepageGridButtonModel;
 
 import java.util.ArrayList;
 
