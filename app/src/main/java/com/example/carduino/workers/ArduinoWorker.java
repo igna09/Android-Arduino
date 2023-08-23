@@ -140,6 +140,12 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         Log.d("ArduinoWorker", "arduino detached");
     }
 
+    /**
+     * Every message received from Arduino MUST be in this format:
+     * ArduinoActions;key;value;unit
+     * eg.: CANBUS;BRIGHTNESS;2700;lux
+     * @param bytes
+     */
     @Override
     public void onArduinoMessage(byte[] bytes) {
         String message = new String(bytes);
@@ -151,7 +157,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 //            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, message));
         } else {
 //            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));
-            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.valueOf(keyValue[0]), keyValue[1], keyValue[2]));
+            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.valueOf(keyValue[0]), keyValue[1], keyValue[2], keyValue[3]));
 //            if(ArduinoActions.valueOf(keyValue[0]) != ArduinoActions.LOGGER) {
 //                this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
 //                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
@@ -159,7 +165,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         }
     }
 
-    private Intent createIntent(ArduinoActions action, String key, String value) {
+    private Intent createIntent(ArduinoActions action, String key, String value, String unit) {
         Intent intent;
         if(action.getC() != null) {
             intent = new Intent(appContext, action.getC());
@@ -169,7 +175,12 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         intent.setAction(action.getAction());
         intent.putExtra("key", key);
         intent.putExtra("value", value);
+        intent.putExtra("unit", unit);
         return intent;
+    }
+
+    private Intent createIntent(ArduinoActions action, String key, String value) {
+        return createIntent(action, key, value, "");
     }
 
     @Override

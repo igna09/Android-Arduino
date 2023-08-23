@@ -1,9 +1,11 @@
 package com.example.carduino.receivers.kline.factory;
 
+import com.example.carduino.receivers.ReceiverInterface;
+
 public class KlineFactory {
-    public static KlineInterface getKlineInterface(String action) {
+    public static ReceiverInterface getKlineInterface(String action) {
         try {
-            return (KlineInterface) KlineActions.valueOf(action).getClazz().newInstance();
+            return (ReceiverInterface) KlineActions.valueOf(action).getClazz().newInstance();
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InstantiationException e) {

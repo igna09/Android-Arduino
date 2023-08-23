@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 
-public class StubAction implements KlineInterface {
+import com.example.carduino.receivers.ReceiverInterface;
+import com.example.carduino.shared.models.ArduinoMessage;
+
+public class StubAction implements ReceiverInterface {
     @Override
-    public void execute(Context context, String message) {
+    public void execute(Context context, ArduinoMessage message) {
         // TODO: action here
     }
 }
