@@ -16,7 +16,7 @@ import java.util.Objects;
 public class CanbusReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        CanbusInterface action = CanbusFactory.getCanbusInterface(intent.getAction());
-        action.execute(context, intent.getStringExtra("message"));
+        CanbusInterface action = CanbusFactory.getCanbusInterface(intent.getStringExtra("key"));
+        action.execute(context, intent.getStringExtra("value"));
     }
 }

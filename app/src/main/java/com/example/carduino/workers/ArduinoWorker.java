@@ -60,7 +60,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                 String message = intent.getStringExtra("message");
                 assert message != null;
                 Log.d("ArduinoWorker", "sending " + message);
-                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.CANBUS, ArduinoActions.CANBUS + " --- " + message));
+                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.CANBUS, ArduinoActions.SEND.toString(), message));
                 arduino.send(message.getBytes());
             }
         };
@@ -151,7 +151,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 //            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, message));
         } else {
 //            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));
-            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));
+            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.valueOf(keyValue[0]), keyValue[1], keyValue[2]));
 //            if(ArduinoActions.valueOf(keyValue[0]) != ArduinoActions.LOGGER) {
 //                this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
 //                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
@@ -159,7 +159,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         }
     }
 
-    private Intent createIntent(ArduinoActions action, String message) {
+    private Intent createIntent(ArduinoActions action, String key, String value) {
         Intent intent;
         if(action.getC() != null) {
             intent = new Intent(appContext, action.getC());
@@ -167,7 +167,8 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
             intent = new Intent();
         }
         intent.setAction(action.getAction());
-        intent.putExtra("message", message);
+        intent.putExtra("key", key);
+        intent.putExtra("value", value);
         return intent;
     }
 

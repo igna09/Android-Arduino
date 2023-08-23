@@ -12,7 +12,7 @@ import com.example.carduino.receivers.kline.factory.KlineInterface;
 public class KlineReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        KlineInterface action = KlineFactory.getKlineInterface(intent.getAction());
-        action.execute(context, intent.getStringExtra("message"));
+        KlineInterface action = KlineFactory.getKlineInterface(intent.getStringExtra("key"));
+        action.execute(context, intent.getStringExtra("value"));
     }
 }
