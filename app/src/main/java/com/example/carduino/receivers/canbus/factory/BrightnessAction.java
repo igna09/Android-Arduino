@@ -18,6 +18,7 @@ public class BrightnessAction implements ReceiverInterface {
     public void execute(Context context, ArduinoMessage message) {
         if(!Settings.System.canWrite(context.getApplicationContext())) {
             Intent settingsIntent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(context.getApplicationContext(), settingsIntent, null);
         } else {
             Settings.System.putInt(context.getApplicationContext().getContentResolver(),

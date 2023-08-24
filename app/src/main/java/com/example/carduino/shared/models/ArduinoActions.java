@@ -28,7 +28,7 @@ public enum ArduinoActions {
     }
 
     public String getIntentAction() {
-        return "com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_" + getAction();
+        return "com.example.carduino.RECEIVED_ARDUINO_MESSAGE_" + getAction();
     }
 
     public IntentFilter getIntentFilter() {

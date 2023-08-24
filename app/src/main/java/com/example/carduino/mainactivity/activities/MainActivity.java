@@ -13,7 +13,7 @@ import android.os.Bundle;
 
 import com.example.carduino.R;
 import com.example.carduino.homepage.fragments.Homepage;
-import com.example.carduino.shared.singletons.MainActivitySingleton;
+import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.workers.ArduinoWorker;
 
 import java.util.List;
@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         thisActivity = this;
-        MainActivitySingleton.getInstance().setMainActivityContext(this);
+        ContextsSingleton.getInstance().setMainActivityContext(this);
+        ContextsSingleton.getInstance().setApplicationContext(getApplication());
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_view, new Homepage()).commit();
 

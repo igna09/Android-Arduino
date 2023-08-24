@@ -41,7 +41,7 @@
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_CANBUS" />
+                <action android:name="com.example.carduino.RECEIVED_ARDUINO_MESSAGE_CANBUS" />
             </intent-filter>
         </receiver>
         <receiver
@@ -49,8 +49,8 @@
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.example.backgroundbrightness.RECEIVED_ARDUINO_MESSAGE_KLINE" />
+                <action android:name="com.example.carduino.RECEIVED_ARDUINO_MESSAGE_KLINE" />
             </intent-filter>
-    </receiver>
+        </receiver>
     </application>
 </manifest>

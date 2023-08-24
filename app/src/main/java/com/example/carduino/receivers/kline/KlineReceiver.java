@@ -12,6 +12,8 @@ public class KlineReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         ReceiverInterface action = KlineFactory.getKlineInterface(intent.getStringExtra("key"));
-        action.execute(context, new ArduinoMessage(intent));
+        if(action != null) {
+            action.execute(context, new ArduinoMessage(intent));
+        }
     }
 }

@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
 import com.example.carduino.shared.models.ArduinoActions;
+import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.models.ArduinoMessageViewModel;
 
 public class Canbus extends Fragment {
@@ -56,9 +57,11 @@ public class Canbus extends Fragment {
                 editText.getText().clear();
 
                 Intent intent = new Intent();
-                intent.setAction("com.example.backgroundbrightness.SEND_ARDUINO_MESSAGE");
+                intent.setAction("com.example.carduino.SEND_ARDUINO_MESSAGE");
                 intent.putExtra("message", editTextString);
                 context.sendBroadcast(intent);
+
+                display(ArduinoActions.SEND + " --- " + editTextString);
             }
         });
 
@@ -66,14 +69,13 @@ public class Canbus extends Fragment {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String message = intent.getStringExtra("message");
-                if (message != null) {
-                    Log.d("Canbus", "received message from canbus: " + message);
-                    display(message);
-                }
+                ArduinoMessage message = new ArduinoMessage(intent);
+                String m = message.getKey() + " --- " + message.getValue() + " " + message.getUnit();
+                Log.d("Canbus", "received message from canbus: " + m);
+                display(m);
             }
         };
-        getActivity().registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED);
+        context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED);
 
         /*arduinoMessageViewModel = new ViewModelProvider(requireActivity()).get(ArduinoMessageViewModel.class);
         arduinoMessageViewModel.getMessages().observe(requireActivity(), messages -> {

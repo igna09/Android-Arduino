@@ -12,6 +12,8 @@ public class CanbusReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         ReceiverInterface action = CanbusFactory.getCanbusInterface(intent.getStringExtra("key"));
-        action.execute(context, new ArduinoMessage(intent));
+        if(action != null) {
+            action.execute(context, new ArduinoMessage(intent));
+        }
     }
 }

@@ -26,7 +26,8 @@ import androidx.work.WorkerParameters;
 import com.example.carduino.shared.models.ArduinoActions;
 import com.example.carduino.R;
 import com.example.carduino.shared.models.ArduinoMessageViewModel;
-import com.example.carduino.shared.singletons.MainActivitySingleton;
+import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.utilities.IntentUtilities;
 
 import java.util.Random;
 
@@ -53,20 +54,19 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         appContext = context;
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction("com.example.backgroundbrightness.SEND_ARDUINO_MESSAGE");
+        filter.addAction("com.example.carduino.SEND_ARDUINO_MESSAGE");
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String message = intent.getStringExtra("message");
                 assert message != null;
                 Log.d("ArduinoWorker", "sending " + message);
-                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.CANBUS, ArduinoActions.SEND.toString(), message));
                 arduino.send(message.getBytes());
             }
         };
         appContext.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
 
-        arduinoMessageViewModel = new ViewModelProvider(MainActivitySingleton.getInstance().getMainActivityContext()).get(ArduinoMessageViewModel.class);
+        arduinoMessageViewModel = new ViewModelProvider(ContextsSingleton.getInstance().getMainActivityContext()).get(ArduinoMessageViewModel.class);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                     return Result.success();
                 } else {
                     //simulating arduino message receive
-                    onArduinoMessage(("CANBUS;BRIGHTNESS;" + new Random().nextInt(5001)).getBytes());
+                    onArduinoMessage(("CANBUS;BRIGHTNESS;" + new Random().nextInt(5001)+";lux;").getBytes());
 
                     Thread.sleep(5000);
                 }
@@ -142,8 +142,8 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 
     /**
      * Every message received from Arduino MUST be in this format:
-     * ArduinoActions;key;value;unit
-     * eg.: CANBUS;BRIGHTNESS;2700;lux
+     * ArduinoActions;key;value;unit;
+     * eg.: CANBUS;BRIGHTNESS;2700;lux;
      * @param bytes
      */
     @Override
@@ -151,37 +151,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         String message = new String(bytes);
         Log.d("ArduinoWorker", "arduino message: " + message);
 
-        String[] keyValue = message.split(";");
-        if(keyValue.length < 4) {
-//            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.LOGGER, message));
-//            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, message));
-        } else {
-//            this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.valueOf(keyValue[0]), keyValue[1]));
-            getApplicationContext().sendBroadcast(createIntent(ArduinoActions.valueOf(keyValue[0]), keyValue[1], keyValue[2], keyValue[3]));
-//            if(ArduinoActions.valueOf(keyValue[0]) != ArduinoActions.LOGGER) {
-//                this.arduinoMessageViewModel.addMessage(new ArduinoMessage(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
-//                getApplicationContext().sendBroadcast(createIntent(ArduinoActions.LOGGER, keyValue[0] + " --- " + keyValue[1]));
-//            }
-        }
-    }
-
-    private Intent createIntent(ArduinoActions action, String key, String value, String unit) {
-        Intent intent;
-        if(action.getC() != null) {
-            intent = new Intent(appContext, action.getC());
-        } else {
-            intent = new Intent();
-        }
-        intent.setAction(action.getAction());
-        intent.putExtra("action", action.toString());
-        intent.putExtra("key", key);
-        intent.putExtra("value", value);
-        intent.putExtra("unit", unit);
-        return intent;
-    }
-
-    private Intent createIntent(ArduinoActions action, String key, String value) {
-        return createIntent(action, key, value, "");
+        IntentUtilities.sendArduinoMessageBroadcast(message);
     }
 
     @Override
