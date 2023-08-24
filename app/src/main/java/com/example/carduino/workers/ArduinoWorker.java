@@ -54,7 +54,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         appContext = context;
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction("com.example.carduino.SEND_ARDUINO_MESSAGE");
+        filter.addAction(context.getString(R.string.arduino_send_message));
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Carduino</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="arduino_received_message_root">com.example.carduino.RECEIVED_ARDUINO_MESSAGE_</string>
+    <string name="arduino_send_message">com.example.carduino.SEND_ARDUINO_MESSAGE</string>
 </resources>

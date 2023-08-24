@@ -57,7 +57,7 @@ public class Canbus extends Fragment {
                 editText.getText().clear();
 
                 Intent intent = new Intent();
-                intent.setAction("com.example.carduino.SEND_ARDUINO_MESSAGE");
+                intent.setAction(context.getString(R.string.arduino_send_message));
                 intent.putExtra("message", editTextString);
                 context.sendBroadcast(intent);
 

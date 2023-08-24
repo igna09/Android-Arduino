@@ -2,8 +2,10 @@ package com.example.carduino.shared.models;
 
 import android.content.IntentFilter;
 
+import com.example.carduino.R;
 import com.example.carduino.receivers.canbus.CanbusReceiver;
 import com.example.carduino.receivers.kline.KlineReceiver;
+import com.example.carduino.shared.singletons.ContextsSingleton;
 
 public enum ArduinoActions {
 //    LOGGER("LOGGER", null),
@@ -28,7 +30,7 @@ public enum ArduinoActions {
     }
 
     public String getIntentAction() {
-        return "com.example.carduino.RECEIVED_ARDUINO_MESSAGE_" + getAction();
+        return ContextsSingleton.getInstance().getApplicationContext().getString(R.string.arduino_received_message_root) + getAction();
     }
 
     public IntentFilter getIntentFilter() {
