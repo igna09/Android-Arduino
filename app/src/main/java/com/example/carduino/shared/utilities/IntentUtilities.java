@@ -6,6 +6,11 @@ import com.example.carduino.shared.models.ArduinoActions;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 
 public class IntentUtilities {
+    /**
+     * Every message received from Arduino MUST be in this format:
+     * ArduinoActions;key;value;unit;
+     * eg.: CANBUS;BRIGHTNESS;2700;lux;
+     */
     public static void sendArduinoMessageBroadcast(String message) {
         String[] splittedMessage = message.split(";");
         sendBroadcast(splittedMessage[0], splittedMessage[1], splittedMessage[2], splittedMessage[3]);
