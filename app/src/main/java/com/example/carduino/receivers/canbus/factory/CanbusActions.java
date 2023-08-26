@@ -1,7 +1,8 @@
 package com.example.carduino.receivers.canbus.factory;
 
 public enum CanbusActions {
-    BRIGHTNESS(BrightnessAction.class, "BRIGHTNESS");
+    BRIGHTNESS(BrightnessAction.class, "BRIGHTNESS"),
+    SETTING(SettingAction.class, "SETTING");
 
     private Class clazz;
     private String name;
