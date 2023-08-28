@@ -2,33 +2,31 @@ package com.example.carduino.settings.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.GridView;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.carduino.R;
-import com.example.carduino.shared.models.ArduinoActions;
-import com.example.carduino.shared.models.ArduinoMessage;
-import com.example.carduino.shared.models.ArduinoMessageViewModel;
-import com.example.carduino.shared.models.Setting;
+import com.example.carduino.canbus.fragments.Canbus;
+import com.example.carduino.homepage.adapters.HomepageGridButtonAdapter;
+import com.example.carduino.homepage.models.HomepageGridButtonModel;
+import com.example.carduino.settings.adapters.SettingAdapter;
+import com.example.carduino.settings.factory.Setting;
 import com.example.carduino.shared.models.SettingsViewModel;
-import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * workflow:
@@ -39,7 +37,8 @@ import java.util.HashMap;
  * Specchietti chiusura automatica (se selettore non in posizione chiusa)
  */
 public class Settings extends Fragment {
-    private BroadcastReceiver receiver;
+    private SettingsViewModel settingsViewModel;
+    private Observer observer;
 
     @Nullable
     @Override
@@ -51,17 +50,28 @@ public class Settings extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Context context = getActivity().getApplicationContext();
+        settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
+        observer = new Observer() {
+            @Override
+            public void onChanged(Object o) {
+                updateList(view, (HashMap<String, Setting>) o);
+            }
+        };
+        settingsViewModel.getSettings().observe(requireActivity(), observer);
 
-        SettingsViewModel settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
-        settingsViewModel.getSettings().observe(requireActivity(), o -> {
-            HashMap map = (HashMap<String, Setting>) o;
-            //TODO: render settings
-        });
+        updateList(view, SharedDataSingleton.getInstance().getSettings());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        settingsViewModel.getSettings().removeObserver(observer);
+    }
+
+    private void updateList(View view, Map settings) {
+        ListView listView = view.findViewById(R.id.settings_list);
+
+        SettingAdapter adapter = new SettingAdapter(getActivity(), new ArrayList<>(settings.values()));
+        listView.setAdapter(adapter);
     }
 }

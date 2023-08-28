@@ -1,26 +1,20 @@
-package com.example.carduino.shared.models;
+package com.example.carduino.settings.factory;
 
-import com.example.carduino.settings.factory.SettingsEnum;
+import android.view.View;
 
-public class Setting<T> {
-    private T value;
+public abstract class Setting {
     private String unit;
     private String id;
     private SettingsEnum settingEnum;
+    private String label;
 
-    public Setting(T value, String unit, String id, SettingsEnum settingEnum) {
-        this.value = value;
+    public Setting() {
+    }
+
+    public Setting(String unit, String id, SettingsEnum settingEnum) {
         this.unit = unit;
         this.id = id;
         this.settingEnum = settingEnum;
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
     }
 
     public String getUnit() {
@@ -46,4 +40,14 @@ public class Setting<T> {
     public void setSettingEnum(SettingsEnum settingEnum) {
         this.settingEnum = settingEnum;
     }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public abstract View getView(View view);
 }

@@ -1,20 +1,18 @@
 package com.example.carduino.settings.factory;
 
-import com.example.carduino.shared.models.Setting;
-
 public class SettingsFactory {
-    public static Setting<?> getSetting(String id, String settingType, Object value, String unit) {
+    public static Setting getSetting(String id, String settingType, Object value, String unit) {
         Setting setting;
 
         switch (SettingsEnum.valueOf(settingType)) {
             case BOOLEAN:
                 Boolean booleanSetting;
-                if(value instanceof String) {
-                    booleanSetting = ((String) value).equals("true");
-                } else {
+                    if(value instanceof String) {
+                        booleanSetting = ((String) value).equals("true");
+                    } else {
                     booleanSetting = (Boolean) value;
                 }
-                return new Setting<Boolean>(booleanSetting, unit, id, SettingsEnum.BOOLEAN);
+                return new BooleanSetting(id, booleanSetting, unit);
             case INTEGER:
                 Integer integerValue;
                 if(value instanceof String) {
@@ -22,7 +20,7 @@ public class SettingsFactory {
                 } else {
                     integerValue = (Integer) value;
                 }
-                return new Setting<Integer>(integerValue, unit, id, SettingsEnum.INTEGER);
+                return new IntegerSetting(id, integerValue, unit);
             case FLOAT:
                 Float floatValue;
                 if(value instanceof String) {
@@ -30,15 +28,13 @@ public class SettingsFactory {
                 } else {
                     floatValue = (Float) value;
                 }
-                return new Setting<Float>(floatValue, unit, id, SettingsEnum.FLOAT);
-            case STRING:
-                return new Setting<String>((String) value, unit, id, SettingsEnum.STRING);
+                return new FloatSetting(id, floatValue, unit);
         }
 
         return null;
     }
 
-    public static Setting<?> getSetting(String id, String settingType, Object value) {
+    public static Setting getSetting(String id, String settingType, Object value) {
         return getSetting(id, settingType, value, null);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.carduino.shared.utilities;
 
-import com.example.carduino.shared.models.Setting;
+import com.example.carduino.settings.factory.Setting;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
 
 public class SettingsUtilities {
