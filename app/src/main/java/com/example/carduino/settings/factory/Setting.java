@@ -1,20 +1,31 @@
 package com.example.carduino.settings.factory;
 
 import android.view.View;
+import android.view.ViewGroup;
 
-public abstract class Setting {
+public abstract class Setting<T> {
     private String unit;
     private String id;
     private SettingsEnum settingEnum;
     private String label;
+    private T value;
 
     public Setting() {
     }
 
-    public Setting(String unit, String id, SettingsEnum settingEnum) {
+    public Setting(String unit, String id, T value, SettingsEnum settingEnum) {
         this.unit = unit;
         this.id = id;
         this.settingEnum = settingEnum;
+        this.value = value;
+    }
+
+    public Setting(String unit, String id, String label, T value, SettingsEnum settingEnum) {
+        this.unit = unit;
+        this.id = id;
+        this.settingEnum = settingEnum;
+        this.label = label;
+        this.value = value;
     }
 
     public String getUnit() {
@@ -49,5 +60,13 @@ public abstract class Setting {
         this.label = label;
     }
 
-    public abstract View getView(View view);
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public abstract View getView(View view, ViewGroup parent);
 }

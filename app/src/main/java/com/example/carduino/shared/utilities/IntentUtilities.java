@@ -12,7 +12,8 @@ public class IntentUtilities {
      * eg.: CANBUS;BRIGHTNESS;2700;lux;
      */
     public static void sendArduinoMessageBroadcast(String message) {
-        String[] splittedMessage = message.split(";");
+//        String[] splittedMessage = message.split(";");
+        String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message);
         sendBroadcast(splittedMessage[0], splittedMessage[1], splittedMessage[2], splittedMessage[3]);
     }
 

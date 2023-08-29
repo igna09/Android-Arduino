@@ -66,7 +66,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         };
         appContext.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
 
-        arduinoMessageViewModel = new ViewModelProvider(ContextsSingleton.getInstance().getMainActivityContext()).get(ArduinoMessageViewModel.class);
+//        arduinoMessageViewModel = new ViewModelProvider(ContextsSingleton.getInstance().getMainActivityContext()).get(ArduinoMessageViewModel.class);
     }
 
     @Override
@@ -81,6 +81,9 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                 } else {
                     //simulating arduino message receive
                     onArduinoMessage(("CANBUS;BRIGHTNESS;" + new Random().nextInt(5001)+";lux;").getBytes());
+                    onArduinoMessage(("CANBUS;READ_SETTING;auto_close_rearview_mirror-BOOLEAN-true-;;").getBytes());
+                    onArduinoMessage(("CANBUS;READ_SETTING;test_integer-INTEGER-10-;;").getBytes());
+                    onArduinoMessage(("CANBUS;READ_SETTING;test_float-FLOAT-12.3-;;").getBytes());
 
                     Thread.sleep(5000);
                 }

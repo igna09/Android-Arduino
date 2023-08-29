@@ -3,4 +3,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="arduino_received_message_root">com.example.carduino.RECEIVED_ARDUINO_MESSAGE_</string>
     <string name="arduino_send_message">com.example.carduino.SEND_ARDUINO_MESSAGE</string>
+    <string name="display_auto_brightness">Luminosità automatica schermo</string>
+    <string name="auto_close_rearview_mirror">Chiudi automaticamente gli specchietti quando viene spento il quadro</string>
+    <string name="test_float">test float</string>
+    <string name="test_integer">test integer</string>
 </resources>

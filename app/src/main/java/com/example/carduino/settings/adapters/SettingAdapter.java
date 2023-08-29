@@ -26,12 +26,8 @@ public class SettingAdapter extends ArrayAdapter<Setting> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listitemView = convertView;
-        if (listitemView == null) {
-            // Layout Inflater inflates each item to be displayed in GridView.
-            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.card_item, parent, false);
-        }
 
         Setting setting = getItem(position);
-        return setting.getView(listitemView);
+        return setting.getView(listitemView, parent);
     }
 }

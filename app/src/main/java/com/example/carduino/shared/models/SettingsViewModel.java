@@ -11,6 +11,10 @@ import java.util.HashMap;
 public class SettingsViewModel extends ViewModel {
     private MutableLiveData<HashMap<String, Setting>> hashMapMutableLiveData;
 
+    public SettingsViewModel() {
+        this.hashMapMutableLiveData = new MutableLiveData<>();
+    }
+
     public void addSetting(Setting setting) {
         HashMap tmpHashMap = new HashMap<String, Setting>();
         if(this.hashMapMutableLiveData.getValue() != null && !this.hashMapMutableLiveData.getValue().isEmpty()) {

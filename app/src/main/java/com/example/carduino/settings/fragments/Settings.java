@@ -43,7 +43,7 @@ public class Settings extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_canbus, container, false);
+        return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Settings extends Fragment {
         };
         settingsViewModel.getSettings().observe(requireActivity(), observer);
 
-        updateList(view, SharedDataSingleton.getInstance().getSettings());
+        updateList(view, (Map) settingsViewModel.getSettings().getValue());
     }
 
     @Override
@@ -69,9 +69,11 @@ public class Settings extends Fragment {
     }
 
     private void updateList(View view, Map settings) {
-        ListView listView = view.findViewById(R.id.settings_list);
+        if(settings != null) {
+            ListView listView = view.findViewById(R.id.settings_list);
 
-        SettingAdapter adapter = new SettingAdapter(getActivity(), new ArrayList<>(settings.values()));
-        listView.setAdapter(adapter);
+            SettingAdapter adapter = new SettingAdapter(getActivity(), new ArrayList<>(settings.values()));
+            listView.setAdapter(adapter);
+        }
     }
 }

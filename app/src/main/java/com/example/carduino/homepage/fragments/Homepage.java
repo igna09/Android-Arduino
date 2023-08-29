@@ -14,6 +14,7 @@ import com.example.carduino.R;
 import com.example.carduino.canbus.fragments.Canbus;
 import com.example.carduino.homepage.adapters.HomepageGridButtonAdapter;
 import com.example.carduino.homepage.models.HomepageGridButtonModel;
+import com.example.carduino.settings.fragments.Settings;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class Homepage extends Fragment {
 
         courseModelArrayList.add(new HomepageGridButtonModel("CAN bus", R.drawable.ic_launcher_foreground, Canbus.class));
         courseModelArrayList.add(new HomepageGridButtonModel("K-line", R.drawable.ic_launcher_foreground, Canbus.class));
-        courseModelArrayList.add(new HomepageGridButtonModel("Settings", R.drawable.ic_launcher_foreground));
+        courseModelArrayList.add(new HomepageGridButtonModel("Settings", R.drawable.ic_launcher_foreground, Settings.class));
 
         HomepageGridButtonAdapter adapter = new HomepageGridButtonAdapter(getActivity(), courseModelArrayList);
         gridView.setAdapter(adapter);
