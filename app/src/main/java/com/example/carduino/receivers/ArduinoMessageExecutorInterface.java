@@ -4,6 +4,6 @@ import android.content.Context;
 
 import com.example.carduino.shared.models.ArduinoMessage;
 
-public interface ReceiverInterface {
+public interface ArduinoMessageExecutorInterface {
     void execute(Context context, ArduinoMessage message);
 }

@@ -1,4 +1,4 @@
-package com.example.carduino.shared.models.carstatus;
+package com.example.carduino.shared.models.carstatus.values;
 
 public class KpaPressure extends Value<Integer> {
     public KpaPressure(String id, Integer pressure) {

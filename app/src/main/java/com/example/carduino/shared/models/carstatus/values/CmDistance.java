@@ -1,4 +1,4 @@
-package com.example.carduino.shared.models.carstatus;
+package com.example.carduino.shared.models.carstatus.values;
 
 public class CmDistance extends Value<Float> {
     public CmDistance(String id, Float centimeters) {

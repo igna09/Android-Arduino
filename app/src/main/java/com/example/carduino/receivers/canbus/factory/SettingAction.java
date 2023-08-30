@@ -4,16 +4,15 @@ import android.content.Context;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.carduino.receivers.ReceiverInterface;
+import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 import com.example.carduino.settings.factory.SettingsFactory;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.settings.factory.Setting;
 import com.example.carduino.shared.models.SettingsViewModel;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
-import com.example.carduino.shared.utilities.SettingsUtilities;
 
-public class SettingAction implements ReceiverInterface {
+public class SettingAction implements ArduinoMessageExecutorInterface {
     @Override
     public void execute(Context context, ArduinoMessage message) {
         String[] settingValues = ArduinoMessageUtilities.parseCanbusSetting(message.getValue());

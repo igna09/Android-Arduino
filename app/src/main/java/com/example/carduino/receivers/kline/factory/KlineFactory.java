@@ -1,11 +1,11 @@
 package com.example.carduino.receivers.kline.factory;
 
-import com.example.carduino.receivers.ReceiverInterface;
+import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 
 public class KlineFactory {
-    public static ReceiverInterface getKlineInterface(String action) {
+    public static ArduinoMessageExecutorInterface getKlineInterface(String action) {
         try {
-            return (ReceiverInterface) KlineActions.valueOf(action).getClazz().newInstance();
+            return (ArduinoMessageExecutorInterface) KlineActions.valueOf(action).getClazz().newInstance();
         } catch (IllegalArgumentException e) {
             return null;
         } catch (IllegalAccessException e) {

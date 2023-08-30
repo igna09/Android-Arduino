@@ -1,4 +1,4 @@
-package com.example.carduino.shared.models.carstatus;
+package com.example.carduino.shared.models.carstatus.values;
 
 public class LuxLuminance extends Value<Integer> {
     public LuxLuminance(String id, Integer luminance) {

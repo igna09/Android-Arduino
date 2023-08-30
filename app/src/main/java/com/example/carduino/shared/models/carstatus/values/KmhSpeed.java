@@ -1,4 +1,4 @@
-package com.example.carduino.shared.models.carstatus;
+package com.example.carduino.shared.models.carstatus.values;
 
 public class KmhSpeed extends Value<Integer> {
     public KmhSpeed(String id, Integer speed) {

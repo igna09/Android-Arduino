@@ -1,7 +1,7 @@
 package com.example.carduino.receivers.canbus.factory;
 
 public enum CanbusActions {
-    BRIGHTNESS(BrightnessAction.class, "BRIGHTNESS"),
+//    BRIGHTNESS(BrightnessAction.class, "BRIGHTNESS"),
     READ_SETTING(SettingAction.class, "READ_SETTING"),
     CAR_STATUS(CarStatusAction.class, "CAR_STATUS");
     //WRITE_SETTING("WRITE_SETTING");

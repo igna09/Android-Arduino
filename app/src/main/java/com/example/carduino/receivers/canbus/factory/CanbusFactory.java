@@ -1,11 +1,11 @@
 package com.example.carduino.receivers.canbus.factory;
 
-import com.example.carduino.receivers.ReceiverInterface;
+import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 
 public class CanbusFactory {
-    public static ReceiverInterface getCanbusInterface(String action) {
+    public static ArduinoMessageExecutorInterface getCanbusInterface(String action) {
         try {
-            return (ReceiverInterface) CanbusActions.valueOf(action).getClazz().newInstance();
+            return (ArduinoMessageExecutorInterface) CanbusActions.valueOf(action).getClazz().newInstance();
         } catch (IllegalArgumentException e) {
             return null;
         } catch (IllegalAccessException e) {

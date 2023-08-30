@@ -1,4 +1,4 @@
-package com.example.carduino.shared.models.carstatus;
+package com.example.carduino.shared.models.carstatus.values;
 
 public class CelsiusTemperature extends Value<Float> {
     public CelsiusTemperature(String id, Float temperature) {
