@@ -5,7 +5,6 @@ import static androidx.core.content.ContextCompat.startActivity;
 import android.app.Application;
 import android.content.Intent;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.example.carduino.shared.models.carstatus.values.LuxLuminance;
 import com.example.carduino.shared.singletons.ContextsSingleton;
@@ -13,7 +12,7 @@ import com.example.carduino.shared.singletons.ContextsSingleton;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class LuxLuminanceCarStatusPropertyChangeListener implements PropertyChangeListener {
+public class InternalLuminanceCarStatusPropertyChangeListener implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Application applicationContext = ContextsSingleton.getInstance().getApplicationContext();
