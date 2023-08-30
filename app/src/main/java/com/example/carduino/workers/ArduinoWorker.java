@@ -87,6 +87,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                 } else {
                     //simulating arduino message receive
                     onArduinoMessage(("CANBUS;CAR_STATUS;INTERNAL_LUMINANCE-" + new Random().nextInt(5001) + ";;").getBytes());
+                    onArduinoMessage(("CANBUS;CAR_STATUS;ENGINE_WATER_COOLING_TEMPERATURE-" + new Random().nextFloat() * 120 + ";;").getBytes());
                     onArduinoMessage(("CANBUS;READ_SETTING;auto_close_rearview_mirror-BOOLEAN-true-;;").getBytes());
                     onArduinoMessage(("CANBUS;READ_SETTING;test_integer-INTEGER-10-;;").getBytes());
                     onArduinoMessage(("CANBUS;READ_SETTING;test_float-FLOAT-12.3-;;").getBytes());
