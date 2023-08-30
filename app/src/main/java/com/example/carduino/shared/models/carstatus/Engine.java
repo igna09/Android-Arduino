@@ -1,10 +1,19 @@
 package com.example.carduino.shared.models.carstatus;
 
+import androidx.annotation.NonNull;
+
 public class Engine {
     private CelsiusTemperature waterCoolingTemperature;
     private CelsiusTemperature oilTemperature;
     private KpaPressure intakeManifoldPressure;
     private Rpm rpm;
+
+    public Engine() {
+        this.waterCoolingTemperature = new CelsiusTemperature();
+        this.oilTemperature = new CelsiusTemperature();
+        this.intakeManifoldPressure = new KpaPressure();
+        this.rpm = new Rpm();
+    }
 
     public CelsiusTemperature getWaterCoolingTemperature() {
         return waterCoolingTemperature;

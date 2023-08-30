@@ -12,6 +12,12 @@ public class Duration extends Value<Duration.Time> {
             this.seconds = seconds;
         }
 
+        public Time(Integer totalSecs) {
+            this.hours = totalSecs/3600;
+            this.minutes = (totalSecs % 3600) / 60;
+            this.seconds = totalSecs % 60;
+        }
+
         public Time() {
         }
     }
@@ -21,8 +27,19 @@ public class Duration extends Value<Duration.Time> {
         setValue(new Time(hours, minutes, seconds));
     }
 
+    public Duration(Integer seconds) {
+        super();
+        setValue(new Time(seconds));
+    }
+
     public Duration() {
         super();
         setValue(new Time());
+    }
+
+    @Override
+    public Time parseValueFromString(String value) {
+        Integer totalSecs = Integer.parseInt(value);
+        return new Time(totalSecs);
     }
 }

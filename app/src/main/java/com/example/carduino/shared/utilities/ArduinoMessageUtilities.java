@@ -20,6 +20,10 @@ public class ArduinoMessageUtilities {
         return parseMessage(message, "-");
     }
 
+    public static String[] parseCanbusCarStatus(String message) {
+        return parseMessage(message, "-");
+    }
+
     public static String stringifyArduinoSetting(Setting setting) {
         StringBuilder builder = new StringBuilder("");
         return builder.append(ArduinoActions.CANBUS)

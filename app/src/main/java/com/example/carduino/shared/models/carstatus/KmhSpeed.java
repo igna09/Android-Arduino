@@ -1,7 +1,16 @@
 package com.example.carduino.shared.models.carstatus;
 
 public class KmhSpeed extends Value<Integer> {
-    public KmhSpeed(Integer speed) {
-        super(speed, "Km/h");
+    public KmhSpeed(String id, Integer speed) {
+        super(id, speed, "Km/h");
+    }
+
+    public KmhSpeed() {
+        super(null, null, "Km/h");
+    }
+
+    @Override
+    public Integer parseValueFromString(String value) {
+        return Integer.parseInt(value);
     }
 }

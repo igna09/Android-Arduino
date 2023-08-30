@@ -1,15 +1,19 @@
 package com.example.carduino.shared.models.carstatus;
 
-public class Value<T> {
+import androidx.annotation.NonNull;
+
+public abstract class Value<T> {
     private T value;
     private String unit;
+    private String id;
 
     public Value() {
     }
 
-    public Value(T value, String unit) {
+    public Value(String id, T value, String unit) {
         this.value = value;
         this.unit = unit;
+        this.id = id;
     }
 
     public T getValue() {
@@ -27,4 +31,14 @@ public class Value<T> {
     public void setUnit(String unit) {
         this.unit = unit;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public abstract T parseValueFromString(String value);
 }

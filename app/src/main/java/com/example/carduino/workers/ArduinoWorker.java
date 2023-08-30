@@ -26,6 +26,7 @@ import androidx.work.WorkerParameters;
 import com.example.carduino.shared.models.ArduinoActions;
 import com.example.carduino.R;
 import com.example.carduino.shared.models.ArduinoMessageViewModel;
+import com.example.carduino.shared.models.CarStatusViewModel;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.utilities.IntentUtilities;
 
@@ -66,6 +67,11 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         };
         appContext.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
 
+        /*CarStatusViewModel carStatusViewModel = new ViewModelProvider(ContextsSingleton.getInstance().getMainActivityContext()).get(CarStatusViewModel.class);
+        carStatusViewModel.getLiveDataCarStatus().observe(ContextsSingleton.getInstance().getMainActivityContext(), o -> {
+            Log.d("ArduinoWorker", carStatusViewModel.getCarStatus().toString());
+        });*/
+
 //        arduinoMessageViewModel = new ViewModelProvider(ContextsSingleton.getInstance().getMainActivityContext()).get(ArduinoMessageViewModel.class);
     }
 
@@ -80,10 +86,11 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                     return Result.success();
                 } else {
                     //simulating arduino message receive
-                    onArduinoMessage(("CANBUS;BRIGHTNESS;" + new Random().nextInt(5001)+";lux;").getBytes());
+                    onArduinoMessage(("CANBUS;BRIGHTNESS;" + new Random().nextInt(5001) + ";lux;").getBytes());
                     onArduinoMessage(("CANBUS;READ_SETTING;auto_close_rearview_mirror-BOOLEAN-true-;;").getBytes());
                     onArduinoMessage(("CANBUS;READ_SETTING;test_integer-INTEGER-10-;;").getBytes());
                     onArduinoMessage(("CANBUS;READ_SETTING;test_float-FLOAT-12.3-;;").getBytes());
+                    onArduinoMessage(("CANBUS;CAR_STATUS;ENGINE_RPM-" + new Random().nextInt(5001) + ";;").getBytes());
 
                     Thread.sleep(5000);
                 }

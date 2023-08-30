@@ -19,6 +19,9 @@ public class CarStatusSingleton {
     }
 
     public CarStatus getCarStatus() {
+        if(carStatus == null) {
+            this.carStatus = new CarStatus();
+        }
         return carStatus;
     }
 
