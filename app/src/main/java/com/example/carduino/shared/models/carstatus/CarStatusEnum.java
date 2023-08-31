@@ -16,7 +16,7 @@ public enum CarStatusEnum {
     SPEED("SPEED", Category.CAR, KmhSpeed.class),
     INTERNAL_LUMINANCE("INTERNAL_LUMINANCE", Category.CAR, LuxLuminance.class, InternalLuminanceCarStatusPropertyChangeListener.class),
     FRONT_DISTANCE("FRONT_DISTANCE", Category.CAR, CmDistance.class),
-    ENGINE_WATER_COOLING_TEMPERATURE("ENGINE_WATER_COOLING_TEMPERATURE", Category.ENGINE, CelsiusTemperature.class, EngineWaterCoolingTemperatureCarStatusPropertyChangeListener.class),
+    ENGINE_WATER_COOLING_TEMPERATURE("ENGINE_WATER_COOLING_TEMPERATURE", Category.ENGINE, CelsiusTemperature.class/*, EngineWaterCoolingTemperatureCarStatusPropertyChangeListener.class*/),
     ENGINE_OIL_TEMPERATURE("ENGINE_OIL_TEMPERATURE", Category.ENGINE, CelsiusTemperature.class),
     ENGINE_INTAKE_MANIFOLD_PRESSURE("ENGINE_INTAKE_MANIFOLD_PRESSURE", Category.ENGINE, KpaPressure.class),
     ENGINE_RPM("ENGINE_RPM", Category.ENGINE, Rpm.class),

@@ -10,11 +10,10 @@ import com.example.carduino.shared.models.carstatus.values.LuxLuminance;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
-public class InternalLuminanceCarStatusPropertyChangeListener implements PropertyChangeListener {
+public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyChangeListener<LuxLuminance> {
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void onPropertyChange(PropertyChangeEvent evt, LuxLuminance oldValue, LuxLuminance newValue) {
         Application applicationContext = ContextsSingleton.getInstance().getApplicationContext();
         if(!Settings.System.canWrite(applicationContext.getApplicationContext())) {
             Intent settingsIntent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
@@ -23,7 +22,7 @@ public class InternalLuminanceCarStatusPropertyChangeListener implements Propert
         } else {
             Settings.System.putInt(applicationContext.getApplicationContext().getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS,
-                    map(((LuxLuminance) evt.getNewValue()).getValue(), 0, 5000, 0, 100));
+                    map(newValue.getValue(), 0, 5000, 0, 100));
         }
     }
 

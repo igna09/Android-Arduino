@@ -13,11 +13,10 @@ import com.example.carduino.shared.models.carstatus.values.Value;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
-public class EngineWaterCoolingTemperatureCarStatusPropertyChangeListener implements PropertyChangeListener {
+public class EngineWaterCoolingTemperatureCarStatusPropertyChangeListener extends PropertyChangeListener<CelsiusTemperature> {
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        Log.d(this.getClass().getSimpleName(), "old " + ((CelsiusTemperature) evt.getOldValue()).getValue() + " new " + ((CelsiusTemperature) evt.getNewValue()).getValue());
+    public void onPropertyChange(PropertyChangeEvent evt, CelsiusTemperature oldCelsiusTemperature, CelsiusTemperature newCelsiusTemperature) {
+        Log.d(this.getClass().getSimpleName(), "old " + oldCelsiusTemperature.getValue() + " new " + newCelsiusTemperature.getValue());
     }
 }
