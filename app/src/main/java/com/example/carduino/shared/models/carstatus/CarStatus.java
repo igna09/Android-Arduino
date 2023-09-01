@@ -1,5 +1,8 @@
 package com.example.carduino.shared.models.carstatus;
 
+import androidx.annotation.NonNull;
+
+import com.example.carduino.shared.models.carstatus.propertychangelisteners.GeneralCarStatusPropertyChangeListener;
 import com.example.carduino.shared.models.carstatus.values.Value;
 
 import java.beans.PropertyChangeListener;
@@ -22,6 +25,8 @@ public class CarStatus {
         });
 
         this.support = new PropertyChangeSupport(this);
+
+        this.addPropertyChangeListener(new GeneralCarStatusPropertyChangeListener());
     }
 
     public void putValue(Value value) {
@@ -51,5 +56,20 @@ public class CarStatus {
 
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         support.removePropertyChangeListener(pcl);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("");
+        builder.append("{");
+        builder.append("\n");
+        this.carStatusValues.values().forEach(value -> {
+            builder.append("    ");
+            builder.append(value.toString());
+            builder.append("\n");
+        });
+        builder.append("}");
+        return builder.toString();
     }
 }

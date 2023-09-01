@@ -52,4 +52,10 @@ public abstract class Value<T> {
     }
 
     public abstract T parseValueFromString(String value);
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "id: " + getId() + ", value: " + getValue() + ", unit: " + getUnit();
+    }
 }

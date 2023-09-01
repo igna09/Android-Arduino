@@ -16,7 +16,7 @@ import java.beans.PropertyChangeEvent;
 
 public class EngineWaterCoolingTemperatureCarStatusPropertyChangeListener extends PropertyChangeListener<CelsiusTemperature> {
     @Override
-    public void onPropertyChange(PropertyChangeEvent evt, CelsiusTemperature oldCelsiusTemperature, CelsiusTemperature newCelsiusTemperature) {
+    public void onPropertyChange(String propertyName, CelsiusTemperature oldCelsiusTemperature, CelsiusTemperature newCelsiusTemperature) {
         Log.d(this.getClass().getSimpleName(), "old " + oldCelsiusTemperature.getValue() + " new " + newCelsiusTemperature.getValue());
     }
 }

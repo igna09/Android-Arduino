@@ -9,8 +9,8 @@ public abstract class PropertyChangeListener<T> implements java.beans.PropertyCh
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        this.onPropertyChange(evt, getValue(evt.getOldValue()), getValue(evt.getNewValue()));
+        this.onPropertyChange(evt.getPropertyName(), getValue(evt.getOldValue()), getValue(evt.getNewValue()));
     }
 
-    public abstract void onPropertyChange(PropertyChangeEvent evt, T oldValue, T newValue);
+    public abstract void onPropertyChange(String propertyName, T oldValue, T newValue);
 }

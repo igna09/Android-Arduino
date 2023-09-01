@@ -13,7 +13,7 @@ import java.beans.PropertyChangeEvent;
 
 public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyChangeListener<LuxLuminance> {
     @Override
-    public void onPropertyChange(PropertyChangeEvent evt, LuxLuminance oldValue, LuxLuminance newValue) {
+    public void onPropertyChange(String propertyName, LuxLuminance oldValue, LuxLuminance newValue) {
         Application applicationContext = ContextsSingleton.getInstance().getApplicationContext();
         if(!Settings.System.canWrite(applicationContext.getApplicationContext())) {
             Intent settingsIntent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
