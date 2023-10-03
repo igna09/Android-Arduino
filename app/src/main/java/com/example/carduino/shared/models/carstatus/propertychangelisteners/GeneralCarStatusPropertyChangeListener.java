@@ -22,6 +22,6 @@ public class GeneralCarStatusPropertyChangeListener extends PropertyChangeListen
     }
 
     private String getSafeValue(Value value) {
-        return value.getValue() != null ? value.getValue().toString() : "";
+        return value != null && value.getValue() != null ? value.getValue().toString() : "";
     }
 }

@@ -4,15 +4,11 @@ import android.content.IntentFilter;
 
 import com.example.carduino.R;
 import com.example.carduino.receivers.canbus.CanbusReceiver;
-import com.example.carduino.receivers.kline.KlineReceiver;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 
 public enum ArduinoActions {
-//    LOGGER("LOGGER", null),
-//    BRIGHTNESS("BRIGHTNESS", CanbusReceiver.class),
     SEND("SEND", null),
-    CANBUS("CANBUS", CanbusReceiver.class),
-    KLINE("KLINE", KlineReceiver.class);
+    CANBUS("CANBUS", CanbusReceiver.class);
 
     private String action;
     private Class c;

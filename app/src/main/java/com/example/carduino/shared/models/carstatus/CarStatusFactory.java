@@ -8,7 +8,7 @@ import java.beans.PropertyChangeListenerProxy;
 
 public class CarStatusFactory {
     public static Value getCarStatusValue(String id, String value) {
-        CarStatusEnum carStatusEnum = CarStatusEnum.valueOf(id);
+        CarStatusEnum carStatusEnum = CarStatusEnum.getCarStatusEnumById(id);
         try {
             Value v = (Value) carStatusEnum.getType().newInstance();
             v.setId(id);

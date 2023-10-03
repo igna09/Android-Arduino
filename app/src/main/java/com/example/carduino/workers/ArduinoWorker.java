@@ -88,9 +88,9 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                     //simulating arduino message receive
                     onArduinoMessage(("CANBUS;CAR_STATUS;INTERNAL_LUMINANCE-" + new Random().nextInt(5001) + ";;").getBytes());
                     onArduinoMessage(("CANBUS;CAR_STATUS;ENGINE_WATER_COOLING_TEMPERATURE-" + new Random().nextFloat() * 120 + ";;").getBytes());
-                    onArduinoMessage(("CANBUS;READ_SETTING;auto_close_rearview_mirror-BOOLEAN-true-;;").getBytes());
-                    onArduinoMessage(("CANBUS;READ_SETTING;test_integer-INTEGER-10-;;").getBytes());
-                    onArduinoMessage(("CANBUS;READ_SETTING;test_float-FLOAT-12.3-;;").getBytes());
+                    //onArduinoMessage(("CANBUS;READ_SETTING;auto_close_rearview_mirror-BOOLEAN-true-;;").getBytes());
+                    //onArduinoMessage(("CANBUS;READ_SETTING;test_integer-INTEGER-10-;;").getBytes());
+                    //onArduinoMessage(("CANBUS;READ_SETTING;test_float-FLOAT-12.3-;;").getBytes());
                     onArduinoMessage(("CANBUS;CAR_STATUS;ENGINE_RPM-" + new Random().nextInt(5001) + ";;").getBytes());
 
                     Thread.sleep(5000);
@@ -153,8 +153,8 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 
     /**
      * Every message received from Arduino MUST be in this format:
-     * ArduinoActions;key;value;unit;
-     * eg.: CANBUS;BRIGHTNESS;2700;lux;
+     * CanbusActions;payload;
+     * eg.: CAR_STATUS;BRIGHTNESS-2700;
      * @param bytes
      */
     @Override

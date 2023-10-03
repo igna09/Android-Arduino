@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         workRequest =
                 new OneTimeWorkRequest.Builder(ArduinoWorker.class)
                         .build();
-        Operation operation = WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork("arduino_worker", ExistingWorkPolicy.KEEP, workRequest);
+        Operation operation = WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork("arduino_worker", ExistingWorkPolicy.REPLACE, workRequest);
 
         WorkManager.getInstance(getApplicationContext()).getWorkInfosForUniqueWorkLiveData("arduino_worker").observe(this, new Observer<List<WorkInfo>>() {
             @Override
