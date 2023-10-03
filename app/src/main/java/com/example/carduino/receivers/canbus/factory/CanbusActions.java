@@ -1,21 +1,23 @@
 package com.example.carduino.receivers.canbus.factory;
 
+import java.util.Arrays;
+
 public enum CanbusActions {
-//    BRIGHTNESS(BrightnessAction.class, "BRIGHTNESS"),
     READ_SETTING(SettingAction.class, "READ_SETTING"),
     CAR_STATUS(CarStatusAction.class, "CAR_STATUS");
+    //TODO: add media control action
     //WRITE_SETTING("WRITE_SETTING");
 
     private Class clazz;
-    private String name;
+    private String id;
 
-    CanbusActions(Class clazz, String name) {
+    CanbusActions(Class clazz, String id) {
         this.clazz = clazz;
-        this.name = name;
+        this.id = id;
     }
 
-    CanbusActions(String name) {
-        this(null, name);
+    CanbusActions(String id) {
+        this(null, id);
     }
 
     public Class getClazz() {
@@ -26,11 +28,11 @@ public enum CanbusActions {
         this.clazz = clazz;
     }
 
-    public String getName() {
-        return name;
+    public String getid() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public static CanbusActions getCanbusActionFromid(String id) {
+        return Arrays.stream(CanbusActions.values()).filter(canbusActions -> canbusActions.getid().equals(id)).findFirst().orElse(null);
     }
 }
