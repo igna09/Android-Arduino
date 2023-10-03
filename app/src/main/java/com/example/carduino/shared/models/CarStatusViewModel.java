@@ -22,19 +22,38 @@ public class CarStatusViewModel extends ViewModel {
 
     public CarStatusViewModel() {
         this.carStatusMutableLiveData = new MutableLiveData<>();
+        this.carStatusMutableLiveData.setValue(new HashMap<String, Value>());
 
-        /*Arrays.stream(CarStatusEnum.values()).forEach(carStatusEnum -> {
-            try {
+        HashMap<String, Value> tmpHashMap = new HashMap<>();
+        Arrays.stream(CarStatusEnum.values()).forEach(carStatusEnum -> {
+            /*try {
                 this.carStatusMutableLiveData.getValue().put(carStatusEnum.getId(), (Value) carStatusEnum.getType().newInstance());
             } catch (IllegalAccessException | InstantiationException e) {
                 throw new RuntimeException(e);
+            }*/
+            try {
+                Value v = (Value) carStatusEnum.getType().newInstance();
+                v.setId(carStatusEnum.getId());
+                this.carStatusMutableLiveData.getValue().put(carStatusEnum.getId(), v);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
             }
-        });*/
+            /*try {
+                Value v = (Value) carStatusEnum.getType().newInstance();
+                v.setId(carStatusEnum.getId());
+                this.updateCarstatus(v);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            }*/
+        });
+        // this.carStatusMutableLiveData.setValue(tmpHashMap);
 
         this.support = new PropertyChangeSupport(this);
         this.addPropertyChangeListener(new GeneralCarStatusPropertyChangeListener());
-
-        this.carStatusMutableLiveData.setValue(new HashMap<String, Value>());
     }
 
     public void addPropertyChangeListener(java.beans.PropertyChangeListener pcl) {

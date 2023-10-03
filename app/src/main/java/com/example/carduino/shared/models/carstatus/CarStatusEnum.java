@@ -22,7 +22,7 @@ public enum CarStatusEnum {
     ENGINE_OIL_TEMPERATURE("ENGINE_OIL_TEMPERATURE", Category.ENGINE, CelsiusTemperature.class),
     ENGINE_INTAKE_MANIFOLD_PRESSURE("ENGINE_INTAKE_MANIFOLD_PRESSURE", Category.ENGINE, KpaPressure.class),
     ENGINE_RPM("ENGINE_RPM", Category.ENGINE, Rpm.class),
-    TRIP_DURATION("TRIP_DURATION", Category.TRIP, Duration.class),
+    //TRIP_DURATION("TRIP_DURATION", Category.TRIP, Duration.class),
     TRIP_AVERAGE_SPEED("TRIP_AVERAGE_SPEED", Category.TRIP, KmhSpeed.class),
     TRIP_MAX_SPEED("TRIP_MAX_SPEED", Category.TRIP, KmhSpeed.class);
 

@@ -70,7 +70,8 @@ public class Canbus extends Fragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 ArduinoMessage message = new ArduinoMessage(intent);
-                String m = message.getKey() + " --- " + message.getValue() + " " + message.getUnit();
+                // TODO: add unit
+                String m = message.getKey() + " --- " + message.getValue();// + " " + message.getAction().getUnit();
                 Log.d("Canbus", "received message from canbus: " + m);
                 display(m);
             }

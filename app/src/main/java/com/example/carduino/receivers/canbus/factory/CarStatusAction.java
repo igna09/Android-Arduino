@@ -16,11 +16,7 @@ import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 public class CarStatusAction implements ArduinoMessageExecutorInterface {
     @Override
     public void execute(Context context, ArduinoMessage message) {
-        String[] keyValue = ArduinoMessageUtilities.parseCanbusCarStatus(message.getValue());
-
-        // CarStatusSingleton.getInstance().getCarStatus().putValue(CarStatusFactory.getCarStatusValue(keyValue[0], keyValue[1]));
-
         CarStatusViewModel carstatusViewModel = new ViewModelProvider(ContextsSingleton.getInstance().getMainActivityContext()).get(CarStatusViewModel.class);
-        carstatusViewModel.updateCarstatus(CarStatusFactory.getCarStatusValue(keyValue[0], keyValue[1]));
+        carstatusViewModel.updateCarstatus(CarStatusFactory.getCarStatusValue(message.getKey(), message.getValue()));
     }
 }

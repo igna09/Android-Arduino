@@ -42,7 +42,7 @@ public class CarstatusAdapter extends ArrayAdapter<Value> {
         TextView carstatus_unit = convertView.findViewById(R.id.carstatus_unit);
 
         carstatus_label.setText(carstatusValue.getId());
-        carstatus_value.setText(carstatusValue.getValue().toString());
+        carstatus_value.setText(carstatusValue.getValue() != null ? carstatusValue.getValue().toString() : "-");
         carstatus_unit.setText(carstatusValue.getUnit());
 
         return convertView;

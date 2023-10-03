@@ -11,7 +11,7 @@ import com.example.carduino.shared.models.ArduinoMessage;
 public class CanbusReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        ArduinoMessageExecutorInterface action = CanbusFactory.getCanbusInterface(intent.getStringExtra("key"));
+        ArduinoMessageExecutorInterface action = CanbusFactory.getCanbusInterface(intent.getStringExtra("action"));
         if(action != null) {
             action.execute(context, new ArduinoMessage(intent));
         }

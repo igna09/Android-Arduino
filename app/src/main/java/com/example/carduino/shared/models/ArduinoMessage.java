@@ -2,30 +2,27 @@ package com.example.carduino.shared.models;
 
 import android.content.Intent;
 
+import com.example.carduino.receivers.canbus.factory.CanbusActions;
+
 public class ArduinoMessage {
-    private ArduinoActions action;
+    private CanbusActions action;
     private String key;
     private String value;
-    private String unit;
 
-    public ArduinoMessage(ArduinoActions action, String key, String value, String unit) {
+    public ArduinoMessage(CanbusActions action, String key, String value) {
         this.action = action;
         this.key = key;
         this.value = value;
-        this.unit = unit;
     }
 
-    public ArduinoMessage(String key, String value, String unit) {
-        this(null, key, value, unit);
+    public ArduinoMessage(String key, String value) {
+        this(null, key, value);
     }
 
     public ArduinoMessage(Intent intent) {
-        if(intent.getStringExtra("action") != null) {
-            this.action = ArduinoActions.valueOf(intent.getStringExtra("action"));
-        }
+        this.action = CanbusActions.valueOf(intent.getStringExtra("action"));
         this.key = intent.getStringExtra("key");
         this.value = intent.getStringExtra("value");
-        this.unit = intent.getStringExtra("unit");
     }
 
     public String getKey() {
@@ -44,19 +41,11 @@ public class ArduinoMessage {
         this.value = value;
     }
 
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public ArduinoActions getAction() {
+    public CanbusActions getAction() {
         return action;
     }
 
-    public void setAction(ArduinoActions action) {
+    public void setAction(CanbusActions action) {
         this.action = action;
     }
 }
