@@ -86,12 +86,13 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                     return Result.success();
                 } else {
                     //simulating arduino message receive
-                    onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + new Random().nextInt(5001)).getBytes());
-                    onArduinoMessage(("CAR_STATUS;ENGINE_WATER_COOLING_TEMPERATURE;" + new Random().nextFloat() * 120).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + new Random().nextInt(5001)).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;ENGINE_WATER_COOLING_TEMPERATURE;" + new Random().nextFloat() * 120).getBytes());
                     //onArduinoMessage(("READ_SETTING;auto_close_rearview_mirror-true").getBytes());
                     //onArduinoMessage(("READ_SETTING;test_integer-10").getBytes());
                     //onArduinoMessage((READ_SETTING;test_float-12.3").getBytes());
-                    onArduinoMessage(("CAR_STATUS;ENGINE_RPM;" + new Random().nextInt(5001)).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;ENGINE_RPM;" + new Random().nextInt(5001)).getBytes());
+                    onArduinoMessage(("MEDIA_CONTROL;VOLUME_UP;0;").getBytes());
 
                     Thread.sleep(5000);
                 }

@@ -1,4 +1,4 @@
-package com.example.carduino.receivers.canbus.factory;
+package com.example.carduino.receivers.canbus.factory.actions;
 
 import android.content.Context;
 
