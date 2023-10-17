@@ -30,11 +30,7 @@ import com.example.carduino.shared.models.CarStatusViewModel;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.utilities.IntentUtilities;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import me.aflak.arduino.Arduino;
 
@@ -104,6 +100,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 //                    onArduinoMessage("------------------;test3;------------------".getBytes());
 //                    onArduinoMessage("------------------;test4;------------------;".getBytes());
 //                    onArduinoMessage("------------------;test5;------------------;dddddddddddddddddds".getBytes());
+                    onArduinoMessage(("MEDIA_CONTROL;VOLUME_UP;0;").getBytes());
 
                     Thread.sleep(5000);
                 }

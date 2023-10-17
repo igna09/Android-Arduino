@@ -1,12 +1,16 @@
 package com.example.carduino.receivers.canbus.factory;
 
+import com.example.carduino.receivers.canbus.factory.actions.CarStatusAction;
+import com.example.carduino.receivers.canbus.factory.actions.MediaControlAction;
+import com.example.carduino.receivers.canbus.factory.actions.SettingAction;
+
 import java.util.Arrays;
 
 public enum CanbusActions {
     READ_SETTING(SettingAction.class, "READ_SETTING"),
-    CAR_STATUS(CarStatusAction.class, "CAR_STATUS");
-    //TODO: add media control action
+    CAR_STATUS(CarStatusAction.class, "CAR_STATUS"),
     //WRITE_SETTING("WRITE_SETTING");
+    MEDIA_CONTROL(MediaControlAction .class, "MEDIA_CONTROL");
 
     private Class clazz;
     private String id;
