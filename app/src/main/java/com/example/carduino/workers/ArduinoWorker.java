@@ -30,7 +30,11 @@ import com.example.carduino.shared.models.CarStatusViewModel;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.utilities.IntentUtilities;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import me.aflak.arduino.Arduino;
 
@@ -50,6 +54,8 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                 context.getSystemService(NOTIFICATION_SERVICE);
 
         arduino = new Arduino(context);
+        arduino.setBaudRate(115200);
+        arduino.addVendorId(6790);
         arduino.setArduinoListener(this);
 
         appContext = context;
@@ -85,13 +91,19 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                     Log.d("ArduinoWorker", "killing");
                     return Result.success();
                 } else {
-                    //simulating arduino message receive
-                    onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + new Random().nextInt(5001)).getBytes());
-                    onArduinoMessage(("CAR_STATUS;ENGINE_WATER_COOLING_TEMPERATURE;" + new Random().nextFloat() * 120).getBytes());
-                    //onArduinoMessage(("READ_SETTING;auto_close_rearview_mirror-true").getBytes());
-                    //onArduinoMessage(("READ_SETTING;test_integer-10").getBytes());
-                    //onArduinoMessage((READ_SETTING;test_float-12.3").getBytes());
-                    onArduinoMessage(("CAR_STATUS;ENGINE_RPM;" + new Random().nextInt(5001)).getBytes());
+                    // simulating arduino message receive
+                    // onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + new Random().nextInt(5001)).getBytes());
+                    // onArduinoMessage(("CAR_STATUS;ENGINE_WATER_COOLING_TEMPERATURE;" + new Random().nextFloat() * 120).getBytes());
+                    // onArduinoMessage(("READ_SETTING;auto_close_rearview_mirror-true").getBytes());
+                    // onArduinoMessage(("READ_SETTING;test_integer-10").getBytes());
+                    // onArduinoMessage((READ_SETTING;test_float-12.3").getBytes());
+                    // onArduinoMessage(("CAR_STATUS;ENGINE_RPM;" + new Random().nextInt(5001)).getBytes());
+//                    onArduinoMessage("".getBytes());
+//                    onArduinoMessage("------------------ test ------------------".getBytes());
+//                    onArduinoMessage("------------------;test2 ------------------".getBytes());
+//                    onArduinoMessage("------------------;test3;------------------".getBytes());
+//                    onArduinoMessage("------------------;test4;------------------;".getBytes());
+//                    onArduinoMessage("------------------;test5;------------------;dddddddddddddddddds".getBytes());
 
                     Thread.sleep(5000);
                 }

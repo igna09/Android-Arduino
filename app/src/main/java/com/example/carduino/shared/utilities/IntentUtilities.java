@@ -13,7 +13,11 @@ public class IntentUtilities {
      */
     public static void sendArduinoMessageBroadcast(String message) {
         String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message);
-        sendBroadcast(splittedMessage[0], splittedMessage[1], splittedMessage[2]);
+
+        if(splittedMessage.length == 3) {
+
+            sendBroadcast(splittedMessage[0], splittedMessage[1], splittedMessage[2]);
+        }
     }
 
     public static void sendBroadcast(String arduinoAction, String key, String value) {
@@ -39,7 +43,7 @@ public class IntentUtilities {
         return intent;
     }
 
-    private static Intent createIntent(String intentAction, String arduinoAction, String key, String value) {
+    public static Intent createIntent(String intentAction, String arduinoAction, String key, String value) {
         return createIntent(null, intentAction, arduinoAction, key, value);
     }
 }
