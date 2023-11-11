@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.example.carduino.R;
 import com.example.carduino.shared.models.ArduinoMessageViewModel;
 import com.example.carduino.shared.models.CarStatusViewModel;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.singletons.Logger;
 import com.example.carduino.shared.utilities.IntentUtilities;
 
 import java.util.Random;
@@ -52,6 +54,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         arduino = new Arduino(context);
         arduino.setBaudRate(115200);
         arduino.addVendorId(6790);
+        arduino.addVendorId(0); //just for local test
         arduino.setArduinoListener(this);
 
         appContext = context;
@@ -113,6 +116,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
     @Override
     public void onStopped() {
         try {
+            Logger.getInstance().log("arduino worker stopped");
             Log.d("ArduinoWorker", "arduino worker stopped");
             arduino.close();
             arduino.unsetArduinoListener();
@@ -152,6 +156,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
     @Override
     public void onArduinoAttached(UsbDevice device) {
         Log.d("ArduinoWorker", "arduino attached");
+        Logger.getInstance().log("arduino attached");
         arduino.open(device);
     }
 
@@ -170,6 +175,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
     public void onArduinoMessage(byte[] bytes) {
         String message = new String(bytes);
         Log.d("ArduinoWorker", "arduino message: " + message);
+        Logger.getInstance().log("arduino message: " + message);
 
         IntentUtilities.sendArduinoMessageBroadcast(message);
     }
@@ -179,11 +185,13 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
         String str = "arduino opened...";
         arduino.send(str.getBytes());
         Log.d("ArduinoWorker", str);
+        Logger.getInstance().log(str);
     }
 
     @Override
     public void onUsbPermissionDenied() {
         Log.d("ArduinoWorker", "Permission denied. Attempting again in 3 sec...");
+        Logger.getInstance().log("Permission denied. Attempting again in 3 sec...");
 
         if (Looper.myLooper() == null) {
             Looper.prepare();
