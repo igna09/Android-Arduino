@@ -100,7 +100,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 //                    onArduinoMessage("------------------;test3;------------------".getBytes());
 //                    onArduinoMessage("------------------;test4;------------------;".getBytes());
 //                    onArduinoMessage("------------------;test5;------------------;dddddddddddddddddds".getBytes());
-                    onArduinoMessage(("MEDIA_CONTROL;VOLUME_UP;0;").getBytes());
+//                    onArduinoMessage(("MEDIA_CONTROL;VOLUME_UP;0;").getBytes());
 
                     Thread.sleep(5000);
                 }
