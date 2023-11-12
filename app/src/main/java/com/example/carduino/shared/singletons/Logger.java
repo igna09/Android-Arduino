@@ -6,6 +6,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Logger {
     private static Logger logger;
@@ -39,6 +43,10 @@ public class Logger {
         {
             //BufferedWriter for performance, true to set append to file flag
             BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//            SimpleDateFormat.getDateTimeInstance();
+            buf.append(df.format(new Date()));
+            buf.append(" - ");
             buf.append(text);
             buf.newLine();
             buf.flush();

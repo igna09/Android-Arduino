@@ -24,10 +24,12 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.carduino.receivers.canbus.CanbusReceiver;
 import com.example.carduino.shared.models.ArduinoActions;
 import com.example.carduino.R;
 import com.example.carduino.shared.models.ArduinoMessageViewModel;
 import com.example.carduino.shared.models.CarStatusViewModel;
+import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.Logger;
 import com.example.carduino.shared.utilities.IntentUtilities;
@@ -91,7 +93,7 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
                     return Result.success();
                 } else {
                     // simulating arduino message receive
-                    // onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + new Random().nextInt(5001)).getBytes());
+                     onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + new Random().nextInt(5001)).getBytes());
                     // onArduinoMessage(("CAR_STATUS;ENGINE_WATER_COOLING_TEMPERATURE;" + new Random().nextFloat() * 120).getBytes());
                     // onArduinoMessage(("READ_SETTING;auto_close_rearview_mirror-true").getBytes());
                     // onArduinoMessage(("READ_SETTING;test_integer-10").getBytes());
@@ -162,28 +164,34 @@ public class ArduinoWorker extends Worker implements me.aflak.arduino.ArduinoLis
 
     @Override
     public void onArduinoDetached() {
+        Logger.getInstance().log("arduino detached");
         Log.d("ArduinoWorker", "arduino detached");
     }
 
     /**
      * Every message received from Arduino MUST be in this format:
      * CanbusActions;payload;
-     * eg.: CAR_STATUS;BRIGHTNESS-2700;
+     * eg.: CAR_STATUS;BRIGHTNESS;2700;
      * @param bytes
      */
     @Override
     public void onArduinoMessage(byte[] bytes) {
-        String message = new String(bytes);
-        Log.d("ArduinoWorker", "arduino message: " + message);
-        Logger.getInstance().log("arduino message: " + message);
+        Logger.getInstance().log("onArduinoMessage");
+        try {
+            String message = new String(bytes);
+            Log.d("ArduinoWorker", "arduino message: " + message);
+            Logger.getInstance().log("arduino message: " + message);
 
-        IntentUtilities.sendArduinoMessageBroadcast(message);
+            IntentUtilities.sendArduinoMessageBroadcast(message);
+        } catch (Exception e) {
+            Logger.getInstance().log(e.getMessage());
+        }
     }
 
     @Override
     public void onArduinoOpened() {
         String str = "arduino opened...";
-        arduino.send(str.getBytes());
+//        arduino.send(str.getBytes());
         Log.d("ArduinoWorker", str);
         Logger.getInstance().log(str);
     }

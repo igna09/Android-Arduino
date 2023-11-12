@@ -2,8 +2,10 @@ package com.example.carduino.shared.utilities;
 
 import android.content.Intent;
 
+import com.example.carduino.receivers.canbus.CanbusReceiver;
 import com.example.carduino.shared.models.ArduinoActions;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.singletons.Logger;
 
 public class IntentUtilities {
     /**
@@ -15,18 +17,24 @@ public class IntentUtilities {
         String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message);
 
         if(splittedMessage.length == 3) {
-
+            Logger.getInstance().log("sending broadcast");
             sendBroadcast(splittedMessage[0], splittedMessage[1], splittedMessage[2]);
+        } else {
+            Logger.getInstance().log("received malformed message");
         }
     }
 
     public static void sendBroadcast(String arduinoAction, String key, String value) {
         // TODO: remove this mock
         ArduinoActions action = ArduinoActions.CANBUS;
-        ContextsSingleton.getInstance().getApplicationContext().sendBroadcast(createIntent(action.getIntentAction(), arduinoAction, key, value));
-        if(action.getC() != null) {
-            ContextsSingleton.getInstance().getApplicationContext().sendBroadcast(createIntent(action.getC(), action.getIntentAction(), arduinoAction, key, value));
-        }
+
+        //why two?
+//        ContextsSingleton.getInstance().getApplicationContext().sendBroadcast(createIntent(action.getIntentAction(), arduinoAction, key, value));
+//        if(action.getC() != null) {
+//            ContextsSingleton.getInstance().getApplicationContext().sendBroadcast(createIntent(action.getC(), action.getIntentAction(), arduinoAction, key, value));
+//        }
+
+        CanbusReceiver.staticOnReceive(ContextsSingleton.getInstance().getApplicationContext(), createIntent(action.getIntentAction(), arduinoAction, key, value));
     }
 
     private static Intent createIntent(Class clazz, String intentAction, String arduinoAction, String key, String value) {

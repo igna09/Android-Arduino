@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -43,14 +43,6 @@
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.example.carduino.RECEIVED_ARDUINO_MESSAGE_CANBUS" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".receivers.kline.KlineReceiver"
-            android:enabled="true"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.example.carduino.RECEIVED_ARDUINO_MESSAGE_KLINE" />
             </intent-filter>
         </receiver>
     </application>
