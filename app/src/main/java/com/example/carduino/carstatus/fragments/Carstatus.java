@@ -1,44 +1,27 @@
 package com.example.carduino.carstatus.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.carduino.R;
 import com.example.carduino.carstatus.adapters.CarstatusAdapter;
-import com.example.carduino.settings.adapters.SettingAdapter;
-import com.example.carduino.settings.factory.Setting;
-import com.example.carduino.shared.models.ArduinoActions;
-import com.example.carduino.shared.models.ArduinoMessage;
-import com.example.carduino.shared.models.ArduinoMessageViewModel;
-import com.example.carduino.shared.models.CarStatusViewModel;
-import com.example.carduino.shared.models.SettingsViewModel;
+import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
 import com.example.carduino.shared.models.carstatus.values.Value;
+import com.example.carduino.shared.singletons.CarStatusSingleton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 public class Carstatus extends Fragment {
-    private CarStatusViewModel carstatusViewModel;
-    private Observer observer;
     private ListView carstatusListView;
+    PropertyChangeListener pcl;
 
     @Nullable
     @Override
@@ -52,17 +35,21 @@ public class Carstatus extends Fragment {
 
         carstatusListView = view.findViewById(R.id.carstatus_list);
 
-        carstatusViewModel = new ViewModelProvider(requireActivity()).get(CarStatusViewModel.class);
-        observer = new Observer() {
+        this.pcl = new PropertyChangeListener<Value>() {
             @Override
-            public void onChanged(Object o) {
-                display((HashMap<String, Value>) o);
+            public void onPropertyChange (String propertyName, Value oldValue, Value newValue){
+                getActivity().runOnUiThread(() -> {
+                    updateView();
+                });
             }
         };
-        carstatusViewModel.getLiveDataCarStatus().observe(requireActivity(), observer);
+        CarStatusSingleton.getInstance().getCarStatus().addPropertyChangeListener(pcl);
+
+        updateView();
     }
 
-    public void display(HashMap<String, Value> values){
+    public void updateView(){
+        Map values = CarStatusSingleton.getInstance().getCarStatus().getCarStatusValues();
         if(values != null) {
             carstatusListView.setAdapter(new CarstatusAdapter(getActivity(), new ArrayList<>(values.values())));
         }
@@ -70,7 +57,7 @@ public class Carstatus extends Fragment {
 
     @Override
     public void onDestroy() {
-        carstatusViewModel.getLiveDataCarStatus().removeObserver(observer);
         super.onDestroy();
+        CarStatusSingleton.getInstance().getCarStatus().removePropertyChangeListener(pcl);
     }
 }

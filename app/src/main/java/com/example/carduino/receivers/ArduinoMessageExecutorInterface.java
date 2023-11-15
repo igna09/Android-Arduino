@@ -5,5 +5,5 @@ import android.content.Context;
 import com.example.carduino.shared.models.ArduinoMessage;
 
 public interface ArduinoMessageExecutorInterface {
-    void execute(Context context, ArduinoMessage message);
+    void execute(ArduinoMessage message);
 }

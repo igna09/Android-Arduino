@@ -3,12 +3,11 @@ package com.example.carduino.shared.models;
 import android.content.IntentFilter;
 
 import com.example.carduino.R;
-import com.example.carduino.receivers.canbus.CanbusReceiver;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 
 public enum ArduinoActions {
     SEND("SEND", null),
-    CANBUS("CANBUS", CanbusReceiver.class);
+    CANBUS("CANBUS", null);
 
     private String action;
     private Class c;

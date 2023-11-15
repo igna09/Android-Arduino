@@ -21,7 +21,7 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
     static AudioFocusRequest audioFocusRequest;
 
     @Override
-    public void execute(Context context, ArduinoMessage message) {
+    public void execute(ArduinoMessage message) {
         MediaControl mediaControl = MediaControl.valueOf(message.getKey());
         AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         switch(mediaControl) {

@@ -13,20 +13,26 @@ import java.util.HashMap;
 public class CarStatus {
     private HashMap <String, Value> carStatusValues;
     private PropertyChangeSupport support;
+    private PropertyChangeListener propertyChangeListener;
 
     public CarStatus() {
         this.carStatusValues = new HashMap<>();
         Arrays.stream(CarStatusEnum.values()).forEach(carStatusEnum -> {
             try {
-                this.carStatusValues.put(carStatusEnum.getId(), (Value) carStatusEnum.getType().newInstance());
-            } catch (IllegalAccessException | InstantiationException e) {
+                Value v = (Value) carStatusEnum.getType().newInstance();
+                v.setId(carStatusEnum.getId());
+                this.carStatusValues.put(carStatusEnum.getId(), v);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
                 throw new RuntimeException(e);
             }
         });
 
         this.support = new PropertyChangeSupport(this);
 
-        this.addPropertyChangeListener(new GeneralCarStatusPropertyChangeListener());
+        this.propertyChangeListener = new GeneralCarStatusPropertyChangeListener();
+        this.addPropertyChangeListener(this.propertyChangeListener);
     }
 
     public void putValue(Value value) {
@@ -41,13 +47,37 @@ public class CarStatus {
         if(value.getPropertyChangeListener() != null) {
             this.addPropertyChangeListener(value.getPropertyChangeListener());
         }
-        support.firePropertyChange(value.getId(), this.carStatusValues.get(value.getId()), value);
+        Value oldValue = null;
+        try {
+            oldValue = value.getClass().newInstance();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
+        oldValue.setId(this.carStatusValues.get(value.getId()).getId());
+        oldValue.setValue(this.carStatusValues.get(value.getId()).getValue());
+        oldValue.setUnit(this.carStatusValues.get(value.getId()).getUnit());
+        oldValue.setPropertyChangeListener(this.carStatusValues.get(value.getId()).getPropertyChangeListener());
         this.carStatusValues.put(value.getId(), value);
+        support.firePropertyChange(value.getId(), oldValue, value);
     }
 
     private void updateValue(Value value) {
-        support.firePropertyChange(value.getId(), this.carStatusValues.get(value.getId()), value);
+        Value oldValue = null;
+        try {
+            oldValue = value.getClass().newInstance();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
+        oldValue.setId(this.carStatusValues.get(value.getId()).getId());
+        oldValue.setValue(this.carStatusValues.get(value.getId()).getValue());
+        oldValue.setUnit(this.carStatusValues.get(value.getId()).getUnit());
+        oldValue.setPropertyChangeListener(this.carStatusValues.get(value.getId()).getPropertyChangeListener());
         this.carStatusValues.get(value.getId()).setValue(value.getValue());
+        support.firePropertyChange(value.getId(), oldValue, value);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -56,6 +86,10 @@ public class CarStatus {
 
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         support.removePropertyChangeListener(pcl);
+    }
+
+    public HashMap<String, Value> getCarStatusValues() {
+        return carStatusValues;
     }
 
     @NonNull

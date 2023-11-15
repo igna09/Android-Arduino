@@ -65,18 +65,18 @@ public class Canbus extends Fragment {
             }
         });
 
-        IntentFilter filter = ArduinoActions.CANBUS.getIntentFilter();
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                ArduinoMessage message = new ArduinoMessage(intent);
-                // TODO: add unit
-                String m = message.getKey() + " --- " + message.getValue();// + " " + message.getAction().getUnit();
-                Log.d("Canbus", "received message from canbus: " + m);
-                display(m);
-            }
-        };
-        context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED);
+//        IntentFilter filter = ArduinoActions.CANBUS.getIntentFilter();
+//        receiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                ArduinoMessage message = new ArduinoMessage(intent);
+//                // TODO: add unit
+//                String m = message.getKey() + " --- " + message.getValue();// + " " + message.getAction().getUnit();
+//                Log.d("Canbus", "received message from canbus: " + m);
+//                display(m);
+//            }
+//        };
+//        context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED);
 
         /*arduinoMessageViewModel = new ViewModelProvider(requireActivity()).get(ArduinoMessageViewModel.class);
         arduinoMessageViewModel.getMessages().observe(requireActivity(), messages -> {
@@ -108,10 +108,10 @@ public class Canbus extends Fragment {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         if (receiver != null) {
             getActivity().unregisterReceiver(receiver);
             receiver = null;
         }
-        super.onDestroy();
     }
 }

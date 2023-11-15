@@ -14,7 +14,7 @@ import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 
 public class SettingAction implements ArduinoMessageExecutorInterface {
     @Override
-    public void execute(Context context, ArduinoMessage message) {
+    public void execute(ArduinoMessage message) {
         String[] settingValues = ArduinoMessageUtilities.parseCanbusSetting(message.getValue());
         Setting setting = SettingsFactory.getSetting(settingValues[0], settingValues[1], settingValues[2], settingValues[3]);
 
