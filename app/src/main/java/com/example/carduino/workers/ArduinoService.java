@@ -2,6 +2,7 @@ package com.example.carduino.workers;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
@@ -74,8 +75,14 @@ public class ArduinoService extends Service implements ArduinoListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
             t.interrupt();
+
             stopForeground(true);
             stopSelfResult(startId);
+
+            if(ContextsSingleton.getInstance().getApplicationContext() != null) {
+                ContextsSingleton.getInstance().getMainActivityContext().finishAffinity();
+            }
+
             return START_NOT_STICKY;
         } else if(intent.getAction() != null && intent.getAction().equals("START_FOREGROUND")) {
             t = new Thread(new ArduinoRunnable());
@@ -88,17 +95,17 @@ public class ArduinoService extends Service implements ArduinoListener {
                     NotificationManager.IMPORTANCE_LOW
             );
 
-//            Intent stopIntent = new Intent(this, ArduinoService.class);
-//            stopIntent.putExtra("action", "STOP");
+            Intent stopIntent = new Intent(this, ArduinoService.class);
+            stopIntent.setAction("STOP_FOREGROUND");
 
             getSystemService(NotificationManager.class).createNotificationChannel(channel);
             NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNELID)
                     .setContentText("Service is running")
                     .setContentTitle("Service enabled")
-                    .setSmallIcon(R.drawable.ic_launcher_background);
+                    .setSmallIcon(R.drawable.ic_launcher_background)
                     // Add the cancel action to the notification which can
                     // be used to cancel the worker
-//                    .addAction(android.R.drawable.ic_delete, "STOP", PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+                    .addAction(android.R.drawable.ic_delete, "STOP", PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE));
 
             startForeground(1001, notification.build());
 
