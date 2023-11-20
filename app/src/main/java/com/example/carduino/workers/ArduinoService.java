@@ -21,6 +21,9 @@ import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.Logger;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import me.aflak.arduino.Arduino;
 import me.aflak.arduino.ArduinoListener;
 
@@ -29,7 +32,7 @@ public class ArduinoService extends Service implements ArduinoListener {
     private class ArduinoRunnable implements  Runnable {
         @Override
         public void run() {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
 //                            Log.e("Service", "Service is running...");
 //                            Logger.getInstance().log("Service is running...");
                 try {
@@ -39,9 +42,12 @@ public class ArduinoService extends Service implements ArduinoListener {
                     onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + getRandomNumber(0, 5000)).getBytes());
 //                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Logger.getInstance().log("service stopped");
+//                    e.printStackTrace();
+                    return;
                 }
             }
+            Logger.getInstance().log("service stopped");
         }
 
         public int getRandomNumber(int min, int max) {
@@ -66,11 +72,12 @@ public class ArduinoService extends Service implements ArduinoListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.getExtras() != null && intent.getExtras().get("action") != null && intent.getExtras().get("action").equals("STOP")) {
+        if (intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
             t.interrupt();
             stopForeground(true);
-            stopSelf();
-        } else {
+            stopSelfResult(startId);
+            return START_NOT_STICKY;
+        } else if(intent.getAction() != null && intent.getAction().equals("START_FOREGROUND")) {
             t = new Thread(new ArduinoRunnable());
             t.start();
 
@@ -102,8 +109,11 @@ public class ArduinoService extends Service implements ArduinoListener {
 
     @Override
     public void onDestroy() {
+        if(t != null) {
+            t.interrupt();
+        }
+        arduino.close();
         super.onDestroy();
-        t.interrupt();
     }
 
     @Nullable
@@ -138,22 +148,23 @@ public class ArduinoService extends Service implements ArduinoListener {
         Log.d("ArduinoWorker", "arduino message: " + message);
         Logger.getInstance().log("arduino message: " + message);
 
-        String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message);
+        try {
+            String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message);
 
-        if(splittedMessage.length == 3) {
-            Logger.getInstance().log("good message, sending it");
-            ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
-            ArduinoMessageExecutorInterface action = null;
-            try {
+            if (splittedMessage.length == 3) {
+                Logger.getInstance().log("good message, sending it");
+                ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
+                ArduinoMessageExecutorInterface action = null;
                 action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
+                action.execute(arduinoMessage);
+            } else {
+                Logger.getInstance().log("malformed message");
             }
-            action.execute(arduinoMessage);
-        } else {
-            Logger.getInstance().log("malformed message");
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            Logger.getInstance().log(sw.toString());
         }
     }
 

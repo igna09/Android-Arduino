@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
+import com.example.carduino.mainactivity.activities.MainActivity;
 import com.example.carduino.shared.models.ArduinoActions;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.models.ArduinoMessageViewModel;
@@ -54,6 +55,8 @@ public class Test extends Fragment implements ArduinoListener {
         displayTextView.setSingleLine(false);
 
         arduino = new Arduino(getActivity());
+
+        sendBtn.setOnClickListener(v -> ((MainActivity)getActivity()).stopForegroundService());
     }
 
     @Override
