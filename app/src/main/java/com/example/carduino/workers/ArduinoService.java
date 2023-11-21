@@ -37,11 +37,11 @@ public class ArduinoService extends Service implements ArduinoListener {
 //                            Log.e("Service", "Service is running...");
 //                            Logger.getInstance().log("Service is running...");
                 try {
-                    long s = getRandomNumber(1, 10) * 1000;
-                    Log.d("sleep", "Sleeping for " + s);
-                    Thread.sleep(s);
-                    onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + getRandomNumber(0, 5000)).getBytes());
-//                    Thread.sleep(1000);
+//                    long s = getRandomNumber(1, 10) * 1000;
+//                    Log.d("sleep", "Sleeping for " + s);
+//                    Thread.sleep(s);
+//                    onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + getRandomNumber(0, 5000)).getBytes());
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     Logger.getInstance().log("service stopped");
 //                    e.printStackTrace();
@@ -156,7 +156,7 @@ public class ArduinoService extends Service implements ArduinoListener {
         Logger.getInstance().log("arduino message: " + message);
 
         try {
-            String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message);
+            String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
             if (splittedMessage.length == 3) {
                 Logger.getInstance().log("good message, sending it");

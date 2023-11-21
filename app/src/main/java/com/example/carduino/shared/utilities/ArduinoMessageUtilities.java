@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class ArduinoMessageUtilities {
     private static String[] parseMessage(String message, String delimeter) {
         String[] values = message.split(delimeter, -1);
-        values = Arrays.stream(values).map(s -> s.isEmpty() ? null : s).toArray(String[]::new);
+        values = Arrays.stream(values).filter(s -> !s.isEmpty()).toArray(String[]::new);
         return values;
     }
 
