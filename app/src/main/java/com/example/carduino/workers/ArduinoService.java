@@ -158,7 +158,14 @@ public class ArduinoService extends Service implements ArduinoListener {
         try {
             String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
-            if (splittedMessage.length == 3) {
+            boolean existsAction = true;
+            try {
+                CanbusActions.valueOf(splittedMessage[0]);
+            } catch (IllegalArgumentException e) {
+                existsAction = false;
+            }
+
+            if (splittedMessage.length == 3 && existsAction) {
                 Logger.getInstance().log("good message, sending it");
                 ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
                 ArduinoMessageExecutorInterface action = null;

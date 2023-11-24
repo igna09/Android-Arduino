@@ -1,7 +1,7 @@
 package com.example.carduino.shared.models.carstatus.values;
 
-public class KpaPressure extends Value<Integer> {
-    public KpaPressure(String id, Integer pressure) {
+public class KpaPressure extends Value<Float> {
+    public KpaPressure(String id, Float pressure) {
         super(id, pressure, "Kpa");
     }
 
@@ -10,7 +10,7 @@ public class KpaPressure extends Value<Integer> {
     }
 
     @Override
-    public Integer parseValueFromString(String value) {
-        return Integer.parseInt(value);
+    public Float parseValueFromString(String value) {
+        return Float.parseFloat(value);
     }
 }
