@@ -1,4 +1,4 @@
-package com.example.carduino.test;
+package com.example.carduino.carstatus;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,17 +17,19 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
-import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
 import com.example.carduino.shared.models.carstatus.values.Value;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
+import com.example.carduino.test.Test;
 
 import java.beans.PropertyChangeListenerProxy;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Test extends Fragment {
+public class Carstatus extends Fragment {
     GridLayout gridLayout;
     List<CardModel> cards;
 
@@ -33,48 +37,11 @@ public class Test extends Fragment {
     final int VIEW_ROW_COUNT = 3;
     final int MARGIN = 5;
 
-    class CardModel {
-        String title;
-        String value;
-        String unit;
-        Integer row;
-        Integer column;
-        Integer columnSpan;
-        Integer rowSpan;
-        Integer textSize;
-        Integer width;
-        Integer height;
-        CarStatusEnum carstatusEnum;
-        PropertyChangeListenerProxy propertyChangeListener;
-
-        public CardModel(String title, String value, String unit, int row, int column) {
-            this.title = title;
-            this.value = value;
-            this.unit = unit;
-            this.row = row;
-            this.column = column;
-            this.columnSpan = 1;
-            this.rowSpan = 1;
-            this.textSize = 16;
-        }
-
-        public CardModel(int row, int column) {
-            this.title = "-";
-            this.value = "-";
-            this.unit = "-";
-            this.row = row;
-            this.column = column;
-            this.columnSpan = 1;
-            this.rowSpan = 1;
-            this.textSize = 16;
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View r = inflater.inflate(R.layout.fragment_test, container, false);
-        this.gridLayout = r.findViewById(R.id.test_grid_view);
+        View r = inflater.inflate(R.layout.fragment_carstatus, container, false);
+        this.gridLayout = r.findViewById(R.id.carstatus_grid_view_container);
 
         cards = Arrays.stream(CarstatusCardEnum.values()).map(carstatusCardEnum -> {
             CardModel card = new CardModel(carstatusCardEnum.row, carstatusCardEnum.column);
@@ -151,21 +118,6 @@ public class Test extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        /*GridView gridView = view.findViewById(R.id.test_grid_view);
-        ArrayList<Model> courseModelArrayList = new ArrayList<>();
-
-        for(int i = 0; i < 15; i++) {
-            courseModelArrayList.add(new Model("title_" + i, "value_" + i, "unit_" + i));
-        }
-
-        Adapter adapter = new Adapter(getActivity(), courseModelArrayList);
-        gridView.setAdapter(adapter);*/
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override

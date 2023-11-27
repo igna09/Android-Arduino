@@ -24,7 +24,7 @@ public abstract class Value<T> {
     }
 
     public void setValue(T value) {
-        this.value = value;
+        this.value = transormFunction(value);
     }
 
     public String getUnit() {
@@ -52,6 +52,10 @@ public abstract class Value<T> {
     }
 
     public abstract T parseValueFromString(String value);
+
+    public T transormFunction(T value) {
+        return value;
+    }
 
     @NonNull
     @Override

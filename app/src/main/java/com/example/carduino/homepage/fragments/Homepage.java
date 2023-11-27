@@ -12,7 +12,7 @@ import android.widget.GridView;
 
 import com.example.carduino.R;
 import com.example.carduino.canbus.fragments.Canbus;
-import com.example.carduino.carstatus.fragments.Carstatus;
+import com.example.carduino.carstatus.Carstatus;
 import com.example.carduino.homepage.adapters.HomepageGridButtonAdapter;
 import com.example.carduino.homepage.models.HomepageGridButtonModel;
 import com.example.carduino.settings.fragments.Settings;

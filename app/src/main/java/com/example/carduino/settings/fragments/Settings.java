@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  * workflow:
- * android ({@link com.example.carduino.mainactivity.activities.MainActivity} asks for settings --> arduino can nodes responds for their settings --> android collects all settings in {@link com.example.carduino.shared.singletons.SharedDataSingleton} --> when opened {@link Settings} expose stored settings if any
+ * android fragment settings asks for settings --> arduino can nodes responds for their settings --> android collects all settings in {@link com.example.carduino.shared.singletons.SharedDataSingleton} --> when opened {@link Settings} expose stored settings if any
  * automatic backlight sensor
  * Specchietto si abbassa con retro
  * Finestrino si apre con telecomando

@@ -38,7 +38,9 @@ public class PermissionUtilities {
             return checkVal == PackageManager.PERMISSION_DENIED;
         }).collect(Collectors.toList());
         if(!missingPermissions.isEmpty()) {
-            ActivityCompat.requestPermissions(ContextsSingleton.getInstance().getMainActivityContext(), missingPermissions.toArray(String[]::new), 0);
+            String[] a = new String[missingPermissions.size()];
+            for(int i = 0; i < missingPermissions.size(); i++) a[i] = missingPermissions.get(i);
+            ActivityCompat.requestPermissions(ContextsSingleton.getInstance().getMainActivityContext(), a, 0);
         }
         Boolean writePermission = Settings.System.canWrite(ContextsSingleton.getInstance().getApplicationContext());
         if(!writePermission) {

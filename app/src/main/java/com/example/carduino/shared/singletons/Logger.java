@@ -6,6 +6,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,5 +59,12 @@ public class Logger {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void logException(Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        log(sw.toString());
     }
 }

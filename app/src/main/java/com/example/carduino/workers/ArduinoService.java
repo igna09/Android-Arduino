@@ -18,9 +18,11 @@ import com.example.carduino.R;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.shared.models.ArduinoMessage;
+import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.Logger;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
+import com.example.carduino.shared.utilities.LoggerUtilities;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -30,6 +32,7 @@ import me.aflak.arduino.ArduinoListener;
 
 public class ArduinoService extends Service implements ArduinoListener {
     private Arduino arduino;
+    public CarStatusSingleton carstatusSingleton;
     private class ArduinoRunnable implements  Runnable {
         @Override
         public void run() {
@@ -37,18 +40,18 @@ public class ArduinoService extends Service implements ArduinoListener {
 //                            Log.e("Service", "Service is running...");
 //                            Logger.getInstance().log("Service is running...");
                 try {
-//                    long s = getRandomNumber(1, 10) * 1000;
-//                    Log.d("sleep", "Sleeping for " + s);
-//                    Thread.sleep(s);
-//                    onArduinoMessage(("CAR_STATUS;INTERNAL_LUMINANCE;" + getRandomNumber(0, 5000)).getBytes());
-                    Thread.sleep(1000);
+                    long s = getRandomNumber(1, 10) * 1000;
+                    Log.d("sleep", "Sleeping for " + s);
+                    Thread.sleep(s);
+                    onArduinoMessage(("CAR_STATUS;SPEED;" + getRandomNumber(0, 110)).getBytes());
+                    onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getRandomNumber(0, 10)).getBytes());
+//                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    Logger.getInstance().log("service stopped");
-//                    e.printStackTrace();
+                    LoggerUtilities.logException(e);
                     return;
                 }
             }
-            Logger.getInstance().log("service stopped");
+            LoggerUtilities.logMessage("ArduinoService", "service stopped");
         }
 
         public int getRandomNumber(int min, int max) {
@@ -69,6 +72,8 @@ public class ArduinoService extends Service implements ArduinoListener {
         arduino.addVendorId(6790);
         arduino.addVendorId(0); //just for local test
         arduino.setArduinoListener(this);
+
+        this.carstatusSingleton = CarStatusSingleton.getInstance();
     }
 
     @Override
@@ -84,7 +89,7 @@ public class ArduinoService extends Service implements ArduinoListener {
             }
 
             return START_NOT_STICKY;
-        } else if(intent.getAction() != null && intent.getAction().equals("START_FOREGROUND")) {
+        } else if(intent.getAction() == null || (intent.getAction() != null && intent.getAction().equals("START_FOREGROUND"))) {
             t = new Thread(new ArduinoRunnable());
             t.start();
 
@@ -131,15 +136,13 @@ public class ArduinoService extends Service implements ArduinoListener {
 
     @Override
     public void onArduinoAttached(UsbDevice device) {
-        Log.d("ArduinoWorker", "arduino attached");
-        Logger.getInstance().log("arduino attached");
+        LoggerUtilities.logMessage("ArduinoService", "arduino attached");
         arduino.open(device);
     }
 
     @Override
     public void onArduinoDetached() {
-        Logger.getInstance().log("arduino detached");
-        Log.d("ArduinoWorker", "arduino detached");
+        LoggerUtilities.logMessage("ArduinoService", "arduino detached");
     }
 
     /**
@@ -150,10 +153,8 @@ public class ArduinoService extends Service implements ArduinoListener {
      */
     @Override
     public void onArduinoMessage(byte[] bytes) {
-        Logger.getInstance().log("onArduinoMessage");
         String message = new String(bytes);
-        Log.d("ArduinoWorker", "arduino message: " + message);
-        Logger.getInstance().log("arduino message: " + message);
+        LoggerUtilities.logMessage("ArduinoService",  "arduino message: " + message);
 
         try {
             String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
@@ -166,19 +167,15 @@ public class ArduinoService extends Service implements ArduinoListener {
             }
 
             if (splittedMessage.length == 3 && existsAction) {
-                Logger.getInstance().log("good message, sending it");
                 ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
                 ArduinoMessageExecutorInterface action = null;
                 action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();
                 action.execute(arduinoMessage);
             } else {
-                Logger.getInstance().log("malformed message");
+                LoggerUtilities.logMessage("ArduinoService", "malformed message");
             }
         } catch (Exception e) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            Logger.getInstance().log(sw.toString());
+            LoggerUtilities.logException(e);
         }
     }
 
@@ -186,14 +183,12 @@ public class ArduinoService extends Service implements ArduinoListener {
     public void onArduinoOpened() {
         String str = "arduino opened...";
 //        arduino.send(str.getBytes());
-        Log.d("ArduinoWorker", str);
-        Logger.getInstance().log(str);
+        LoggerUtilities.logMessage("ArduinoService", str);
     }
 
     @Override
     public void onUsbPermissionDenied() {
-        Log.d("ArduinoWorker", "Permission denied. Attempting again in 3 sec...");
-        Logger.getInstance().log("Permission denied. Attempting again in 3 sec...");
+        LoggerUtilities.logMessage("ArduinoService",  "Permission denied. Attempting again in 3 sec...");
 
         if (Looper.myLooper() == null) {
             Looper.prepare();
