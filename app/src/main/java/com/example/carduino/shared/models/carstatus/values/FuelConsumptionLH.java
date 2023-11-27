@@ -1,6 +1,6 @@
 package com.example.carduino.shared.models.carstatus.values;
 
-public class FuelConsumptionLH extends Value<Float> {
+public class FuelConsumptionLH extends ValueFloat {
     public FuelConsumptionLH(String id, Float consumption) {
         super(id, consumption, "l/h");
     }

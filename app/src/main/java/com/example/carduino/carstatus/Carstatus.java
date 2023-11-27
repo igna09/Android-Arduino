@@ -20,9 +20,9 @@ import com.example.carduino.R;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
 import com.example.carduino.shared.models.carstatus.values.Value;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
-import com.example.carduino.test.Test;
 
 import java.beans.PropertyChangeListenerProxy;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

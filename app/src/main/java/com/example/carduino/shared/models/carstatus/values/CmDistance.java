@@ -1,6 +1,6 @@
 package com.example.carduino.shared.models.carstatus.values;
 
-public class CmDistance extends Value<Float> {
+public class CmDistance extends ValueFloat {
     public CmDistance(String id, Float centimeters) {
         super(id, centimeters, "cm");
     }

@@ -45,6 +45,7 @@ public class ArduinoService extends Service implements ArduinoListener {
                     Thread.sleep(s);
                     onArduinoMessage(("CAR_STATUS;SPEED;" + getRandomNumber(0, 110)).getBytes());
                     onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getRandomNumber(0, 10)).getBytes());
+                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getRandomNumber(1000, 2500)).getBytes());
 //                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     LoggerUtilities.logException(e);

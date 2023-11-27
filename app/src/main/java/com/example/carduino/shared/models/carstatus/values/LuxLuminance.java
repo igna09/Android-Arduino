@@ -1,6 +1,6 @@
 package com.example.carduino.shared.models.carstatus.values;
 
-public class LuxLuminance extends Value<Integer> {
+public class LuxLuminance extends ValueInteger {
     public LuxLuminance(String id, Integer luminance) {
         super(id, luminance, "lux");
     }
