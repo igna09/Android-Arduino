@@ -22,11 +22,9 @@ import com.example.carduino.shared.models.carstatus.values.Value;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
 
 import java.beans.PropertyChangeListenerProxy;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Carstatus extends Fragment {
@@ -47,11 +45,17 @@ public class Carstatus extends Fragment {
             CardModel card = new CardModel(carstatusCardEnum.row, carstatusCardEnum.column);
             card.carstatusEnum = carstatusCardEnum.carstatusEnum;
             card.title = carstatusCardEnum.label;
-
             try {
                 card.unit = ((Value) card.carstatusEnum.getType().newInstance()).getUnit();
             } catch (IllegalAccessException | java.lang.InstantiationException e) {
                 throw new RuntimeException(e);
+            }
+            final HashMap carStatusValues = CarStatusSingleton.getInstance().getCarStatus().getCarStatusValues();
+            if(carStatusValues.containsKey(carstatusCardEnum.carstatusEnum.name()) && carStatusValues.get(carstatusCardEnum.carstatusEnum.name()) != null) {
+                Value v = (Value) carStatusValues.get(carstatusCardEnum.carstatusEnum.name());
+                if(v.getValue() != null) {
+                    card.value = v.getValue().toString();
+                }
             }
 
             return card;

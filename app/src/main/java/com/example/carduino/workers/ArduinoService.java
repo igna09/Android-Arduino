@@ -18,21 +18,20 @@ import com.example.carduino.R;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.shared.models.ArduinoMessage;
+import com.example.carduino.shared.singletons.ArduinoMessageSingleton;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
-import com.example.carduino.shared.singletons.Logger;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 import com.example.carduino.shared.utilities.LoggerUtilities;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import me.aflak.arduino.Arduino;
 import me.aflak.arduino.ArduinoListener;
 
 public class ArduinoService extends Service implements ArduinoListener {
     private Arduino arduino;
-    public CarStatusSingleton carstatusSingleton;
+    private CarStatusSingleton carstatusSingleton;
+    private ArduinoMessageSingleton arduinoMessageSingleton;
+
     private class ArduinoRunnable implements  Runnable {
         @Override
         public void run() {
@@ -76,6 +75,9 @@ public class ArduinoService extends Service implements ArduinoListener {
 
         this.carstatusSingleton = CarStatusSingleton.getInstance();
         this.carstatusSingleton.getCarStatus();
+
+        this.arduinoMessageSingleton = ArduinoMessageSingleton.getInstance();
+        this.arduinoMessageSingleton.getCircularArrayList();
     }
 
     @Override
@@ -157,6 +159,7 @@ public class ArduinoService extends Service implements ArduinoListener {
     public void onArduinoMessage(byte[] bytes) {
         String message = new String(bytes);
         LoggerUtilities.logMessage("ArduinoService",  "arduino message: " + message);
+        this.arduinoMessageSingleton.getCircularArrayList().add(message);
 
         try {
             String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());

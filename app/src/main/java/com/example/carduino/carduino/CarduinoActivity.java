@@ -83,8 +83,8 @@ public class CarduinoActivity extends AppCompatActivity {
 
         menuItems = new ArrayList<>();
         menuItems.add(new MyMenuItem(0, "Carstatus", R.drawable.baseline_directions_car_24, Carstatus.class));
-        menuItems.add(new MyMenuItem(1, "Settings", R.drawable.baseline_settings_24, Settings.class));
         menuItems.add(new MyMenuItem(2, "CAN bus", R.drawable.baseline_usb_24, Canbus.class));
+        menuItems.add(new MyMenuItem(1, "Settings", R.drawable.baseline_settings_24, Settings.class));
         menuItems.add(new MyMenuItem(3, "Test", R.drawable.baseline_tips_and_updates_24, Test.class));
 
         NavigationRailView navigationView = findViewById(R.id.navigation_rail);

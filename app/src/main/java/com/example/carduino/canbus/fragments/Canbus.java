@@ -22,15 +22,16 @@ import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
 import com.example.carduino.shared.models.ArduinoActions;
-import com.example.carduino.shared.models.ArduinoMessage;
-import com.example.carduino.shared.models.ArduinoMessageViewModel;
+import com.example.carduino.shared.singletons.ArduinoMessageSingleton;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class Canbus extends Fragment {
     private TextView displayTextView;
     private EditText editText;
     private Button sendBtn;
-    private BroadcastReceiver receiver;
-    private ArduinoMessageViewModel arduinoMessageViewModel;
+    private PropertyChangeListener pcl;
 
     @Nullable
     @Override
@@ -65,23 +66,13 @@ public class Canbus extends Fragment {
             }
         });
 
-//        IntentFilter filter = ArduinoActions.CANBUS.getIntentFilter();
-//        receiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                ArduinoMessage message = new ArduinoMessage(intent);
-//                // TODO: add unit
-//                String m = message.getKey() + " --- " + message.getValue();// + " " + message.getAction().getUnit();
-//                Log.d("Canbus", "received message from canbus: " + m);
-//                display(m);
-//            }
-//        };
-//        context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED);
-
-        /*arduinoMessageViewModel = new ViewModelProvider(requireActivity()).get(ArduinoMessageViewModel.class);
-        arduinoMessageViewModel.getMessages().observe(requireActivity(), messages -> {
-            display(messages.get(messages.size() - 1).getMessage());
-        });*/
+        this.pcl = new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                display((String) evt.getNewValue());
+            }
+        };
+        ArduinoMessageSingleton.getInstance().getCircularArrayList().addPropertyChangeListener(pcl);
     }
 
     public void display(final String message){
@@ -109,9 +100,8 @@ public class Canbus extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (receiver != null) {
-            getActivity().unregisterReceiver(receiver);
-            receiver = null;
+        if(pcl != null) {
+            ArduinoMessageSingleton.getInstance().getCircularArrayList().removePropertyChangeListener(pcl);
         }
     }
 }

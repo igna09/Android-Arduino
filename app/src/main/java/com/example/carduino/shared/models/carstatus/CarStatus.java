@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class CarStatus {
     private HashMap <String, Value> carStatusValues;
-    private PropertyChangeSupport support;
+    public PropertyChangeSupport support;
     private PropertyChangeListener propertyChangeListener;
 
     public CarStatus() {
