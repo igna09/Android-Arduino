@@ -75,6 +75,7 @@ public class ArduinoService extends Service implements ArduinoListener {
         arduino.setArduinoListener(this);
 
         this.carstatusSingleton = CarStatusSingleton.getInstance();
+        this.carstatusSingleton.getCarStatus();
     }
 
     @Override
