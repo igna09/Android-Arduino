@@ -1,11 +1,9 @@
 package com.example.carduino.shared.models.carstatus;
 
-import com.example.carduino.shared.models.carstatus.propertychangelisteners.FuelConsumptionLHCarStatusPropertyChangeListener;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.InternalLuminanceCarStatusPropertyChangeListener;
 import com.example.carduino.shared.models.carstatus.values.CelsiusTemperature;
 import com.example.carduino.shared.models.carstatus.values.CmDistance;
 import com.example.carduino.shared.models.carstatus.values.FuelConsumptionKmL;
-import com.example.carduino.shared.models.carstatus.values.FuelConsumptionLH;
 import com.example.carduino.shared.models.carstatus.values.InjectedQuantity;
 import com.example.carduino.shared.models.carstatus.values.KmhSpeed;
 import com.example.carduino.shared.models.carstatus.values.BarPressure;
@@ -28,8 +26,7 @@ public enum CarStatusEnum {
     TRIP_AVERAGE_SPEED("TRIP_AVERAGE_SPEED", Category.TRIP, KmhSpeed.class),
     TRIP_MAX_SPEED("TRIP_MAX_SPEED", Category.TRIP, KmhSpeed.class),
     INJECTED_QUANTITY("INJECTED_QUANTITY", Category.CAR, InjectedQuantity.class),
-    FUEL_CONSUMPTION("FUEL_CONSUMPTION", Category.CAR, FuelConsumptionLH.class, FuelConsumptionLHCarStatusPropertyChangeListener.class),
-    FUEL_CONSUMPTION_KM_L("FUEL_CONSUMPTION_KM_L", Category.CAR, FuelConsumptionKmL.class);
+    FUEL_CONSUMPTION("FUEL_CONSUMPTION", Category.CAR, FuelConsumptionKmL.class);
 
     private enum Category {
         ENGINE,

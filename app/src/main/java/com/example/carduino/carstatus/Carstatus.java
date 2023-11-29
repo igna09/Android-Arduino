@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,6 +39,7 @@ public class Carstatus extends Fragment {
         View r = inflater.inflate(R.layout.fragment_carstatus, container, false);
         this.gridLayout = r.findViewById(R.id.carstatus_grid_view_container);
 
+        final HashMap carStatusValues = CarStatusSingleton.getInstance().getCarStatus().getCarStatusValues();
         cards = Arrays.stream(CarstatusCardEnum.values()).map(carstatusCardEnum -> {
             CardModel card = new CardModel(carstatusCardEnum.row, carstatusCardEnum.column);
             card.carstatusEnum = carstatusCardEnum.carstatusEnum;
@@ -50,12 +49,15 @@ public class Carstatus extends Fragment {
             } catch (IllegalAccessException | java.lang.InstantiationException e) {
                 throw new RuntimeException(e);
             }
-            final HashMap carStatusValues = CarStatusSingleton.getInstance().getCarStatus().getCarStatusValues();
             if(carStatusValues.containsKey(carstatusCardEnum.carstatusEnum.name()) && carStatusValues.get(carstatusCardEnum.carstatusEnum.name()) != null) {
                 Value v = (Value) carStatusValues.get(carstatusCardEnum.carstatusEnum.name());
                 if(v.getValue() != null) {
                     card.value = v.getValue().toString();
+                } else {
+                    card.value = "-";
                 }
+            } else {
+                card.value = "-";
             }
 
             return card;
@@ -76,13 +78,16 @@ public class Carstatus extends Fragment {
                     cardModel.width = (viewWidth - ((VIEW_COLUMN_COUNT - viewColumnSpan) * (MARGIN * 2))) / VIEW_COLUMN_COUNT;
                     cardModel.height = (viewHeight - ((VIEW_ROW_COUNT - viewRowSpan) * (MARGIN * 2))) / VIEW_ROW_COUNT;
 
-                    CardView cardView = createCardModel(gridLayout, cardModel);
+                    CardView cardView = addCardView(gridLayout, cardModel);
+                    cardModel.cardView = cardView;
+
+                    updateCardView(cardModel);
 
                     cardModel.propertyChangeListener = new PropertyChangeListenerProxy(cardModel.carstatusEnum.name(), new PropertyChangeListener<Value>() {
                         @Override
                         public void onPropertyChange(String propertyName, Value oldValue, Value newValue) {
-                            TextView textView = (TextView) cardView.findViewById(R.id.value);
-                            textView.setText(newValue.getValue().toString());
+                            cardModel.value = newValue.getValue().toString();
+                            updateCardView(cardModel);
                         }
                     });
                     CarStatusSingleton.getInstance().getCarStatus().addPropertyChangeListener(cardModel.propertyChangeListener);
@@ -93,18 +98,18 @@ public class Carstatus extends Fragment {
         return r;
     }
 
-    CardView createCardModel(ViewGroup container, CardModel model){
+    CardView addCardView(ViewGroup container, CardModel model){
         CardView v = (CardView) LayoutInflater.from(getContext()).inflate(R.layout.card_text, null);
 //        v.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
 
         TextView title = v.findViewById(R.id.title);
         title.setText(model.title);
-        title.setTextSize(20);
-        TextView value = v.findViewById(R.id.value);
-        value.setText(model.value);
+//        title.setTextSize(11);
+//        TextView value = v.findViewById(R.id.value);
+//        value.setText(model.value);
         TextView unit = v.findViewById(R.id.unit);
         unit.setText(model.unit);
-        unit.setTextSize(20);
+//        unit.setTextSize(11);
 
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
         lp.setGravity(Gravity.CENTER);
@@ -117,6 +122,11 @@ public class Carstatus extends Fragment {
         container.addView(v, lp);
 
         return v;
+    }
+
+    public void updateCardView(CardModel cardModel) {
+        TextView textView = cardModel.cardView.findViewById(R.id.value);
+        textView.setText(cardModel.value);
     }
 
     @Override

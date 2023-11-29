@@ -1,5 +1,7 @@
 package com.example.carduino.carstatus;
 
+import androidx.cardview.widget.CardView;
+
 import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 
 import java.beans.PropertyChangeListenerProxy;
@@ -17,6 +19,7 @@ class CardModel {
     Integer height;
     CarStatusEnum carstatusEnum;
     PropertyChangeListenerProxy propertyChangeListener;
+    CardView cardView;
 
     public CardModel(String title, String value, String unit, int row, int column) {
         this.title = title;
