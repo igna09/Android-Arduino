@@ -39,12 +39,12 @@ public class ArduinoService extends Service implements ArduinoListener {
 //                            Log.e("Service", "Service is running...");
 //                            Logger.getInstance().log("Service is running...");
                 try {
-//                    long s = getRandomNumber(1, 10) * 1000;
+//                    long s = getIntegerRandomNumber(1, 10) * 1000;
 //                    Log.d("sleep", "Sleeping for " + s);
 //                    Thread.sleep(s);
-//                    onArduinoMessage(("CAR_STATUS;SPEED;" + getRandomNumber(0, 110)).getBytes());
-//                    onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getRandomNumber(0, 10)).getBytes());
-//                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getRandomNumber(1000, 2500)).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200)).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10)).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500)).getBytes());
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     LoggerUtilities.logException(e);
@@ -54,8 +54,12 @@ public class ArduinoService extends Service implements ArduinoListener {
             LoggerUtilities.logMessage("ArduinoService", "service stopped");
         }
 
-        public int getRandomNumber(int min, int max) {
+        public Integer getIntegerRandomNumber(int min, int max) {
             return (int) ((Math.random() * (max - min)) + min);
+        }
+
+        public Float getFloatRandomNumber(int min, int max) {
+            return (float) ((Math.random() * (max - min)) + min);
         }
     }
 
