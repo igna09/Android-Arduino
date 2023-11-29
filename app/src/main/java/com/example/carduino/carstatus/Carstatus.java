@@ -63,6 +63,9 @@ public class Carstatus extends Fragment {
             return card;
         }).collect(Collectors.toList());
 
+        final int viewColumnSpan = cards.stream().reduce(0, (acc, cur) -> acc + (cur.columnSpan - 1), Integer::sum);
+        final int viewRowSpan = cards.stream().reduce(0, (acc, cur) -> acc + (cur.rowSpan - 1), Integer::sum);
+
         ViewTreeObserver vto = gridLayout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -70,9 +73,6 @@ public class Carstatus extends Fragment {
                 gridLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 final int viewWidth  = gridLayout.getMeasuredWidth();
                 final int viewHeight = gridLayout.getMeasuredHeight();
-
-                final int viewColumnSpan = cards.stream().reduce(0, (acc, cur) -> acc + (cur.columnSpan - 1), Integer::sum);
-                final int viewRowSpan = cards.stream().reduce(0, (acc, cur) -> acc + (cur.rowSpan - 1), Integer::sum);
 
                 cards.forEach(cardModel -> {
                     cardModel.width = (viewWidth - ((VIEW_COLUMN_COUNT - viewColumnSpan) * (MARGIN * 2))) / VIEW_COLUMN_COUNT;
