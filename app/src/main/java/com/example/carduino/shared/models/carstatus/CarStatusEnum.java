@@ -9,6 +9,7 @@ import com.example.carduino.shared.models.carstatus.values.KmhSpeed;
 import com.example.carduino.shared.models.carstatus.values.BarPressure;
 import com.example.carduino.shared.models.carstatus.values.LuxLuminance;
 import com.example.carduino.shared.models.carstatus.values.Rpm;
+import com.example.carduino.shared.models.carstatus.values.TurboBarPressure;
 
 import java.util.Arrays;
 
@@ -20,7 +21,7 @@ public enum CarStatusEnum {
     FRONT_DISTANCE("FRONT_DISTANCE", Category.CAR, CmDistance.class),
     ENGINE_WATER_COOLING_TEMPERATURE("ENGINE_WATER_COOLING_TEMPERATURE", Category.ENGINE, CelsiusTemperature.class/*, EngineWaterCoolingTemperatureCarStatusPropertyChangeListener.class*/),
     ENGINE_OIL_TEMPERATURE("ENGINE_OIL_TEMPERATURE", Category.ENGINE, CelsiusTemperature.class),
-    ENGINE_INTAKE_MANIFOLD_PRESSURE("ENGINE_INTAKE_MANIFOLD_PRESSURE", Category.ENGINE, BarPressure.class),
+    ENGINE_INTAKE_MANIFOLD_PRESSURE("ENGINE_INTAKE_MANIFOLD_PRESSURE", Category.ENGINE, TurboBarPressure.class),
     ENGINE_RPM("ENGINE_RPM", Category.ENGINE, Rpm.class),
     //TRIP_DURATION("TRIP_DURATION", Category.TRIP, Duration.class),
     TRIP_AVERAGE_SPEED("TRIP_AVERAGE_SPEED", Category.TRIP, KmhSpeed.class),
