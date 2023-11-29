@@ -8,9 +8,4 @@ public class CelsiusTemperature extends ValueFloat {
     public CelsiusTemperature() {
         super(null, null, "°C");
     }
-
-    @Override
-    public Float parseValueFromString(String value) {
-        return Float.parseFloat(value);
-    }
 }

@@ -8,9 +8,4 @@ public class Rpm extends ValueInteger {
     public Rpm() {
         super(null, null, "rpm");
     }
-
-    @Override
-    public Integer parseValueFromString(String value) {
-        return Integer.parseInt(value);
-    }
 }

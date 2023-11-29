@@ -7,9 +7,4 @@ public class LuxLuminance extends ValueInteger {
     public LuxLuminance() {
         super(null, null, "lux");
     }
-
-    @Override
-    public Integer parseValueFromString(String value) {
-        return Integer.parseInt(value);
-    }
 }

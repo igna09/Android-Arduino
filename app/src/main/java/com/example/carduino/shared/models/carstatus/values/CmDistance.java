@@ -8,9 +8,4 @@ public class CmDistance extends ValueFloat {
     public CmDistance() {
         super(null, null, "cm");
     }
-
-    @Override
-    public Float parseValueFromString(String value) {
-        return Float.parseFloat(value);
-    }
 }

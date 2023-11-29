@@ -44,6 +44,7 @@ public class Carstatus extends Fragment {
             CardModel card = new CardModel(carstatusCardEnum.row, carstatusCardEnum.column);
             card.carstatusEnum = carstatusCardEnum.carstatusEnum;
             card.title = carstatusCardEnum.label;
+            card.transformator = carstatusCardEnum.transformator;
             try {
                 card.unit = ((Value) card.carstatusEnum.getType().newInstance()).getUnit();
             } catch (IllegalAccessException | java.lang.InstantiationException e) {
@@ -52,7 +53,7 @@ public class Carstatus extends Fragment {
             if(carStatusValues.containsKey(carstatusCardEnum.carstatusEnum.name()) && carStatusValues.get(carstatusCardEnum.carstatusEnum.name()) != null) {
                 Value v = (Value) carStatusValues.get(carstatusCardEnum.carstatusEnum.name());
                 if(v.getValue() != null) {
-                    card.value = v.getValue().toString();
+                    card.setValueWithTransformator(v.getValue().toString());
                 } else {
                     card.value = "-";
                 }
@@ -85,7 +86,7 @@ public class Carstatus extends Fragment {
                     cardModel.propertyChangeListener = new PropertyChangeListenerProxy(cardModel.carstatusEnum.name(), new PropertyChangeListener<Value>() {
                         @Override
                         public void onPropertyChange(String propertyName, Value oldValue, Value newValue) {
-                            cardModel.value = newValue.getValue().toString();
+                            cardModel.setValueWithTransformator(newValue.getValue().toString());
                             getActivity().runOnUiThread(() -> {
                                 updateCardView(cardModel);
                             });

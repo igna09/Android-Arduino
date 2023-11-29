@@ -8,9 +8,4 @@ public class InjectedQuantity extends ValueFloat {
     public InjectedQuantity() {
         super(null, null, "mg/stroke");
     }
-
-    @Override
-    public Float parseValueFromString(String value) {
-        return Float.parseFloat(value);
-    }
 }

@@ -8,9 +8,4 @@ public class KmhSpeed extends ValueInteger {
     public KmhSpeed() {
         super(null, null, "Km/h");
     }
-
-    @Override
-    public Integer parseValueFromString(String value) {
-        return Integer.parseInt(value);
-    }
 }

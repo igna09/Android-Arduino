@@ -8,9 +8,4 @@ public class FuelConsumptionKmL extends ValueFloat {
     public FuelConsumptionKmL() {
         super(null, null, "km/l");
     }
-
-    @Override
-    public Float parseValueFromString(String value) {
-        return Float.parseFloat(value);
-    }
 }
