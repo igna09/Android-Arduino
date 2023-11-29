@@ -27,6 +27,10 @@ public abstract class Value<T> {
         this.value = transormFunction(value);
     }
 
+    public void setValueWithoutTransform(T value) {
+        this.value = value;
+    }
+
     public String getUnit() {
         return unit;
     }

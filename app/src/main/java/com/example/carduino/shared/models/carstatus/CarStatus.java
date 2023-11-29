@@ -56,7 +56,7 @@ public class CarStatus {
             throw new RuntimeException(e);
         }
         oldValue.setId(this.carStatusValues.get(value.getId()).getId());
-        oldValue.setValue(this.carStatusValues.get(value.getId()).getValue());
+        oldValue.setValueWithoutTransform(this.carStatusValues.get(value.getId()).getValue());
         oldValue.setUnit(this.carStatusValues.get(value.getId()).getUnit());
         oldValue.setPropertyChangeListener(this.carStatusValues.get(value.getId()).getPropertyChangeListener());
         this.carStatusValues.put(value.getId(), value);
@@ -73,10 +73,10 @@ public class CarStatus {
             throw new RuntimeException(e);
         }
         oldValue.setId(this.carStatusValues.get(value.getId()).getId());
-        oldValue.setValue(this.carStatusValues.get(value.getId()).getValue());
+        oldValue.setValueWithoutTransform(this.carStatusValues.get(value.getId()).getValue());
         oldValue.setUnit(this.carStatusValues.get(value.getId()).getUnit());
         oldValue.setPropertyChangeListener(this.carStatusValues.get(value.getId()).getPropertyChangeListener());
-        this.carStatusValues.get(value.getId()).setValue(value.getValue());
+        this.carStatusValues.get(value.getId()).setValueWithoutTransform(value.getValue());
         support.firePropertyChange(value.getId(), oldValue, value);
     }
 

@@ -24,17 +24,17 @@ public class Duration extends Value<Duration.Time> {
 
     public Duration(Integer hours, Integer minutes, Integer seconds) {
         super();
-        setValue(new Time(hours, minutes, seconds));
+        setValueWithoutTransform(new Time(hours, minutes, seconds));
     }
 
     public Duration(Integer seconds) {
         super();
-        setValue(new Time(seconds));
+        setValueWithoutTransform(new Time(seconds));
     }
 
     public Duration() {
         super();
-        setValue(new Time());
+        setValueWithoutTransform(new Time());
     }
 
     @Override
