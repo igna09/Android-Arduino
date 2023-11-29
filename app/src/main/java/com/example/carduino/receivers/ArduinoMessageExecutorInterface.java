@@ -2,8 +2,8 @@ package com.example.carduino.receivers;
 
 import android.content.Context;
 
+import com.example.carduino.shared.Executor;
 import com.example.carduino.shared.models.ArduinoMessage;
 
-public interface ArduinoMessageExecutorInterface {
-    void execute(ArduinoMessage message);
+public interface ArduinoMessageExecutorInterface extends Executor<ArduinoMessage> {
 }

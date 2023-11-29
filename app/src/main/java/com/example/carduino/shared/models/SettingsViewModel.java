@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.carduino.settings.factory.Setting;
+import com.example.carduino.settings.settingfactory.Setting;
 
 import java.util.HashMap;
 

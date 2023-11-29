@@ -1,8 +1,5 @@
 package com.example.carduino.shared.utilities;
 
-import com.example.carduino.settings.factory.Setting;
-import com.example.carduino.shared.models.ArduinoActions;
-
 import java.util.Arrays;
 
 public class ArduinoMessageUtilities {
@@ -24,7 +21,7 @@ public class ArduinoMessageUtilities {
         return parseMessage(message, "-");
     }
 
-    public static String stringifyArduinoSetting(Setting setting) {
+    /*public static String stringifyArduinoSetting(Setting setting) {
         StringBuilder builder = new StringBuilder("");
         return builder.append(ArduinoActions.CANBUS)
                 .append(";")
@@ -39,5 +36,5 @@ public class ArduinoMessageUtilities {
                 .append(";")
                 .append(";")
                 .toString();
-    }
+    }*/
 }

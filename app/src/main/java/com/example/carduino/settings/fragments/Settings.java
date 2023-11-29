@@ -1,28 +1,19 @@
 package com.example.carduino.settings.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.carduino.R;
-import com.example.carduino.settings.adapters.SettingAdapter;
-import com.example.carduino.settings.factory.Setting;
-import com.example.carduino.shared.models.SettingsViewModel;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import com.example.carduino.settings.settingfactory.Setting;
+import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
+import com.example.carduino.shared.singletons.SettingsSingleton;
 
 /**
  * workflow:
@@ -33,8 +24,8 @@ import java.util.Map;
  * Specchietti chiusura automatica (se selettore non in posizione chiusa)
  */
 public class Settings extends Fragment {
-    private SettingsViewModel settingsViewModel;
-    private Observer observer;
+    private PropertyChangeListener pcl;
+
 
     @Nullable
     @Override
@@ -45,31 +36,40 @@ public class Settings extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        LinearLayout settingsList = (LinearLayout) view.findViewById(R.id.settings_list);
 
-        settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
-        observer = new Observer() {
+        SettingsSingleton.getInstance().getSettings().getSettings().values().forEach(setting -> {
+            if(setting.getView() != null) {
+                ViewGroup parent = (ViewGroup) setting.getView().getParent();
+                if (parent != null) {
+                    parent.removeView(setting.getView());
+                }
+                getActivity().runOnUiThread(() -> {
+                    settingsList.addView(setting.getView());
+                });
+            }
+        });
+
+        pcl = new PropertyChangeListener<Setting>() {
             @Override
-            public void onChanged(Object o) {
-                updateList(view, (HashMap<String, Setting>) o);
+            public void onPropertyChange(String propertyName, Setting oldValue, Setting newValue) {
+                if(newValue.getView() == null) {
+                    View v = newValue.generateView();
+                    getActivity().runOnUiThread(() -> {
+                        settingsList.addView(v);
+                    });
+                }
+                getActivity().runOnUiThread(() -> {
+                    newValue.updateView();
+                });
             }
         };
-        settingsViewModel.getSettings().observe(requireActivity(), observer);
-
-        updateList(view, (Map) settingsViewModel.getSettings().getValue());
+        SettingsSingleton.getInstance().getSettings().addPropertyChangeListener(pcl);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        settingsViewModel.getSettings().removeObserver(observer);
-    }
-
-    private void updateList(View view, Map settings) {
-        if(settings != null) {
-            ListView listView = view.findViewById(R.id.settings_list);
-
-            SettingAdapter adapter = new SettingAdapter(getActivity(), new ArrayList<>(settings.values()));
-            listView.setAdapter(adapter);
-        }
+        SettingsSingleton.getInstance().getSettings().removePropertyChangeListener(pcl);
     }
 }

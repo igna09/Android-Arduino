@@ -1,6 +1,6 @@
 package com.example.carduino.shared.singletons;
 
-import com.example.carduino.settings.factory.Setting;
+import com.example.carduino.settings.settingfactory.Setting;
 
 import java.util.HashMap;
 import java.util.Map;

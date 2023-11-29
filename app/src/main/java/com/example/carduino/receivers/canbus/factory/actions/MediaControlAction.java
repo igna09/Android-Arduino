@@ -1,22 +1,14 @@
 package com.example.carduino.receivers.canbus.factory.actions;
 
 import android.content.Context;
-import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.view.KeyEvent;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
-import com.example.carduino.settings.factory.Setting;
-import com.example.carduino.settings.factory.SettingsFactory;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.models.MediaControl;
-import com.example.carduino.shared.models.SettingsViewModel;
 import com.example.carduino.shared.singletons.ContextsSingleton;
-import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
-import com.example.carduino.workers.ArduinoService;
 
 public class MediaControlAction implements ArduinoMessageExecutorInterface {
     static AudioFocusRequest audioFocusRequest;

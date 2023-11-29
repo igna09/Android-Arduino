@@ -21,6 +21,7 @@ import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.singletons.ArduinoMessageSingleton;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.singletons.Logger;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 
@@ -39,13 +40,14 @@ public class ArduinoService extends Service implements ArduinoListener {
 //                            Log.e("Service", "Service is running...");
 //                            Logger.getInstance().log("Service is running...");
                 try {
-//                    long s = getIntegerRandomNumber(1, 10) * 1000;
-//                    Log.d("sleep", "Sleeping for " + s);
-//                    Thread.sleep(s);
-//                    onArduinoMessage(("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200)).getBytes());
-//                    onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10)).getBytes());
-//                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500)).getBytes());
-                    Thread.sleep(1000);
+                    long s = getIntegerRandomNumber(1, 10) * 1000;
+                    Log.d("sleep", "Sleeping for " + s);
+                    Thread.sleep(s);
+                    onArduinoMessage(("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200)).getBytes());
+                    onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10)).getBytes());
+                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500)).getBytes());
+                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;").getBytes());
+//                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     LoggerUtilities.logException(e);
                     return;
@@ -87,6 +89,8 @@ public class ArduinoService extends Service implements ArduinoListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
+            Logger.getInstance().log("Stopping service");
+
             t.interrupt();
 
             stopForeground(true);
@@ -98,6 +102,8 @@ public class ArduinoService extends Service implements ArduinoListener {
 
             return START_NOT_STICKY;
         } else if(intent.getAction() == null || (intent.getAction() != null && intent.getAction().equals("START_FOREGROUND"))) {
+            Logger.getInstance().log("Starting service");
+
             t = new Thread(new ArduinoRunnable());
             t.start();
 
