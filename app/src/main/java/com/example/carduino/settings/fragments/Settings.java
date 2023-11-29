@@ -16,13 +16,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.carduino.R;
-import com.example.carduino.canbus.fragments.Canbus;
-import com.example.carduino.homepage.adapters.HomepageGridButtonAdapter;
-import com.example.carduino.homepage.models.HomepageGridButtonModel;
 import com.example.carduino.settings.adapters.SettingAdapter;
 import com.example.carduino.settings.factory.Setting;
 import com.example.carduino.shared.models.SettingsViewModel;
-import com.example.carduino.shared.singletons.SharedDataSingleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
