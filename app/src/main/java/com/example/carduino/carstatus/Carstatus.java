@@ -78,8 +78,7 @@ public class Carstatus extends Fragment {
                     cardModel.width = (viewWidth - ((VIEW_COLUMN_COUNT - viewColumnSpan) * (MARGIN * 2))) / VIEW_COLUMN_COUNT;
                     cardModel.height = (viewHeight - ((VIEW_ROW_COUNT - viewRowSpan) * (MARGIN * 2))) / VIEW_ROW_COUNT;
 
-                    CardView cardView = addCardView(gridLayout, cardModel);
-                    cardModel.cardView = cardView;
+                    cardModel.cardView = addCardView(gridLayout, cardModel);
 
                     updateCardView(cardModel);
 
@@ -87,7 +86,9 @@ public class Carstatus extends Fragment {
                         @Override
                         public void onPropertyChange(String propertyName, Value oldValue, Value newValue) {
                             cardModel.value = newValue.getValue().toString();
-                            updateCardView(cardModel);
+                            getActivity().runOnUiThread(() -> {
+                                updateCardView(cardModel);
+                            });
                         }
                     });
                     CarStatusSingleton.getInstance().getCarStatus().addPropertyChangeListener(cardModel.propertyChangeListener);
@@ -100,16 +101,11 @@ public class Carstatus extends Fragment {
 
     CardView addCardView(ViewGroup container, CardModel model){
         CardView v = (CardView) LayoutInflater.from(getContext()).inflate(R.layout.card_text, null);
-//        v.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
 
         TextView title = v.findViewById(R.id.title);
         title.setText(model.title);
-//        title.setTextSize(11);
-//        TextView value = v.findViewById(R.id.value);
-//        value.setText(model.value);
         TextView unit = v.findViewById(R.id.unit);
         unit.setText(model.unit);
-//        unit.setTextSize(11);
 
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
         lp.setGravity(Gravity.CENTER);
