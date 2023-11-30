@@ -6,7 +6,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.carduino.R;
+import com.example.carduino.receivers.canbus.factory.CanbusActions;
+import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 
 public class FloatSetting extends Setting<Float> {
     public FloatSetting() {
@@ -22,26 +25,8 @@ public class FloatSetting extends Setting<Float> {
     }
 
     @Override
-    public View generateView() {
-        View view = LayoutInflater.from(ContextsSingleton.getInstance().getApplicationContext()).inflate(R.layout.float_setting, null);
-
-        TextView floatSettingLabel = view.findViewById(R.id.float_setting_label);
-        EditText floatSettingInput = view.findViewById(R.id.float_setting_input);
-
-        floatSettingLabel.setText(getLabel());
-        floatSettingInput.setText(getValue().toString());
-
-        this.setView(view);
-
-        return view;
-    }
-
-    @Override
-    public void updateView() {
-        View view = LayoutInflater.from(ContextsSingleton.getInstance().getApplicationContext()).inflate(R.layout.float_setting, null);
-
-        EditText floatSettingInput = view.findViewById(R.id.float_setting_input);
-
-        floatSettingInput.setText(getValue().toString());
+    public void onValueChange(Float newValue) {
+        super.onValueChange(newValue);
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, getId(), getValue().toString()));
     }
 }

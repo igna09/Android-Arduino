@@ -18,7 +18,7 @@ import com.example.carduino.R;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.shared.models.ArduinoMessage;
-import com.example.carduino.shared.singletons.ArduinoMessageSingleton;
+import com.example.carduino.shared.singletons.ArduinoSingleton;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.Logger;
@@ -31,7 +31,8 @@ import me.aflak.arduino.ArduinoListener;
 public class ArduinoService extends Service implements ArduinoListener {
     private Arduino arduino;
     private CarStatusSingleton carstatusSingleton;
-    private ArduinoMessageSingleton arduinoMessageSingleton;
+    private ArduinoSingleton arduinoSingleton;
+    private ContextsSingleton contextsSingleton;
 
     private class ArduinoRunnable implements  Runnable {
         @Override
@@ -71,8 +72,6 @@ public class ArduinoService extends Service implements ArduinoListener {
     public void onCreate() {
         super.onCreate();
 
-        ContextsSingleton.getInstance().setServiceContext(this);
-
         arduino = new Arduino(this);
         arduino.setBaudRate(115200);
         arduino.addVendorId(6790);
@@ -82,8 +81,12 @@ public class ArduinoService extends Service implements ArduinoListener {
         this.carstatusSingleton = CarStatusSingleton.getInstance();
         this.carstatusSingleton.getCarStatus();
 
-        this.arduinoMessageSingleton = ArduinoMessageSingleton.getInstance();
-        this.arduinoMessageSingleton.getCircularArrayList();
+        this.arduinoSingleton = ArduinoSingleton.getInstance();
+        this.arduinoSingleton.setArduinoService(this);
+        this.arduinoSingleton.getCircularArrayList();
+
+        this.contextsSingleton = ContextsSingleton.getInstance();
+        this.contextsSingleton.setServiceContext(this);
     }
 
     @Override
@@ -169,7 +172,7 @@ public class ArduinoService extends Service implements ArduinoListener {
     public void onArduinoMessage(byte[] bytes) {
         String message = new String(bytes);
         LoggerUtilities.logMessage("ArduinoService",  "arduino message: " + message);
-        this.arduinoMessageSingleton.getCircularArrayList().add(message);
+        this.arduinoSingleton.getCircularArrayList().add(message);
 
         try {
             String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
@@ -215,5 +218,9 @@ public class ArduinoService extends Service implements ArduinoListener {
                 arduino.reopen();
             }
         }, 3000);
+    }
+
+    public void sendMessageToArduino(String message) {
+        this.arduino.send(message.getBytes());
     }
 }

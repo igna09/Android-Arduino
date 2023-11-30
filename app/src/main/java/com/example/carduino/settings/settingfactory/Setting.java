@@ -7,7 +7,6 @@ public abstract class Setting<T> {
     private String id;
     private String label;
     private T value;
-    private View view;
 
     public Setting() {
     }
@@ -48,14 +47,7 @@ public abstract class Setting<T> {
 
     public abstract void setValueFromString(String value);
 
-    public View getView() {
-        return view;
+    public void onValueChange(T newValue) {
+        this.value = newValue;
     }
-
-    public void setView(View view) {
-        this.view = view;
-    }
-
-    public abstract View generateView();
-    public abstract void updateView();
 }

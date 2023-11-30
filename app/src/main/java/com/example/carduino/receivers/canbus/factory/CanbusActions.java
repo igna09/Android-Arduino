@@ -9,7 +9,7 @@ import java.util.Arrays;
 public enum CanbusActions {
     READ_SETTING(SettingAction.class, "READ_SETTING"),
     CAR_STATUS(CarStatusAction.class, "CAR_STATUS"),
-    //WRITE_SETTING("WRITE_SETTING");
+    WRITE_SETTING("WRITE_SETTING"),
     MEDIA_CONTROL(MediaControlAction .class, "MEDIA_CONTROL");
 
     private Class clazz;
@@ -37,6 +37,6 @@ public enum CanbusActions {
     }
 
     public static CanbusActions getCanbusActionFromid(String id) {
-        return Arrays.stream(CanbusActions.values()).filter(canbusActions -> canbusActions.getid().equals(id)).findFirst().orElse(null);
+        return Arrays.stream(CanbusActions.values()).filter(canbusActions -> canbusActions.name().equals(id)).findFirst().orElse(null);
     }
 }

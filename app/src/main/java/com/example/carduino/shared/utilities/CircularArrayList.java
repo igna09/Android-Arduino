@@ -10,7 +10,6 @@ public class CircularArrayList<T> {
     private ArrayList<T> list;
 
     private PropertyChangeSupport support;
-    private PropertyChangeListener propertyChangeListener;
 
     public CircularArrayList(Integer size) {
         listSize = size;

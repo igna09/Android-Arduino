@@ -1,14 +1,9 @@
 package com.example.carduino.canbus.fragments;
 
-import static android.content.Context.RECEIVER_NOT_EXPORTED;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
 import com.example.carduino.shared.models.ArduinoActions;
-import com.example.carduino.shared.singletons.ArduinoMessageSingleton;
+import com.example.carduino.shared.singletons.ArduinoSingleton;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -72,7 +67,7 @@ public class Canbus extends Fragment {
                 display((String) evt.getNewValue());
             }
         };
-        ArduinoMessageSingleton.getInstance().getCircularArrayList().addPropertyChangeListener(pcl);
+        ArduinoSingleton.getInstance().getCircularArrayList().addPropertyChangeListener(pcl);
     }
 
     public void display(final String message){
@@ -101,7 +96,7 @@ public class Canbus extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if(pcl != null) {
-            ArduinoMessageSingleton.getInstance().getCircularArrayList().removePropertyChangeListener(pcl);
+            ArduinoSingleton.getInstance().getCircularArrayList().removePropertyChangeListener(pcl);
         }
     }
 }

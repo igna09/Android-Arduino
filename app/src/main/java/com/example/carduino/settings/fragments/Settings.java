@@ -8,12 +8,17 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
 import com.example.carduino.settings.settingfactory.Setting;
+import com.example.carduino.settings.settingviewfactory.SettingViewFactory;
+import com.example.carduino.settings.settingviewfactory.SettingViewWrapper;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
 import com.example.carduino.shared.singletons.SettingsSingleton;
+
+import java.util.Map;
 
 /**
  * workflow:
@@ -26,7 +31,6 @@ import com.example.carduino.shared.singletons.SettingsSingleton;
 public class Settings extends Fragment {
     private PropertyChangeListener pcl;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,31 +40,41 @@ public class Settings extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         LinearLayout settingsList = (LinearLayout) view.findViewById(R.id.settings_list);
 
-        SettingsSingleton.getInstance().getSettings().getSettings().values().forEach(setting -> {
-            if(setting.getView() != null) {
-                ViewGroup parent = (ViewGroup) setting.getView().getParent();
-                if (parent != null) {
-                    parent.removeView(setting.getView());
-                }
-                getActivity().runOnUiThread(() -> {
-                    settingsList.addView(setting.getView());
-                });
+        /**
+         * reusing already existing view
+         */
+        SettingsSingleton.getInstance().getSettingViews().values().forEach(settingViewWrapper -> {
+            ViewGroup parent = (ViewGroup) settingViewWrapper.getView().getParent();
+            if (parent != null) {
+                parent.removeView(settingViewWrapper.getView());
             }
+            getActivity().runOnUiThread(() -> {
+                settingsList.addView(settingViewWrapper.getView());
+            });
         });
 
         pcl = new PropertyChangeListener<Setting>() {
             @Override
             public void onPropertyChange(String propertyName, Setting oldValue, Setting newValue) {
-                if(newValue.getView() == null) {
-                    View v = newValue.generateView();
+                if(!SettingsSingleton.getInstance().getSettingViews().containsKey(propertyName)) {
+                    SettingViewWrapper settingViewWrapper = SettingViewFactory.getSettingView(propertyName);
+                    settingViewWrapper.generateView(newValue.getLabel());
+                    SwitchCompat switchCompat = (SwitchCompat) settingViewWrapper.getView().findViewById(R.id.boolean_setting_switch);
+                    switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (switchCompat.isPressed()) {
+                            newValue.onValueChange(isChecked);
+                        }
+                    });
+                    SettingsSingleton.getInstance().getSettingViews().put(propertyName, settingViewWrapper);
                     getActivity().runOnUiThread(() -> {
-                        settingsList.addView(v);
+                        settingsList.addView(settingViewWrapper.getView());
                     });
                 }
                 getActivity().runOnUiThread(() -> {
-                    newValue.updateView();
+                    SettingsSingleton.getInstance().getSettingViews().get(propertyName).updateView(newValue.getValue());
                 });
             }
         };

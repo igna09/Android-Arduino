@@ -7,7 +7,11 @@ import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.carduino.R;
+import com.example.carduino.receivers.canbus.factory.CanbusActions;
+import com.example.carduino.shared.models.ArduinoMessage;
+import com.example.carduino.shared.singletons.ArduinoSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 
 public class BooleanSetting extends Setting<Boolean> {
     public BooleanSetting() {
@@ -23,27 +27,8 @@ public class BooleanSetting extends Setting<Boolean> {
     }
 
     @Override
-    public View generateView() {
-        View view = LayoutInflater.from(ContextsSingleton.getInstance().getMainActivityContext()).inflate(R.layout.boolean_setting, null);
-
-        TextView booleanSettingLabel = view.findViewById(R.id.boolean_setting_label);
-        SwitchCompat booleanSettingSwitch = view.findViewById(R.id.boolean_setting_switch);
-
-        if(this.getLabel() == null) {
-            booleanSettingLabel.setText(this.getId());
-        } else {
-            booleanSettingLabel.setText(getLabel());
-        }
-        booleanSettingSwitch.setChecked(getValue() != null && getValue());
-
-        this.setView(view);
-
-        return view;
-    }
-
-    @Override
-    public void updateView() {
-        SwitchCompat booleanSettingSwitch = this.getView().findViewById(R.id.boolean_setting_switch);
-        booleanSettingSwitch.setChecked(getValue());
+    public void onValueChange(Boolean newValue) {
+        super.onValueChange(newValue);
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, getId(), getValue() ? "true" : "false"));
     }
 }

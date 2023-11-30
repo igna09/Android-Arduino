@@ -18,11 +18,11 @@ public class Settings {
     public void addSetting(Setting setting) {
         Setting oldSetting = settings.get(setting.getId());
         settings.put(setting.getId(), setting);
-        if(oldSetting != null && oldSetting.getView() != null) {
+        /*if(oldSetting != null && oldSetting.getView() != null) {
             setting.setView(oldSetting.getView());
         } else {
             setting.setView(null);
-        }
+        }*/
         this.support.firePropertyChange(setting.getId(), oldSetting, setting);
     }
 

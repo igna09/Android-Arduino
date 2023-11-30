@@ -1,5 +1,8 @@
 package com.example.carduino.shared.utilities;
 
+import com.example.carduino.shared.models.ArduinoMessage;
+import com.example.carduino.shared.singletons.ArduinoSingleton;
+
 import java.util.Arrays;
 
 public class ArduinoMessageUtilities {
@@ -13,28 +16,17 @@ public class ArduinoMessageUtilities {
         return parseMessage(message, ";");
     }
 
-    public static String[] parseCanbusSetting(String message) {
-        return parseMessage(message, "-");
+    public static void sendArduinoMessage(ArduinoMessage message) {
+        ArduinoSingleton.getInstance().getArduinoService().sendMessageToArduino(stringifyArduinoMessage(message));
     }
 
-    public static String[] parseCanbusCarStatus(String message) {
-        return parseMessage(message, "-");
+    public static String stringifyArduinoMessage(ArduinoMessage message) {
+        String builder = message.getAction().name() +
+                ";" +
+                message.getKey() +
+                ";" +
+                message.getValue() +
+                ";";
+        return builder;
     }
-
-    /*public static String stringifyArduinoSetting(Setting setting) {
-        StringBuilder builder = new StringBuilder("");
-        return builder.append(ArduinoActions.CANBUS)
-                .append(";")
-                .append("WRITE_SETTING")
-                .append(";")
-                .append(setting.getId())
-                .append("-")
-                .append(setting.getSettingEnum())
-                .append("-")
-                .append(setting.getValue().toString())
-                .append("-")
-                .append(";")
-                .append(";")
-                .toString();
-    }*/
 }
