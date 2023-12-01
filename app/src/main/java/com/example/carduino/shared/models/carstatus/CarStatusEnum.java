@@ -9,6 +9,7 @@ import com.example.carduino.shared.models.carstatus.values.KmhSpeed;
 import com.example.carduino.shared.models.carstatus.values.BarPressure;
 import com.example.carduino.shared.models.carstatus.values.LuxLuminance;
 import com.example.carduino.shared.models.carstatus.values.Rpm;
+import com.example.carduino.shared.models.carstatus.values.Voltage;
 
 import java.util.Arrays;
 
@@ -26,7 +27,8 @@ public enum CarStatusEnum {
     TRIP_AVERAGE_SPEED("TRIP_AVERAGE_SPEED", Category.TRIP, KmhSpeed.class),
     TRIP_MAX_SPEED("TRIP_MAX_SPEED", Category.TRIP, KmhSpeed.class),
     INJECTED_QUANTITY("INJECTED_QUANTITY", Category.CAR, InjectedQuantity.class),
-    FUEL_CONSUMPTION("FUEL_CONSUMPTION", Category.CAR, FuelConsumptionKmL.class);
+    FUEL_CONSUMPTION("FUEL_CONSUMPTION", Category.CAR, FuelConsumptionKmL.class),
+    BATTERY_VOLTAGE("BATTERY_VOLTAGE", Category.CAR, Voltage.class);
 
     private enum Category {
         ENGINE,
