@@ -12,6 +12,11 @@ public class LoggerUtilities {
         Logger.getInstance().log(label + " - " + message);
         Log.d(label, message);
     }
+    //TODO: remove
+    public static void logArduinoMessage(String label, String message) {
+        Logger.getInstance().log("arduino_message", label + " - " + message);
+        Log.d(label, message);
+    }
     public static void logException(Exception e) {
         Logger.getInstance().logException(e);
         e.printStackTrace();

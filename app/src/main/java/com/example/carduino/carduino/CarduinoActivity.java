@@ -61,6 +61,7 @@ public class CarduinoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LoggerUtilities.logMessage("CarduinoActivity", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carduino);
 
@@ -107,6 +108,12 @@ public class CarduinoActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LoggerUtilities.logMessage("CarduinoActivity", "onDestroy");
     }
 
     void startArduinoService() {

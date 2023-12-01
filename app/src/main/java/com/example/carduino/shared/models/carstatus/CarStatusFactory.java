@@ -9,16 +9,20 @@ import java.beans.PropertyChangeListenerProxy;
 public class CarStatusFactory {
     public static Value getCarStatusValue(String id, String value) {
         CarStatusEnum carStatusEnum = CarStatusEnum.getCarStatusEnumById(id);
-        try {
-            Value v = (Value) carStatusEnum.getType().newInstance();
-            v.setId(id);
-            v.setValue(v.parseValueFromString(value));
-            if(carStatusEnum.getPropertyChangeListener() != null) {
-                v.setPropertyChangeListener(new PropertyChangeListenerProxy(carStatusEnum.getId(), (PropertyChangeListener) carStatusEnum.getPropertyChangeListener().newInstance()));
+        if(carStatusEnum != null) {
+            try {
+                Value v = (Value) carStatusEnum.getType().newInstance();
+                v.setId(id);
+                v.setValue(v.parseValueFromString(value));
+                if(carStatusEnum.getPropertyChangeListener() != null) {
+                    v.setPropertyChangeListener(new PropertyChangeListenerProxy(carStatusEnum.getId(), (PropertyChangeListener) carStatusEnum.getPropertyChangeListener().newInstance()));
+                }
+                return v;
+            } catch (IllegalAccessException | InstantiationException e) {
+                throw new RuntimeException(e);
             }
-            return v;
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new RuntimeException(e);
+        } else {
+            return null;
         }
     }
 }

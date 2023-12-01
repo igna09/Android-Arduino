@@ -41,14 +41,14 @@ public class ArduinoService extends Service implements ArduinoListener {
 //                            Log.e("Service", "Service is running...");
 //                            Logger.getInstance().log("Service is running...");
                 try {
-                    long s = getIntegerRandomNumber(1, 10) * 1000;
-                    Log.d("sleep", "Sleeping for " + s);
-                    Thread.sleep(s);
-                    onArduinoMessage(("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200)).getBytes());
-                    onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10)).getBytes());
-                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500)).getBytes());
-                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;").getBytes());
-//                    Thread.sleep(1000);
+//                    long s = getIntegerRandomNumber(1, 10) * 1000;
+//                    Log.d("sleep", "Sleeping for " + s);
+//                    Thread.sleep(s);
+//                    onArduinoMessage(("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200)).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10)).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500)).getBytes());
+//                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;").getBytes());
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     LoggerUtilities.logException(e);
                     return;
@@ -92,7 +92,7 @@ public class ArduinoService extends Service implements ArduinoListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
-            Logger.getInstance().log("Stopping service");
+            LoggerUtilities.logMessage("service", "Stopping");
 
             t.interrupt();
 
@@ -105,7 +105,7 @@ public class ArduinoService extends Service implements ArduinoListener {
 
             return START_NOT_STICKY;
         } else if(intent.getAction() == null || (intent.getAction() != null && intent.getAction().equals("START_FOREGROUND"))) {
-            Logger.getInstance().log("Starting service");
+            LoggerUtilities.logMessage("service", "Starting");
 
             t = new Thread(new ArduinoRunnable());
             t.start();
@@ -138,6 +138,7 @@ public class ArduinoService extends Service implements ArduinoListener {
 
     @Override
     public void onDestroy() {
+        LoggerUtilities.logMessage("service", "onDestroy()");
         if(t != null) {
             t.interrupt();
         }
@@ -171,24 +172,25 @@ public class ArduinoService extends Service implements ArduinoListener {
     @Override
     public void onArduinoMessage(byte[] bytes) {
         String message = new String(bytes);
-        LoggerUtilities.logMessage("ArduinoService",  "arduino message: " + message);
+        LoggerUtilities.logArduinoMessage("ArduinoService",  "receiving " + message);
         this.arduinoSingleton.getCircularArrayList().add(message);
 
         try {
             String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
-            boolean existsAction = true;
-            try {
-                CanbusActions.valueOf(splittedMessage[0]);
-            } catch (IllegalArgumentException e) {
-                existsAction = false;
-            }
-
-            if (splittedMessage.length == 3 && existsAction) {
-                ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
-                ArduinoMessageExecutorInterface action = null;
-                action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();
-                action.execute(arduinoMessage);
+            if (splittedMessage.length == 3) {
+                boolean existsAction = true;
+                try {
+                    CanbusActions.valueOf(splittedMessage[0]);
+                } catch (IllegalArgumentException e) {
+                    existsAction = false;
+                }
+                if(existsAction) {
+                    ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
+                    ArduinoMessageExecutorInterface action = null;
+                    action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();
+                    action.execute(arduinoMessage);
+                }
             } else {
                 LoggerUtilities.logMessage("ArduinoService", "malformed message");
             }
@@ -221,6 +223,7 @@ public class ArduinoService extends Service implements ArduinoListener {
     }
 
     public void sendMessageToArduino(String message) {
+        LoggerUtilities.logArduinoMessage("sending", message);
         this.arduino.send(message.getBytes());
     }
 }

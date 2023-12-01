@@ -25,10 +25,14 @@ public class Logger {
         return logger;
     }
 
-    public void log(String text)
+    public void log(String text) {
+        log("main", text);
+    }
+
+    public void log(String file, String text)
     {
         File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File logFile = new File(root, "carduino_log.txt");
+        File logFile = new File(root, file + "_carduino_log.txt");
         if (!logFile.exists())
         {
             try

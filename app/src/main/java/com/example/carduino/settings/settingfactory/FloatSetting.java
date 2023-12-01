@@ -1,14 +1,7 @@
 package com.example.carduino.settings.settingfactory;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import com.example.carduino.R;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.shared.models.ArduinoMessage;
-import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 
 public class FloatSetting extends Setting<Float> {
