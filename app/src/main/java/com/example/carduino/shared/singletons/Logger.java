@@ -15,12 +15,14 @@ import java.util.Date;
 
 public class Logger {
     private static Logger logger;
+    private static Long counter;
 
     private Logger(){}
 
     public static Logger getInstance() {
         if(logger == null) {
             logger = new Logger();
+            counter = new Long(0);
         }
         return logger;
     }
@@ -53,10 +55,14 @@ public class Logger {
 //            SimpleDateFormat.getDateTimeInstance();
             buf.append(df.format(new Date()));
             buf.append(" - ");
+            buf.append(counter.toString());
+            buf.append(" - ");
             buf.append(text);
             buf.newLine();
             buf.flush();
             buf.close();
+
+            increaseCounter();
         }
         catch (IOException e)
         {
@@ -70,5 +76,9 @@ public class Logger {
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
         log(sw.toString());
+    }
+
+    private static void increaseCounter() {
+        counter = counter + 1;
     }
 }
