@@ -14,16 +14,12 @@ import androidx.fragment.app.Fragment;
 import com.example.carduino.R;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.settings.settingfactory.Setting;
-import com.example.carduino.settings.settingfactory.SettingsFactory;
 import com.example.carduino.settings.settingviewfactory.SettingViewFactory;
 import com.example.carduino.settings.settingviewfactory.SettingViewWrapper;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
-import com.example.carduino.shared.singletons.ArduinoSingleton;
 import com.example.carduino.shared.singletons.SettingsSingleton;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
-
-import java.util.Map;
 
 /**
  * workflow:
@@ -91,7 +87,7 @@ public class Settings extends Fragment {
             SettingsSingleton.getInstance().getSettings().addSetting(SettingsFactory.getSetting("OTA_MODE", "false"));
         }*/
 
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.READ_SETTING, "", ""));
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.READ_SETTINGS, "OTA_MODE", "false"));
     }
 
     @Override

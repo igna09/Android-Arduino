@@ -133,10 +133,11 @@ public class Carstatus extends Fragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-
+        // TODO: move in onPause?
         cards.forEach(cardModel -> {
             CarStatusSingleton.getInstance().getCarStatus().removePropertyChangeListener(cardModel.propertyChangeListener);
         });
+
+        super.onDestroy();
     }
 }

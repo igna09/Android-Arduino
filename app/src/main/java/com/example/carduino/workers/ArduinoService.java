@@ -9,6 +9,7 @@ import android.hardware.usb.UsbDevice;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -47,6 +48,7 @@ public class ArduinoService extends Service implements ArduinoListener {
 //                    onArduinoMessage(("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200)).getBytes());
 //                    onArduinoMessage(("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10)).getBytes());
 //                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500)).getBytes());
+//                    onArduinoMessage(("CAR_STATUS;BATTERY_VOLTAGE;" + getFloatRandomNumber(11, 14)).getBytes());
 //                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;").getBytes());
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -67,6 +69,7 @@ public class ArduinoService extends Service implements ArduinoListener {
     }
 
     private static Thread t;
+    private static PowerManager.WakeLock wakeLock;
 
     @Override
     public void onCreate() {
@@ -103,8 +106,12 @@ public class ArduinoService extends Service implements ArduinoListener {
                 ContextsSingleton.getInstance().getMainActivityContext().finishAffinity();
             }
 
+            if(wakeLock.isHeld()){
+                wakeLock.release();
+            }
+
             return START_NOT_STICKY;
-        } else if(intent.getAction() == null || (intent.getAction() != null && intent.getAction().equals("START_FOREGROUND"))) {
+        } else if(intent.getAction() == null || (intent.getAction().equals("START_FOREGROUND"))) {
             LoggerUtilities.logMessage("service", "Starting");
 
             t = new Thread(new ArduinoRunnable());
@@ -130,6 +137,11 @@ public class ArduinoService extends Service implements ArduinoListener {
                     .addAction(android.R.drawable.ic_delete, "STOP", PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE));
 
             startForeground(1001, notification.build());
+
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                    "Carduino::MyWakelockTag");
+            wakeLock.acquire();
 
             super.onStartCommand(intent, flags, startId);
         }
@@ -171,11 +183,11 @@ public class ArduinoService extends Service implements ArduinoListener {
      */
     @Override
     public void onArduinoMessage(byte[] bytes) {
-        String message = new String(bytes);
-        LoggerUtilities.logArduinoMessage("ArduinoService",  "receiving " + message);
-        this.arduinoSingleton.getCircularArrayList().add(message);
-
         try {
+            String message = new String(bytes);
+            LoggerUtilities.logArduinoMessage("ArduinoService",  "receiving " + message);
+            this.arduinoSingleton.getCircularArrayList().add(message);
+
             String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
             if (splittedMessage.length == 3) {
@@ -192,7 +204,7 @@ public class ArduinoService extends Service implements ArduinoListener {
                     action.execute(arduinoMessage);
                 }
             } else {
-                LoggerUtilities.logMessage("ArduinoService", "malformed message");
+                LoggerUtilities.logArduinoMessage("ArduinoService", "malformed message");
             }
         } catch (Exception e) {
             LoggerUtilities.logException(e);
