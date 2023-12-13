@@ -26,6 +26,9 @@ import com.example.carduino.shared.singletons.Logger;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import me.aflak.arduino.Arduino;
 import me.aflak.arduino.ArduinoListener;
 
@@ -36,6 +39,7 @@ public class ArduinoService extends Service implements ArduinoListener {
     private ContextsSingleton contextsSingleton;
 
     private class ArduinoRunnable implements  Runnable {
+//        Integer counter = 0;
         @Override
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
@@ -50,7 +54,10 @@ public class ArduinoService extends Service implements ArduinoListener {
 //                    onArduinoMessage(("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500)).getBytes());
 //                    onArduinoMessage(("CAR_STATUS;BATTERY_VOLTAGE;" + getFloatRandomNumber(11, 14)).getBytes());
 //                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;").getBytes());
+//                    if(counter >= 5)
+//                        onArduinoMessage(("CAR_STATUS;ENGINE_RPM;" + getIntegerRandomNumber(900, 4000)).getBytes());
                     Thread.sleep(1000);
+//                    counter++;
                 } catch (InterruptedException e) {
                     LoggerUtilities.logException(e);
                     return;
