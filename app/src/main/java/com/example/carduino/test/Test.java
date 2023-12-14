@@ -61,7 +61,7 @@ public class Test extends Fragment {
 
         Button button6 = r.findViewById(R.id.button6);
         button6.setOnClickListener(v -> {
-            Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.package.address");
+            Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.syu.carlink");
             if (launchIntent != null) {
                 startActivity(launchIntent);//null pointer check in case package name was not found
             }
