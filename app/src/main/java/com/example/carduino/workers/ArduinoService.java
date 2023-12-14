@@ -108,7 +108,7 @@ public class ArduinoService extends Service implements ArduinoListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
+        if (intent != null && intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
             LoggerUtilities.logMessage("service", "Stopping");
 
             t.interrupt();
@@ -125,7 +125,7 @@ public class ArduinoService extends Service implements ArduinoListener {
             }
 
             return START_NOT_STICKY;
-        } else if(intent.getAction() == null || (intent.getAction().equals("START_FOREGROUND"))) {
+        } else if(intent == null || (intent != null && intent.getAction() == null || (intent.getAction().equals("START_FOREGROUND")))) {
             LoggerUtilities.logMessage("service", "Starting");
 
             t = new Thread(new ArduinoRunnable());
@@ -158,8 +158,9 @@ public class ArduinoService extends Service implements ArduinoListener {
             wakeLock.acquire();
 
             super.onStartCommand(intent, flags, startId);
+            return Service.START_STICKY_COMPATIBILITY;
         }
-        return Service.START_STICKY_COMPATIBILITY;
+        return Service.START_STICKY;
     }
 
     @Override
