@@ -21,6 +21,8 @@
         tools:targetApi="29">
         <activity
             android:name=".carduino.CarduinoActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -30,20 +32,35 @@
             </intent-filter>
         </activity>
 
+<!--        <receiver-->
+<!--            android:name=".receivers.BootReceiver"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
+
         <receiver
-            android:name=".receivers.BootReceiver"
+            android:name=".arduinolistener.ConnectReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter" />
         </receiver>
 
-        <service
-            android:name=".workers.ArduinoService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
+
+
+<!--        <service-->
+<!--            android:name=".services.ArduinoService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false"-->
+<!--            android:foregroundServiceType="dataSync" />-->
+        <service android:name=".services.ArduinoService"/>
     </application>
 
 </manifest>

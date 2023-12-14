@@ -1,7 +1,7 @@
 package com.example.carduino.shared.singletons;
 
 import com.example.carduino.shared.utilities.CircularArrayList;
-import com.example.carduino.workers.ArduinoService;
+import com.example.carduino.services.ArduinoService;
 
 public class ArduinoSingleton {
     private static ArduinoSingleton arduinoSingleton;
