@@ -2,6 +2,7 @@ package com.example.carduino.test;
 
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -56,6 +57,14 @@ public class Test extends Fragment {
         button5.setOnClickListener(v -> {
             Instrumentation instrumentation = new Instrumentation();
             instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
+        });
+
+        Button button6 = r.findViewById(R.id.button6);
+        button6.setOnClickListener(v -> {
+            Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.package.address");
+            if (launchIntent != null) {
+                startActivity(launchIntent);//null pointer check in case package name was not found
+            }
         });
 
         return r;
