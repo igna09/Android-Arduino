@@ -4,32 +4,19 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
-import com.example.carduino.shared.models.carstatus.CarStatusEnum;
-import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
-import com.example.carduino.shared.models.carstatus.values.Value;
-import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
-
-import java.beans.PropertyChangeListenerProxy;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Test extends Fragment {
     GridLayout gridLayout;

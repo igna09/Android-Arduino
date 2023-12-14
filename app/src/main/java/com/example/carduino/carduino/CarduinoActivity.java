@@ -108,6 +108,20 @@ public class CarduinoActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
             }
         });
+
+        Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            try {
+                LoggerUtilities.logException(new Exception(e));
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                if (oldHandler != null)
+                    oldHandler.uncaughtException(t, e);
+                else
+                    System.exit(1);
+            }
+        });
     }
 
     @Override
