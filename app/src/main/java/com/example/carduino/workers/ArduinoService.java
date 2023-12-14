@@ -39,7 +39,7 @@ public class ArduinoService extends Service implements ArduinoListener {
     private ContextsSingleton contextsSingleton;
 
     private class ArduinoRunnable implements  Runnable {
-//        Integer counter = 0;
+        Integer counter = 0;
         @Override
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
@@ -56,8 +56,15 @@ public class ArduinoService extends Service implements ArduinoListener {
 //                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;").getBytes());
 //                    if(counter >= 5)
 //                        onArduinoMessage(("CAR_STATUS;ENGINE_RPM;" + getIntegerRandomNumber(900, 4000)).getBytes());
+//                    if(counter % 5 == 0) {
+//                        if(counter % 2 == 0) {
+//                            onArduinoMessage("MEDIA_CONTROL;VOLUME_UP;0;".getBytes());
+//                        } else {
+//                            onArduinoMessage("MEDIA_CONTROL;VOLUME_DOWN;0;".getBytes());
+//                        }
+//                    }
                     Thread.sleep(1000);
-//                    counter++;
+                    counter++;
                 } catch (InterruptedException e) {
                     LoggerUtilities.logException(e);
                     return;
