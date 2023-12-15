@@ -27,6 +27,7 @@ import com.example.carduino.arduinolistener.Constants;
 import com.example.carduino.arduinolistener.CustomProber;
 import com.example.carduino.arduinolistener.SerialListener;
 import com.example.carduino.arduinolistener.SerialSocket;
+import com.example.carduino.arduinolistener.StringBuffer;
 import com.example.carduino.arduinolistener.TextUtil;
 import com.example.carduino.carduino.CarduinoActivity;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
@@ -73,7 +74,6 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
     private final Handler mainLooper;
     private final IBinder binder;
     private final ArrayDeque<QueueItem> queue1, queue2;
-    private final QueueItem lastRead;
 
     private SerialSocket socket;
     private SerialListener listener;
@@ -84,12 +84,13 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
     private static PowerManager.WakeLock wakeLock;
     private Integer deviceIdToConnect;
 
+    private StringBuffer buffer;
+
     public ArduinoService() {
         mainLooper = new Handler(Looper.getMainLooper());
         binder = new SerialBinder();
         queue1 = new ArrayDeque<>();
         queue2 = new ArrayDeque<>();
-        lastRead = new QueueItem(QueueType.Read);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -100,6 +101,8 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
                 }
             }
         };
+
+        buffer = new StringBuffer();
     }
 
     @Nullable
@@ -177,9 +180,11 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
      * While not consumed (2), add more data (3).
      */
     public void onSerialRead(byte[] data) {
-        if(connected == CarduinoActivity.Connected.True) {
+        buffer.addData(new String(data));
+        String line = buffer.readNewLine();
+        if(connected == CarduinoActivity.Connected.True && line != null) {
             synchronized (this) {
-                onArduinoMessage(data);
+                onArduinoMessage(line);
             }
         }
     }
@@ -289,29 +294,30 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
         super.onDestroy();
     }
 
-    public void onArduinoMessage(byte[] bytes) {
+    public void onArduinoMessage(String message) {
         try {
-            String message = new String(bytes);
-            LoggerUtilities.logArduinoMessage("ArduinoService",  "receiving " + message);
-            this.arduinoSingleton.getCircularArrayList().add(message);
+            if(message.trim().length() > 0) {
+                LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + message);
+                this.arduinoSingleton.getCircularArrayList().add(message);
 
-            String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
+                String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
-            if (splittedMessage.length == 3) {
-                boolean existsAction = true;
-                try {
-                    CanbusActions.valueOf(splittedMessage[0]);
-                } catch (IllegalArgumentException e) {
-                    existsAction = false;
+                if (splittedMessage.length == 3) {
+                    boolean existsAction = true;
+                    try {
+                        CanbusActions.valueOf(splittedMessage[0]);
+                    } catch (IllegalArgumentException e) {
+                        existsAction = false;
+                    }
+                    if (existsAction) {
+                        ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
+                        ArduinoMessageExecutorInterface action = null;
+                        action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();
+                        action.execute(arduinoMessage);
+                    }
+                } else {
+                    LoggerUtilities.logArduinoMessage("ArduinoService", "malformed message");
                 }
-                if(existsAction) {
-                    ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
-                    ArduinoMessageExecutorInterface action = null;
-                    action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();
-                    action.execute(arduinoMessage);
-                }
-            } else {
-                LoggerUtilities.logArduinoMessage("ArduinoService", "malformed message");
             }
         } catch (Exception e) {
             LoggerUtilities.logException(e);

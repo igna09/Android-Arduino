@@ -17,7 +17,7 @@ public final class TextUtil {
     @ColorInt static int caretBackground = 0xff666666;
 
     public final static String newline_crlf = "\r\n";
-    final static String newline_lf = "\n";
+    public final static String newline_lf = "\n";
 
     static byte[] fromHexString(final CharSequence s) {
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
