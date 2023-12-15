@@ -12,11 +12,11 @@ import androidx.annotation.ColorInt;
 
 import java.io.ByteArrayOutputStream;
 
-final class TextUtil {
+public final class TextUtil {
 
     @ColorInt static int caretBackground = 0xff666666;
 
-    final static String newline_crlf = "\r\n";
+    public final static String newline_crlf = "\r\n";
     final static String newline_lf = "\n";
 
     static byte[] fromHexString(final CharSequence s) {

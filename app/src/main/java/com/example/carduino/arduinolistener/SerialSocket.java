@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.hardware.usb.UsbDeviceConnection;
 import android.util.Log;
 
+import com.example.carduino.shared.utilities.LoggerUtilities;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
@@ -52,7 +53,7 @@ public class SerialSocket implements SerialInputOutputManager.Listener {
 	    serialPort.setDTR(true); // for arduino, ...
 	    serialPort.setRTS(true);
 	} catch (UnsupportedOperationException e) {
-	    Log.d(TAG, "Failed to set initial DTR/RTS", e);
+	    LoggerUtilities.logException(e);
 	}
         ioManager = new SerialInputOutputManager(serialPort, this);
         ioManager.start();

@@ -31,35 +31,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-<!--        <receiver-->
-<!--            android:name=".receivers.BootReceiver"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
-
-        <receiver
-            android:name=".arduinolistener.ConnectReceiver"
-            android:enabled="true"
-            android:exported="false">
+        <activity
+            android:name=".arduinolistener.UsbEventReceiverActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Transparent"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/usb_device_filter" />
-        </receiver>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/usb_device_filter" />
+        </activity>
 
-
-
-<!--        <service-->
-<!--            android:name=".services.ArduinoService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false"-->
-<!--            android:foregroundServiceType="dataSync" />-->
         <service android:name=".services.ArduinoService"/>
     </application>
 
