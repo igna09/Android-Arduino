@@ -4,9 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.carduino.shared.singletons.Logger;
 import com.example.carduino.shared.utilities.LoggerUtilities;
-import com.example.carduino.workers.ArduinoService;
+import com.example.carduino.services.ArduinoService;
 
 public class BootReceiver extends BroadcastReceiver {
 

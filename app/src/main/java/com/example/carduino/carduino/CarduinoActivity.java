@@ -1,9 +1,5 @@
 package com.example.carduino.carduino;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -11,15 +7,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.example.carduino.R;
 import com.example.carduino.canbus.fragments.Canbus;
 import com.example.carduino.carstatus.Carstatus;
+import com.example.carduino.services.ArduinoService;
 import com.example.carduino.settings.fragments.Settings;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 import com.example.carduino.shared.utilities.PermissionUtilities;
 import com.example.carduino.test.Test;
-import com.example.carduino.workers.ArduinoService;
 import com.google.android.material.navigationrail.NavigationRailView;
 
 import java.util.ArrayList;
@@ -57,6 +57,8 @@ public class CarduinoActivity extends AppCompatActivity {
         }
     }
 
+    public enum Connected { False, Pending, True }
+
     List<MyMenuItem> menuItems;
 
     @Override
@@ -81,6 +83,14 @@ public class CarduinoActivity extends AppCompatActivity {
                 PermissionUtilities.requestMissingPermissions();
             }
         }
+
+//        if(getIntent() != null) {
+//            UsbDevice device = (UsbDevice) getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE);
+//            if(device != null)
+//                Toast.makeText(this, Integer.valueOf(device.getDeviceId()).toString(), Toast.LENGTH_SHORT).show();
+//            else
+//                Toast.makeText(this, "no device", Toast.LENGTH_SHORT).show();
+//        }
 
         menuItems = new ArrayList<>();
         menuItems.add(new MyMenuItem(0, "Carstatus", R.drawable.baseline_directions_car_24, Carstatus.class));
@@ -141,7 +151,7 @@ public class CarduinoActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if(PermissionUtilities.haveAllPermissions()) {
-            startArduinoService();
+//            startArduinoService();
         }
     }
 
