@@ -44,17 +44,4 @@ public class UsbEventReceiverActivity extends AppCompatActivity
         // Close the activity
         finish();
     }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        if(intent != null) {
-            UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-            if(device != null) {}
-//                Toast.makeText(this, Integer.valueOf(device.getDeviceId()).toString(), Toast.LENGTH_SHORT).show();
-//                connect(device.getDeviceId());
-            else
-                Toast.makeText(this, "no device", Toast.LENGTH_SHORT).show();
-        }
-        super.onNewIntent(intent);
-    }
 }

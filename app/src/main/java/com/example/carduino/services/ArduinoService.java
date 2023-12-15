@@ -198,19 +198,7 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
     public void onSerialIoError(Exception e) {
         if(connected == CarduinoActivity.Connected.True) {
             synchronized (this) {
-//                if (listener != null) {
-//                    mainLooper.post(() -> {
-//                        if (listener != null) {
-//                            listener.onSerialIoError(e);
-//                        } else {
-//                            queue1.add(new QueueItem(QueueType.IoError, e));
-//                            disconnect();
-//                        }
-//                    });
-//                } else {
-//                    queue2.add(new QueueItem(QueueType.IoError, e));
-//                    disconnect();
-//                }
+                connected = CarduinoActivity.Connected.False;
             }
         }
     }
@@ -279,6 +267,11 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
             registerReceiver(broadcastReceiver, new IntentFilter(Constants.INTENT_ACTION_GRANT_USB));
 
             super.onStartCommand(intent, flags, startId);
+
+            if(!isConnected()) {
+                connectDevice();
+            }
+
             return Service.START_STICKY_COMPATIBILITY;
         }
         return Service.START_STICKY;
@@ -332,12 +325,26 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
         }
         try {
             byte[] data;
-            data = (message + TextUtil.newline_crlf).getBytes();
+            data = (message + TextUtil.newline_lf).getBytes();
             this.write(data);
         } catch (SerialTimeoutException e) {
             LoggerUtilities.logMessage("write timeout: " + e.getMessage());
         } catch (Exception e) {
             onSerialIoError(e);
+        }
+    }
+
+    public void connectDevice() {
+        UsbDevice device = null;
+        UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        for(UsbDevice v : usbManager.getDeviceList().values()) {
+            if (v.getVendorId() == 6790 && v.getProductId() == 29987) {
+                device = v;
+            }
+        }
+
+        if(device != null) {
+            connectDevice(device.getDeviceId(), false);
         }
     }
 
