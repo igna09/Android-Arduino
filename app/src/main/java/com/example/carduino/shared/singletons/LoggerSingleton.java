@@ -19,13 +19,13 @@ public class LoggerSingleton {
     private FileSystemSingleton fileSystemSingleton;
 
     private LoggerSingleton(){
+        fileSystemSingleton = FileSystemSingleton.getInstance();
         try {
             sessionFolder = createSessionFolder();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         counter = new Long(0);
-        fileSystemSingleton = FileSystemSingleton.getInstance();
     }
 
     public static LoggerSingleton getInstance() {
