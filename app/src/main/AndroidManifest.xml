@@ -46,6 +46,17 @@
         </activity>
 
         <service android:name=".services.ArduinoService"/>
+        <receiver
+            android:name=".arduinolistener.UsbDeviceConnectedReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter" />
+        </receiver>
     </application>
 
 </manifest>
