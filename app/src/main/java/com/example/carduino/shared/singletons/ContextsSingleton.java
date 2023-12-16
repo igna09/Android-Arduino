@@ -1,15 +1,15 @@
 package com.example.carduino.shared.singletons;
 
-import android.app.Application;
-import android.content.Context;
-
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.carduino.services.ArduinoService;
+import com.example.carduino.shared.MyApplication;
 
 public class ContextsSingleton {
     private static ContextsSingleton contextsSingleton;
     private AppCompatActivity mainActivityContext;
-    private Application applicationContext;
-    private Context serviceContext;
+    private MyApplication applicationContext;
+    private ArduinoService arduinoServiceContext;
 
     private ContextsSingleton(){}
     public static ContextsSingleton getInstance()
@@ -29,19 +29,19 @@ public class ContextsSingleton {
         this.mainActivityContext = mainActivityContext;
     }
 
-    public Application getApplicationContext() {
+    public MyApplication getApplicationContext() {
         return applicationContext;
     }
 
-    public void setApplicationContext(Application applicationContext) {
+    public void setApplicationContext(MyApplication applicationContext) {
         this.applicationContext = applicationContext;
     }
 
-    public Context getServiceContext() {
-        return serviceContext;
+    public ArduinoService getServiceContext() {
+        return arduinoServiceContext;
     }
 
-    public void setServiceContext(Context serviceContext) {
-        this.serviceContext = serviceContext;
+    public void setArduinoService(ArduinoService arduinoServiceContext) {
+        this.arduinoServiceContext = arduinoServiceContext;
     }
 }

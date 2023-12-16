@@ -73,7 +73,6 @@ public class CarduinoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_carduino);
 
         ContextsSingleton.getInstance().setMainActivityContext(this);
-        ContextsSingleton.getInstance().setApplicationContext(getApplication());
 
         getSupportFragmentManager().beginTransaction().replace(R.id.carduino_main_view, new Carstatus()).commit();
 
@@ -172,12 +171,12 @@ public class CarduinoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.activityResumed();
+        ContextsSingleton.getInstance().getApplicationContext().activityResumed();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MyApplication.activityPaused();
+        ContextsSingleton.getInstance().getApplicationContext().activityPaused();
     }
 }

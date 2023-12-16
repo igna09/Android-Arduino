@@ -1,6 +1,5 @@
 package com.example.carduino.services;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,10 +13,7 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.PowerManager;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -44,10 +40,9 @@ import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
 
 public class ArduinoService extends Service implements SerialListener {
-    private class ArduinoRunnable implements  Runnable {
+    private class ArduinoRunnable implements Runnable {
         Integer counter = 0;
         @Override
         public void run() {
@@ -91,10 +86,7 @@ public class ArduinoService extends Service implements SerialListener {
         }
     }
 
-    private static Thread t;
-    private CarStatusSingleton carstatusSingleton;
-    private ArduinoSingleton arduinoSingleton;
-    private ContextsSingleton contextsSingleton;
+    private static Thread testThread;
 
     class SerialBinder extends Binder {
         ArduinoService getService() { return ArduinoService.this; }
@@ -105,14 +97,11 @@ public class ArduinoService extends Service implements SerialListener {
     private CarduinoActivity.Connected connected;
 
     private final BroadcastReceiver broadcastReceiver;
-
-    private static PowerManager.WakeLock wakeLock;
     private Integer deviceIdToConnect;
 
     private final StringBuffer buffer;
 
     public ArduinoService() {
-//        mainLooper = new Handler(Looper.getMainLooper());
         binder = new SerialBinder();
 
         broadcastReceiver = new BroadcastReceiver() {
@@ -155,44 +144,8 @@ public class ArduinoService extends Service implements SerialListener {
      * SerialListener
      */
     public void onSerialConnect() {
-        if(connected == CarduinoActivity.Connected.True) {
-            synchronized (this) {
-//                if (listener != null) {
-//                    mainLooper.post(() -> {
-//                        if (listener != null) {
-//                            listener.onSerialConnect();
-//                        } else {
-//                            queue1.add(new QueueItem(QueueType.Connect));
-//                        }
-//                    });
-//                } else {
-//                    queue2.add(new QueueItem(QueueType.Connect));
-//                }
-            }
-        }
+        LoggerUtilities.logMessage("ArduinoService::onSerialConnect()", "");
     }
-
-    public void onSerialConnectError(Exception e) {
-        if(connected == CarduinoActivity.Connected.True) {
-            synchronized (this) {
-//                if (listener != null) {
-//                    mainLooper.post(() -> {
-//                        if (listener != null) {
-//                            listener.onSerialConnectError(e);
-//                        } else {
-//                            queue1.add(new QueueItem(QueueType.ConnectError, e));
-//                            disconnect();
-//                        }
-//                    });
-//                } else {
-//                    queue2.add(new QueueItem(QueueType.ConnectError, e));
-//                    disconnect();
-//                }
-            }
-        }
-    }
-
-    public void onSerialRead(ArrayDeque<byte[]> datas) { throw new UnsupportedOperationException(); }
 
     /**
      * reduce number of UI updates by merging data chunks.
@@ -203,6 +156,7 @@ public class ArduinoService extends Service implements SerialListener {
      * While not consumed (2), add more data (3).
      */
     public void onSerialRead(byte[] data) {
+        LoggerUtilities.logMessage("ArduinoService::onSerialRead()", "");
         buffer.addData(new String(data));
         String line = buffer.readNewLine();
         while(line != null) {
@@ -222,6 +176,8 @@ public class ArduinoService extends Service implements SerialListener {
     }
 
     public void onSerialIoError(Exception e) {
+        LoggerUtilities.logMessage("ArduinoService::onSerialIoError()", "");
+        LoggerUtilities.logException(e);
         if(connected == CarduinoActivity.Connected.True) {
             synchronized (this) {
                 connected = CarduinoActivity.Connected.False;
@@ -233,15 +189,7 @@ public class ArduinoService extends Service implements SerialListener {
     public void onCreate() {
         super.onCreate();
 
-        this.carstatusSingleton = CarStatusSingleton.getInstance();
-        this.carstatusSingleton.getCarStatus();
-
-        this.arduinoSingleton = ArduinoSingleton.getInstance();
-        this.arduinoSingleton.setArduinoService(this);
-        this.arduinoSingleton.getCircularArrayList();
-
-        this.contextsSingleton = ContextsSingleton.getInstance();
-        this.contextsSingleton.setServiceContext(this);
+        ContextsSingleton.getInstance().setArduinoService(this);
     }
 
     @Override
@@ -249,7 +197,7 @@ public class ArduinoService extends Service implements SerialListener {
         if (intent != null && intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
             LoggerUtilities.logMessage("service", "Stopping");
 
-            t.interrupt();
+            testThread.interrupt();
 
             stopForeground(true);
             stopSelfResult(startId);
@@ -258,16 +206,16 @@ public class ArduinoService extends Service implements SerialListener {
                 ContextsSingleton.getInstance().getMainActivityContext().finishAffinity();
             }
 
-            if(wakeLock.isHeld()){
-                wakeLock.release();
-            }
+//            if(wakeLock.isHeld()){
+//                wakeLock.release();
+//            }
 
             return START_NOT_STICKY;
         } else if(intent == null || (intent != null && intent.getAction() == null || (intent.getAction().equals("START_FOREGROUND")))) {
             LoggerUtilities.logMessage("service", "Starting");
 
-            t = new Thread(new ArduinoRunnable());
-            t.start();
+            testThread = new Thread(new ArduinoRunnable());
+            testThread.start();
 
             final String CHANNELID = "Foreground Service ID";
             NotificationChannel channel = new NotificationChannel(
@@ -290,10 +238,10 @@ public class ArduinoService extends Service implements SerialListener {
 
             startForeground(1001, notification.build());
 
-            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    "Carduino::MyWakelockTag");
-            wakeLock.acquire();
+//            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+//            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+//                    "Carduino::MyWakelockTag");
+//            wakeLock.acquire();
 
             registerReceiver(broadcastReceiver, new IntentFilter(Constants.INTENT_ACTION_GRANT_USB));
 
@@ -322,7 +270,7 @@ public class ArduinoService extends Service implements SerialListener {
         try {
             if(message.trim().length() > 0) {
                 LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + message);
-                this.arduinoSingleton.getCircularArrayList().add(message);
+                ArduinoSingleton.getInstance().getCircularArrayList().add(message);
 
                 String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
@@ -380,7 +328,9 @@ public class ArduinoService extends Service implements SerialListener {
     }
 
     public void connectDevice(Integer deviceId, Boolean granted) {
+        LoggerUtilities.logMessage("ArduinoService::connectDevice()", "begin");
         deviceIdToConnect = deviceId;
+
         Integer portNum = null;
         UsbDevice device = null;
         UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
@@ -390,8 +340,10 @@ public class ArduinoService extends Service implements SerialListener {
                 portNum = 0;
             }
         if(device == null) {
-            LoggerUtilities.logMessage("CarduinoActivity", "connection failed: device not found");
+            LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connection failed: device not found");
             return;
+        } else {
+            LoggerUtilities.logMessage("ArduinoService::connectDevice()", "found device " + device.getDeviceName());
         }
 
         UsbSerialDriver driver = UsbSerialProber.getDefaultProber().probeDevice(device);
@@ -399,18 +351,21 @@ public class ArduinoService extends Service implements SerialListener {
             driver = CustomProber.getCustomProber().probeDevice(device);
         }
         if(driver == null) {
-            LoggerUtilities.logMessage("CarduinoActivity", "connection failed: no driver for device");
+            LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connection failed: no driver for device");
             return;
+        } else {
+            LoggerUtilities.logMessage("ArduinoService::connectDevice()", "found driver " + driver);
         }
 
         if(driver.getPorts().size() < portNum) {
-            LoggerUtilities.logMessage("CarduinoActivity","connection failed: not enough ports at device");
+            LoggerUtilities.logMessage("ArduinoService::connectDevice()","connection failed: not enough ports at device");
             return;
         }
         UsbSerialPort usbSerialPort = driver.getPorts().get(portNum);
 
         UsbDeviceConnection usbConnection = usbManager.openDevice(driver.getDevice());
         if(usbConnection == null && (granted == null || granted == false) && !usbManager.hasPermission(driver.getDevice())) {
+            LoggerUtilities.logMessage("ArduinoService::connectDevice()","requesting permissions");
             int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_MUTABLE : 0;
             PendingIntent usbPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(Constants.INTENT_ACTION_GRANT_USB), flags);
             usbManager.requestPermission(driver.getDevice(), usbPermissionIntent);
@@ -418,9 +373,9 @@ public class ArduinoService extends Service implements SerialListener {
         }
         if(usbConnection == null) {
             if (!usbManager.hasPermission(driver.getDevice()))
-                LoggerUtilities.logMessage("CarduinoActivity", "connection failed: permission denied");
+                LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connection failed: permission denied");
             else
-                LoggerUtilities.logMessage("CarduinoActivity", "connection failed: open failed");
+                LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connection failed: open failed");
             return;
         }
 
@@ -429,13 +384,14 @@ public class ArduinoService extends Service implements SerialListener {
             try {
                 usbSerialPort.setParameters(115200, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
             } catch (UnsupportedOperationException e) {
-                LoggerUtilities.logMessage("CarduinoActivity", "Setting serial parameters failed: " + e.getMessage());
+                LoggerUtilities.logException(e);
             }
             SerialSocket socket = new SerialSocket(getApplicationContext(), usbConnection, usbSerialPort);
             ArduinoSingleton.getInstance().getArduinoService().connect(socket);
         } catch (Exception e) {
-            ArduinoSingleton.getInstance().getArduinoService().onSerialConnectError(e);
+            LoggerUtilities.logException(e);
         }
+        LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connected");
     }
 
     public Boolean isConnected() {
