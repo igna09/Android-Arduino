@@ -1,9 +1,11 @@
 package com.example.carduino.shared.models.trip.tripvalue;
 
+import com.example.carduino.shared.models.carstatus.CarStatusEnum;
+
 import java.util.Date;
 
 public abstract class TripValue<T> {
-    private TripValueEnum tripValueEnum;
+    private CarStatusEnum carStatusEnum;
     private T average;
     private T max;
     private T sum;
@@ -52,11 +54,11 @@ public abstract class TripValue<T> {
         this.sum = sum;
     }
 
-    public TripValueEnum getTripValueEnum() {
-        return tripValueEnum;
+    public CarStatusEnum getTripValueEnum() {
+        return carStatusEnum;
     }
 
-    public void setTripValueEnum(TripValueEnum tripValueEnum) {
-        this.tripValueEnum = tripValueEnum;
+    public void setTripValueEnum(CarStatusEnum carStatusEnum) {
+        this.carStatusEnum = carStatusEnum;
     }
 }

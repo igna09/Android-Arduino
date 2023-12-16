@@ -1,5 +1,6 @@
 package com.example.carduino.shared.models.trip;
 
+import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 import com.example.carduino.shared.models.trip.tripvalue.FloatTripValue;
 import com.example.carduino.shared.models.trip.tripvalue.IntegerTripValue;
 import com.example.carduino.shared.models.trip.tripvalue.TripValue;
@@ -12,7 +13,7 @@ import java.util.Map;
 public class Trip {
     private Boolean started;
     private Date begin;
-    private Map<TripValueEnum, TripValue> tripValues;
+    private Map<CarStatusEnum, TripValue> tripValues;
 
     public Trip() {
         started = false;
@@ -33,16 +34,20 @@ public class Trip {
         return started;
     }
 
-    public void addTripValue(TripValueEnum tripValueEnum, Object value) {
-        if(!tripValues.containsKey(tripValueEnum)) {
+    public void addTripValue(CarStatusEnum carStatusEnum, Object value) {
+        if(!tripValues.containsKey(carStatusEnum)) {
             try {
-                TripValue tripValue = (TripValue) tripValueEnum.getClazz().newInstance();
-                tripValue.setTripValueEnum(tripValueEnum);
-                tripValues.put(tripValueEnum, tripValue);
+                TripValue tripValue = (TripValue) carStatusEnum.getTripType().newInstance();
+                tripValue.setTripValueEnum(carStatusEnum);
+                tripValues.put(carStatusEnum, tripValue);
             } catch (IllegalAccessException | InstantiationException e) {
                 throw new RuntimeException(e);
             }
         }
-        tripValues.get(tripValueEnum).addValue(value);
+        tripValues.get(carStatusEnum).addValue(value);
+    }
+
+    public Map<CarStatusEnum, TripValue> getTripValues() {
+        return tripValues;
     }
 }

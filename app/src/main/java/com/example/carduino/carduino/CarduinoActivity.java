@@ -24,6 +24,7 @@ import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 import com.example.carduino.shared.utilities.PermissionUtilities;
 import com.example.carduino.test.Test;
+import com.example.carduino.trip.Trip;
 import com.google.android.material.navigationrail.NavigationRailView;
 
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class CarduinoActivity extends AppCompatActivity {
 
         menuItems = new ArrayList<>();
         menuItems.add(new MyMenuItem(0, "Carstatus", R.drawable.baseline_directions_car_24, Carstatus.class));
+        menuItems.add(new MyMenuItem(4, "Trip", R.drawable.baseline_bar_chart_24, Trip.class));
         menuItems.add(new MyMenuItem(2, "CAN bus", R.drawable.baseline_usb_24, Canbus.class));
         menuItems.add(new MyMenuItem(1, "Settings", R.drawable.baseline_settings_24, Settings.class));
         menuItems.add(new MyMenuItem(3, "Test", R.drawable.baseline_tips_and_updates_24, Test.class));
