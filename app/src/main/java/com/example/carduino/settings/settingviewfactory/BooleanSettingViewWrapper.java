@@ -15,7 +15,7 @@ public class BooleanSettingViewWrapper extends SettingViewWrapper<Boolean> {
 
     @Override
     public void generateView(String label) {
-        View view = LayoutInflater.from(ContextsSingleton.getInstance().getMainActivityContext()).inflate(R.layout.boolean_setting, null);
+        View view = LayoutInflater.from(ContextsSingleton.getInstance().getApplicationContext()).inflate(R.layout.boolean_setting, null);
 
         TextView booleanSettingLabel = view.findViewById(R.id.boolean_setting_label);
         booleanSettingLabel.setText(label);
