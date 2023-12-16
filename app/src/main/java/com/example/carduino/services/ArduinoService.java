@@ -182,10 +182,13 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
     public void onSerialRead(byte[] data) {
         buffer.addData(new String(data));
         String line = buffer.readNewLine();
-        if(connected == CarduinoActivity.Connected.True && line != null) {
-            synchronized (this) {
-                onArduinoMessage(line);
-            }
+        while(line != null) {
+//            if (connected == CarduinoActivity.Connected.True) {
+                synchronized (this) {
+                    onArduinoMessage(line);
+                }
+//            }
+            line = buffer.readNewLine();
         }
     }
 
