@@ -35,7 +35,7 @@
         <activity
             android:name=".arduinolistener.UsbEventReceiverActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Transparent"
+            android:theme="@style/Theme.AppCompat.Translucent"
             android:noHistory="true"
             android:excludeFromRecents="true"
             android:exported="true">
