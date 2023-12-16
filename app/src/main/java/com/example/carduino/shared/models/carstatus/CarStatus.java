@@ -32,7 +32,7 @@ public class CarStatus {
         this.support = new PropertyChangeSupport(this);
 
         this.propertyChangeListener = new GeneralCarStatusPropertyChangeListener();
-        this.addPropertyChangeListener(this.propertyChangeListener);
+//        this.addPropertyChangeListener(this.propertyChangeListener);
     }
 
     public void putValue(Value value) {

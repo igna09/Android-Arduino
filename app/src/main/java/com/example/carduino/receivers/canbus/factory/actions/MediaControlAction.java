@@ -38,7 +38,14 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
                         audioManager2.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
                         audioManager2.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_VOLUME_UP));
                     }
-                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
+//                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Instrumentation instrumentation = new Instrumentation();
+                            instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
+                        }
+                    }).start();
                     break;
 
                 case VOLUME_DOWN:
@@ -52,7 +59,14 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
                         audioManager2.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_DOWN));
                         audioManager2.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_VOLUME_DOWN));
                     }
-                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_DOWN);
+//                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_DOWN);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Instrumentation instrumentation = new Instrumentation();
+                            instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_DOWN);
+                        }
+                    }).start();
                     break;
 
                 case NEXT:

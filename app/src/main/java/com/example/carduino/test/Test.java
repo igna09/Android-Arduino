@@ -30,11 +30,20 @@ public class Test extends Fragment {
         Button button1 = r.findViewById(R.id.button1);
         button1.setOnClickListener(v -> {
             AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+        });
+        r.findViewById(R.id.button1_2).setOnClickListener(v -> {
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
         });
 
         Button button2 = r.findViewById(R.id.button2);
         button2.setOnClickListener(v -> {
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_DOWN));
+            audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_VOLUME_DOWN));
+        });
+        r.findViewById(R.id.button2_2).setOnClickListener(v -> {
             AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
             audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_VOLUME_UP));
@@ -43,11 +52,20 @@ public class Test extends Fragment {
         Button button3 = r.findViewById(R.id.button3);
         button3.setOnClickListener(v -> {
             AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getServiceContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+        });
+        r.findViewById(R.id.button3_2).setOnClickListener(v -> {
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getServiceContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
         });
 
         Button button4 = r.findViewById(R.id.button4);
         button4.setOnClickListener(v -> {
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getServiceContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_DOWN));
+            audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_VOLUME_DOWN));
+        });
+        r.findViewById(R.id.button4_2).setOnClickListener(v -> {
             AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getServiceContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
             audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_VOLUME_UP));
@@ -55,8 +73,22 @@ public class Test extends Fragment {
 
         Button button5 = r.findViewById(R.id.button5);
         button5.setOnClickListener(v -> {
-            Instrumentation instrumentation = new Instrumentation();
-            instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final Instrumentation instrumentation = new Instrumentation();
+                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_DOWN);
+                }
+            }).start();
+        });
+        r.findViewById(R.id.button5_2).setOnClickListener(v -> {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final Instrumentation instrumentation = new Instrumentation();
+                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
+                }
+            }).start();
         });
 
         Button button6 = r.findViewById(R.id.button6);

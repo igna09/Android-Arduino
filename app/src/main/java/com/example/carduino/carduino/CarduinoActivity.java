@@ -84,14 +84,6 @@ public class CarduinoActivity extends AppCompatActivity {
             }
         }
 
-//        if(getIntent() != null) {
-//            UsbDevice device = (UsbDevice) getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE);
-//            if(device != null)
-//                Toast.makeText(this, Integer.valueOf(device.getDeviceId()).toString(), Toast.LENGTH_SHORT).show();
-//            else
-//                Toast.makeText(this, "no device", Toast.LENGTH_SHORT).show();
-//        }
-
         menuItems = new ArrayList<>();
         menuItems.add(new MyMenuItem(0, "Carstatus", R.drawable.baseline_directions_car_24, Carstatus.class));
         menuItems.add(new MyMenuItem(2, "CAN bus", R.drawable.baseline_usb_24, Canbus.class));
