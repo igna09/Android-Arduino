@@ -56,30 +56,22 @@ public class LoggerSingleton {
         File logFile = null;
         try {
             logFile = fileSystemSingleton.createOrGetFile(sessionFolder, file + ".txt");
+
+            StringBuilder builder = new StringBuilder();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+            builder.append(df.format(new Date()));
+            builder.append(" - ");
+            builder.append(counter.toString());
+            builder.append(" - ");
+            builder.append(text);
+            builder.append('\n');
+
+            Boolean writed = fileSystemSingleton.writeToFile(logFile, builder.toString(), true);
+            if(writed) {
+                increaseCounter();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-        try
-        {
-            //BufferedWriter for performance, true to set append to file flag
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-//            SimpleDateFormat.getDateTimeInstance();
-            buf.append(df.format(new Date()));
-            buf.append(" - ");
-            buf.append(counter.toString());
-            buf.append(" - ");
-            buf.append(text);
-            buf.newLine();
-            buf.flush();
-            buf.close();
-
-            increaseCounter();
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
 

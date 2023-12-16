@@ -36,7 +36,9 @@ public class Trip {
     public void addTripValue(TripValueEnum tripValueEnum, Object value) {
         if(!tripValues.containsKey(tripValueEnum)) {
             try {
-                tripValues.put(tripValueEnum, (TripValue) tripValueEnum.getClazz().newInstance());
+                TripValue tripValue = (TripValue) tripValueEnum.getClazz().newInstance();
+                tripValue.setTripValueEnum(tripValueEnum);
+                tripValues.put(tripValueEnum, tripValue);
             } catch (IllegalAccessException | InstantiationException e) {
                 throw new RuntimeException(e);
             }

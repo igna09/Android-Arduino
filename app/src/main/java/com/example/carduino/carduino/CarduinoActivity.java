@@ -2,12 +2,14 @@ package com.example.carduino.carduino;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -16,7 +18,9 @@ import com.example.carduino.canbus.fragments.Canbus;
 import com.example.carduino.carstatus.Carstatus;
 import com.example.carduino.services.ArduinoService;
 import com.example.carduino.settings.fragments.Settings;
+import com.example.carduino.shared.MyApplication;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 import com.example.carduino.shared.utilities.PermissionUtilities;
 import com.example.carduino.test.Test;
@@ -161,5 +165,17 @@ public class CarduinoActivity extends AppCompatActivity {
         Intent stopIntent = new Intent(CarduinoActivity.this, ArduinoService.class);
         stopIntent.setAction("STOP_FOREGROUND");
         startService(stopIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
     }
 }

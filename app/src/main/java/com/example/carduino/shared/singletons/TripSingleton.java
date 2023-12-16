@@ -1,8 +1,16 @@
 package com.example.carduino.shared.singletons;
 
+import android.media.MediaScannerConnection;
+
 import com.example.carduino.shared.models.trip.Trip;
+import com.example.carduino.shared.models.trip.tripvalue.TripValue;
+import com.example.carduino.shared.models.trip.tripvalue.TripValueEnum;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,8 +20,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 
 public class TripSingleton {
+    private class TripValueDeserializer implements JsonDeserializer<TripValue> {
+        @Override
+        public TripValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String stringType = json.getAsJsonObject().get("tripValueEnum").getAsString();
+            TripValueEnum type;
+            try {
+                type = TripValueEnum.valueOf(stringType);
+            } catch (IllegalArgumentException e) {
+                type = null;
+            }
+            if(type == null) {
+                throw new IllegalArgumentException("No TripValuEnum exists for" + stringType);
+            } else {
+                return context.deserialize(json, type.getClazz());
+            }
+        }
+    }
     private static TripSingleton tripSingleton;
 
     private Trip trip;
@@ -39,7 +65,22 @@ public class TripSingleton {
                 }
             }
         });
-        backupThread.start();
+    }
+
+    public void startBackupThread() {
+        if(!backupThread.isAlive()) {
+            backupThread.start();
+        }
+    }
+
+    public void startTrip() {
+        startBackupThread();
+        trip.startTrip();
+    }
+
+    public void stopTrip() {
+        trip.stopTrip();
+        stopBackupThread();
     }
 
     public void stopBackupThread() {
@@ -58,17 +99,18 @@ public class TripSingleton {
     }
 
     public void backupTrip() throws IOException {
-        File tripFile = fileSystemSingleton.createOrGetFile(fileSystemSingleton.getCarduinoRootFolder(), TRIP_FILE_NAME);
+        File tripFile = getTripFile();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(trip);
 
-        BufferedWriter buf = new BufferedWriter(new FileWriter(tripFile, false));
+        if(tripFile != null) {
+            fileSystemSingleton.writeToFile(tripFile, json, false);
+        }
+    }
 
-        buf.append(json);
-
-        buf.flush();
-        buf.close();
+    private File getTripFile() throws IOException {
+        return fileSystemSingleton.createOrGetFile(fileSystemSingleton.getCarduinoRootFolder(), TRIP_FILE_NAME);
     }
 
     public Boolean tripBackupAvailable() {
@@ -77,13 +119,15 @@ public class TripSingleton {
 
     public Boolean restoreTrip() throws Exception {
         if(tripBackupAvailable()) {
-            File tripFile = fileSystemSingleton.createOrGetFile(fileSystemSingleton.getCarduinoRootFolder(), TRIP_FILE_NAME);
+            File tripFile = getTripFile();
 
             FileInputStream fin = new FileInputStream(tripFile);
             String json = convertStreamToString(fin);
             fin.close();;
 
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(TripValue.class, new TripValueDeserializer())
+                    .create();
             trip = gson.fromJson(json, Trip.class);
 
             return true;

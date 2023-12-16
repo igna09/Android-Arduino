@@ -3,6 +3,7 @@ package com.example.carduino.shared.models.trip.tripvalue;
 import java.util.Date;
 
 public abstract class TripValue<T> {
+    private TripValueEnum tripValueEnum;
     private T average;
     private T max;
     private T sum;
@@ -49,5 +50,13 @@ public abstract class TripValue<T> {
 
     public void setSum(T sum) {
         this.sum = sum;
+    }
+
+    public TripValueEnum getTripValueEnum() {
+        return tripValueEnum;
+    }
+
+    public void setTripValueEnum(TripValueEnum tripValueEnum) {
+        this.tripValueEnum = tripValueEnum;
     }
 }

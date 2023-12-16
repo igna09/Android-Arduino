@@ -46,8 +46,52 @@ import com.hoho.android.usbserial.driver.UsbSerialProber;
 import java.io.IOException;
 import java.util.ArrayDeque;
 
-public class ArduinoService extends Service implements SerialListener/*ArduinoListener*/ {
-//    private Arduino arduino;
+public class ArduinoService extends Service implements SerialListener {
+    private class ArduinoRunnable implements  Runnable {
+        Integer counter = 0;
+        @Override
+        public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
+//                            Log.e("Service", "Service is running...");
+//                            Logger.getInstance().log("Service is running...");
+                try {
+//                    long s = getIntegerRandomNumber(1, 10) * 1000;
+//                    Log.d("sleep", "Sleeping for " + s);
+//                    Thread.sleep(s);
+                        onArduinoMessage("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200));
+                        onArduinoMessage("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10));
+                        onArduinoMessage("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500));
+                        onArduinoMessage("CAR_STATUS;BATTERY_VOLTAGE;" + getFloatRandomNumber(11, 14));
+//                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;");
+                    if(counter >= 10)
+                        onArduinoMessage("CAR_STATUS;ENGINE_RPM;" + getIntegerRandomNumber(900, 4000));
+//                    if(counter % 5 == 0) {
+//                        if(counter % 2 == 0) {
+//                            onArduinoMessage("MEDIA_CONTROL;VOLUME_UP;0;".getBytes());
+//                        } else {
+//                            onArduinoMessage("MEDIA_CONTROL;VOLUME_DOWN;0;".getBytes());
+//                        }
+//                    }
+                    Thread.sleep(1000);
+                    counter++;
+                } catch (InterruptedException e) {
+                    LoggerUtilities.logException(e);
+                    return;
+                }
+            }
+            LoggerUtilities.logMessage("ArduinoService", "service stopped");
+        }
+
+        public Integer getIntegerRandomNumber(int min, int max) {
+            return (int) ((Math.random() * (max - min)) + min);
+        }
+
+        public Float getFloatRandomNumber(int min, int max) {
+            return (float) ((Math.random() * (max - min)) + min);
+        }
+    }
+
+    private static Thread t;
     private CarStatusSingleton carstatusSingleton;
     private ArduinoSingleton arduinoSingleton;
     private ContextsSingleton contextsSingleton;
@@ -55,28 +99,9 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
     class SerialBinder extends Binder {
         ArduinoService getService() { return ArduinoService.this; }
     }
-
-    private enum QueueType {Connect, ConnectError, Read, IoError}
-
-    private static class QueueItem {
-        QueueType type;
-        ArrayDeque<byte[]> datas;
-        Exception e;
-
-        QueueItem(QueueType type) { this.type=type; if(type==QueueType.Read) init(); }
-        QueueItem(QueueType type, Exception e) { this.type=type; this.e=e; }
-        QueueItem(QueueType type, ArrayDeque<byte[]> datas) { this.type=type; this.datas=datas; }
-
-        void init() { datas = new ArrayDeque<>(); }
-        void add(byte[] data) { datas.add(data); }
-    }
-
-    private final Handler mainLooper;
     private final IBinder binder;
-    private final ArrayDeque<QueueItem> queue1, queue2;
 
     private SerialSocket socket;
-    private SerialListener listener;
     private CarduinoActivity.Connected connected;
 
     private final BroadcastReceiver broadcastReceiver;
@@ -84,13 +109,11 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
     private static PowerManager.WakeLock wakeLock;
     private Integer deviceIdToConnect;
 
-    private StringBuffer buffer;
+    private final StringBuffer buffer;
 
     public ArduinoService() {
-        mainLooper = new Handler(Looper.getMainLooper());
+//        mainLooper = new Handler(Looper.getMainLooper());
         binder = new SerialBinder();
-        queue1 = new ArrayDeque<>();
-        queue2 = new ArrayDeque<>();
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -134,17 +157,17 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
     public void onSerialConnect() {
         if(connected == CarduinoActivity.Connected.True) {
             synchronized (this) {
-                if (listener != null) {
-                    mainLooper.post(() -> {
-                        if (listener != null) {
-                            listener.onSerialConnect();
-                        } else {
-                            queue1.add(new QueueItem(QueueType.Connect));
-                        }
-                    });
-                } else {
-                    queue2.add(new QueueItem(QueueType.Connect));
-                }
+//                if (listener != null) {
+//                    mainLooper.post(() -> {
+//                        if (listener != null) {
+//                            listener.onSerialConnect();
+//                        } else {
+//                            queue1.add(new QueueItem(QueueType.Connect));
+//                        }
+//                    });
+//                } else {
+//                    queue2.add(new QueueItem(QueueType.Connect));
+//                }
             }
         }
     }
@@ -152,19 +175,19 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
     public void onSerialConnectError(Exception e) {
         if(connected == CarduinoActivity.Connected.True) {
             synchronized (this) {
-                if (listener != null) {
-                    mainLooper.post(() -> {
-                        if (listener != null) {
-                            listener.onSerialConnectError(e);
-                        } else {
-                            queue1.add(new QueueItem(QueueType.ConnectError, e));
-                            disconnect();
-                        }
-                    });
-                } else {
-                    queue2.add(new QueueItem(QueueType.ConnectError, e));
-                    disconnect();
-                }
+//                if (listener != null) {
+//                    mainLooper.post(() -> {
+//                        if (listener != null) {
+//                            listener.onSerialConnectError(e);
+//                        } else {
+//                            queue1.add(new QueueItem(QueueType.ConnectError, e));
+//                            disconnect();
+//                        }
+//                    });
+//                } else {
+//                    queue2.add(new QueueItem(QueueType.ConnectError, e));
+//                    disconnect();
+//                }
             }
         }
     }
@@ -226,6 +249,8 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
         if (intent != null && intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
             LoggerUtilities.logMessage("service", "Stopping");
 
+            t.interrupt();
+
             stopForeground(true);
             stopSelfResult(startId);
 
@@ -240,6 +265,9 @@ public class ArduinoService extends Service implements SerialListener/*ArduinoLi
             return START_NOT_STICKY;
         } else if(intent == null || (intent != null && intent.getAction() == null || (intent.getAction().equals("START_FOREGROUND")))) {
             LoggerUtilities.logMessage("service", "Starting");
+
+            t = new Thread(new ArduinoRunnable());
+            t.start();
 
             final String CHANNELID = "Foreground Service ID";
             NotificationChannel channel = new NotificationChannel(
