@@ -58,12 +58,18 @@ public class Trip extends Fragment {
             if(trip.getTripValues().containsKey(tripCardEnum.carstatusEnum.name()) && trip.getTripValues().get(tripCardEnum.carstatusEnum.name()) != null) {
                 TripValue v = (TripValue) trip.getTripValues().get(tripCardEnum.carstatusEnum.name());
                 if(v.getAverage() != null) {
-                    card.setValueWithTransformator(v.getAverage().toString());
+                    card.setAvgValueWithTransformator(v.getAverage().toString());
                 } else {
-                    card.value = "-";
+                    card.avgValue = "-";
+                }
+                if(v.getMax() != null) {
+                    card.setAvgValueWithTransformator(v.getMax().toString());
+                } else {
+                    card.maxValue = "-";
                 }
             } else {
-                card.value = "-";
+                card.avgValue = "-";
+                card.maxValue = "-";
             }
 
             return card;
@@ -101,7 +107,8 @@ public class Trip extends Fragment {
                             cards.forEach(card -> {
                                 TripValue tripValue = TripSingleton.getInstance().getTrip().getTripValues().get(card.carstatusEnum);
                                 if(tripValue != null) {
-                                    card.setValueWithTransformator(tripValue.getAverage().toString());
+                                    card.setAvgValueWithTransformator(tripValue.getAverage().toString());
+                                    card.setMaxValueWithTransformator(tripValue.getMax().toString());
                                     updateCardView(card);
                                 }
                             });
@@ -121,12 +128,14 @@ public class Trip extends Fragment {
     }
 
     CardView addCardView(ViewGroup container, CardModel model){
-        CardView v = (CardView) LayoutInflater.from(getContext()).inflate(R.layout.card_text, null);
+        CardView v = (CardView) LayoutInflater.from(getContext()).inflate(R.layout.card_trip, null);
 
         TextView title = v.findViewById(R.id.title);
         title.setText(model.title);
-        TextView unit = v.findViewById(R.id.unit);
-        unit.setText(model.unit);
+        TextView avgUnit = v.findViewById(R.id.avg_unit);
+        avgUnit.setText(model.unit);
+        TextView maxUnit = v.findViewById(R.id.max_unit);
+        maxUnit.setText(model.unit);
 
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
         lp.setGravity(Gravity.CENTER);
@@ -142,8 +151,12 @@ public class Trip extends Fragment {
     }
 
     public void updateCardView(CardModel cardModel) {
-        TextView textView = cardModel.cardView.findViewById(R.id.value);
-        textView.setText(cardModel.value);
+        TextView avgTextView = cardModel.cardView.findViewById(R.id.avg_value);
+        avgTextView.setText(cardModel.avgValue);
+        avgTextView.requestLayout();
+        TextView maxTextView = cardModel.cardView.findViewById(R.id.max_value);
+        maxTextView.setText(cardModel.maxValue);
+        maxTextView.requestLayout();
     }
 
     @Override

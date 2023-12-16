@@ -9,7 +9,8 @@ import java.beans.PropertyChangeListenerProxy;
 
 class CardModel {
     String title;
-    String value;
+    String maxValue;
+    String avgValue;
     String unit;
     Integer row;
     Integer column;
@@ -23,9 +24,10 @@ class CardModel {
     CardView cardView;
     CardTransformator transformator;
 
-    public CardModel(String title, String value, String unit, int row, int column) {
+    public CardModel(String title, String maxValue, String avgValue, String unit, int row, int column) {
         this.title = title;
-        this.value = value;
+        this.maxValue = maxValue;
+        this.avgValue = avgValue;
         this.unit = unit;
         this.row = row;
         this.column = column;
@@ -36,17 +38,29 @@ class CardModel {
     }
 
     public CardModel(int row, int column) {
-        this("-", null, "-", row, column);
+        this("-", null, null, "-", row, column);
     }
 
-    public void setValueWithTransformator(String value) {
+    public void setMaxValueWithTransformator(String value) {
         if(this.transformator != null) {
-            this.value = this.transformator.transform(value);
+            this.maxValue = this.transformator.transform(value);
         } else {
             if(value != null) {
-                this.value = value;
+                this.maxValue = value;
             } else {
-                this.value = "-";
+                this.maxValue = "-";
+            }
+        }
+    }
+
+    public void setAvgValueWithTransformator(String value) {
+        if(this.transformator != null) {
+            this.avgValue = this.transformator.transform(value);
+        } else {
+            if(value != null) {
+                this.avgValue = value;
+            } else {
+                this.avgValue = "-";
             }
         }
     }
