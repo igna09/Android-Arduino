@@ -39,6 +39,36 @@ public class MyApplication extends Application {
         contextsSingleton.setApplicationContext(this);
     }
 
+    @Override
+    public void onTrimMemory(int level) {
+        String stringLevel = "";
+        switch(level) {
+            case TRIM_MEMORY_BACKGROUND:
+                stringLevel = "TRIM_MEMORY_BACKGROUND";
+                break;
+            case TRIM_MEMORY_COMPLETE:
+                stringLevel = "TRIM_MEMORY_COMPLETE";
+                break;
+            case TRIM_MEMORY_MODERATE:
+                stringLevel = "TRIM_MEMORY_MODERATE";
+                break;
+            case TRIM_MEMORY_UI_HIDDEN:
+                stringLevel = "TRIM_MEMORY_UI_HIDDEN";
+                break;
+            case TRIM_MEMORY_RUNNING_LOW:
+                stringLevel = "TRIM_MEMORY_RUNNING_LOW";
+                break;
+            case TRIM_MEMORY_RUNNING_CRITICAL:
+                stringLevel = "TRIM_MEMORY_RUNNING_CRITICAL";
+                break;
+            case TRIM_MEMORY_RUNNING_MODERATE:
+                stringLevel = "TRIM_MEMORY_RUNNING_MODERATE";
+                break;
+        }
+        LoggerSingleton.getInstance().log("MyApplication::onTrimMemory()", stringLevel);
+        super.onTrimMemory(level);
+    }
+
     public boolean isActivityVisible() {
         return activityVisible;
     }
