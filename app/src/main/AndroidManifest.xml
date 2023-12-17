@@ -45,7 +45,6 @@
             </intent-filter>
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/usb_device_filter" />
         </activity>
-
         <service android:name=".services.ArduinoService"/>
         <receiver
             android:name=".arduinolistener.UsbDeviceConnectedReceiver"
@@ -57,7 +56,17 @@
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/usb_device_filter" />
-        </receiver>
+        </receiver><activity
+            android:name=".dialog.DialogActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.carduino.DIALOG" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
