@@ -5,6 +5,10 @@ import androidx.core.content.res.TypedArrayUtils;
 public class StringBuffer {
     private String buffer;
 
+    public StringBuffer() {
+        this.buffer = "";
+    }
+
     public void addData(String data) {
         buffer += data;
     }

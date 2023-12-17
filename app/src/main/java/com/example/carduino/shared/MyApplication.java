@@ -77,7 +77,7 @@ public class MyApplication extends Application implements Application.ActivityLi
                 stringLevel = "TRIM_MEMORY_RUNNING_MODERATE";
                 break;
         }
-        LoggerSingleton.getInstance().log("MyApplication::onTrimMemory()", stringLevel);
+        LoggerSingleton.getInstance().log("MyApplication::onTrimMemory()" + " - " + stringLevel);
         super.onTrimMemory(level);
     }
 

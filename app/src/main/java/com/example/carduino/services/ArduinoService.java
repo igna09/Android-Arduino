@@ -63,10 +63,13 @@ public class ArduinoService extends Service implements SerialListener {
                         onArduinoMessage("CAR_STATUS;ENGINE_RPM;" + getIntegerRandomNumber(900, 4000));
 //                    if(counter % 5 == 0) {
 //                        if(counter % 2 == 0) {
-//                            onArduinoMessage("MEDIA_CONTROL;VOLUME_UP;0;".getBytes());
+//                            onArduinoMessage("MEDIA_CONTROL;VOLUME_UP;0;");
 //                        } else {
-//                            onArduinoMessage("MEDIA_CONTROL;VOLUME_DOWN;0;".getBytes());
+//                            onArduinoMessage("MEDIA_CONTROL;VOLUME_DOWN;0;");
 //                        }
+//                    }
+//                    if(counter % 15 == 0) {
+//                        onArduinoMessage("MEDIA_CONTROL;LONG_PRESS;0;");
 //                    }
                     Thread.sleep(1000);
                     counter++;
@@ -159,7 +162,7 @@ public class ArduinoService extends Service implements SerialListener {
      * While not consumed (2), add more data (3).
      */
     public void onSerialRead(byte[] data) {
-        LoggerUtilities.logMessage("ArduinoService::onSerialRead()", "");
+//        LoggerUtilities.logMessage("ArduinoService::onSerialRead()", "");
         buffer.addData(new String(data));
         String line = buffer.readNewLine();
         while(line != null) {
@@ -211,7 +214,7 @@ public class ArduinoService extends Service implements SerialListener {
             LoggerUtilities.logMessage("service", "Starting");
 
             testThread = new Thread(new ArduinoRunnable());
-            testThread.start();
+//            testThread.start();
 
             final String CHANNELID = "Foreground Service ID";
             NotificationChannel channel = new NotificationChannel(
@@ -378,7 +381,7 @@ public class ArduinoService extends Service implements SerialListener {
         try {
             usbSerialPort.open(usbConnection);
             try {
-                usbSerialPort.setParameters(115200, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
+                usbSerialPort.setParameters(9600, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
             } catch (UnsupportedOperationException e) {
                 LoggerUtilities.logException(e);
             }
