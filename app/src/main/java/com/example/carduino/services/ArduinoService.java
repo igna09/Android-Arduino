@@ -116,6 +116,8 @@ public class ArduinoService extends Service implements SerialListener {
         };
 
         buffer = new StringBuffer();
+
+        ArduinoSingleton.getInstance().setArduinoService(this);
     }
 
     @Nullable
@@ -381,7 +383,7 @@ public class ArduinoService extends Service implements SerialListener {
                 LoggerUtilities.logException(e);
             }
             SerialSocket socket = new SerialSocket(getApplicationContext(), usbConnection, usbSerialPort);
-            ArduinoSingleton.getInstance().getArduinoService().connect(socket);
+            this.connect(socket);
         } catch (Exception e) {
             LoggerUtilities.logException(e);
         }

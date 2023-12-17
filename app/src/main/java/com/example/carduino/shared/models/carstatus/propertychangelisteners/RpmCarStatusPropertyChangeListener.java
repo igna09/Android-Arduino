@@ -15,7 +15,7 @@ public class RpmCarStatusPropertyChangeListener extends PropertyChangeListener<R
     public void onPropertyChange(String propertyName, Rpm oldValue, Rpm newValue) {
         if(!TripSingleton.getInstance().getTrip().isStarted() && newValue.getValue() > 0) { //Engine turned on
 //            if(ContextsSingleton.getInstance().getMainActivityContext() != null && ContextsSingleton.getInstance().getApplicationContext().isActivityVisible() && TripSingleton.getInstance().tripBackupAvailable() && !DialogUtilities.isShowingDialog()) {
-            if(TripSingleton.getInstance().tripBackupAvailable()) {
+            if(TripSingleton.getInstance().tripBackupAvailable() && !DialogUtilities.isShowingDialog()) {
                 DialogUtilities.showContinueTripSession();
             } else {
                 TripSingleton.getInstance().startTrip();

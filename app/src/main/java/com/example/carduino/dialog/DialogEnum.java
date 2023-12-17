@@ -16,13 +16,31 @@ public enum DialogEnum {
         TripSingleton.getInstance().startTrip();
     });
 
-    DialogInterface.OnClickListener positiveCallback;
-    DialogInterface.OnClickListener negativeCallback;
-    String message;
-    String title;
+    private DialogInterface.OnClickListener positiveCallback;
+    private DialogInterface.OnClickListener negativeCallback;
+    private String message;
+    private String title;
 
     DialogEnum(String title, String message, DialogInterface.OnClickListener positiveCallback, DialogInterface.OnClickListener negativeCallback) {
         this.positiveCallback = positiveCallback;
         this.negativeCallback = negativeCallback;
+        this.title = title;
+        this.message = message;
+    }
+
+    public DialogInterface.OnClickListener getPositiveCallback() {
+        return positiveCallback;
+    }
+
+    public DialogInterface.OnClickListener getNegativeCallback() {
+        return negativeCallback;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
