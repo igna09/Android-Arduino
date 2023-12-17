@@ -9,7 +9,7 @@ import com.example.carduino.shared.singletons.TripSingleton;
 public class FuelConsumptionCarStatusPropertyChangeListener extends PropertyChangeListener<FuelConsumptionKmL> {
     @Override
     public void onPropertyChange(String propertyName, FuelConsumptionKmL oldValue, FuelConsumptionKmL newValue) {
-        if(TripSingleton.getInstance().getTrip().isStarted()) {
+        if(TripSingleton.getInstance().getTrip().isStarted() && newValue.getValue() > 0 && newValue.getValue() < 50) { // avoiding abnormal values
             TripSingleton.getInstance().getTrip().addTripValue(CarStatusEnum.FUEL_CONSUMPTION, newValue.getValue());
         }
     }

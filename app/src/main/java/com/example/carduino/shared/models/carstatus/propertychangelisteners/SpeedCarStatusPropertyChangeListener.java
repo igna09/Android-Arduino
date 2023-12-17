@@ -11,7 +11,7 @@ import com.example.carduino.shared.singletons.TripSingleton;
 public class SpeedCarStatusPropertyChangeListener extends PropertyChangeListener<KmhSpeed> {
     @Override
     public void onPropertyChange(String propertyName, KmhSpeed oldValue, KmhSpeed newValue) {
-        if(TripSingleton.getInstance().getTrip().isStarted()) {
+        if(TripSingleton.getInstance().getTrip().isStarted() && newValue.getValue() > 0) {
             TripSingleton.getInstance().getTrip().addTripValue(CarStatusEnum.SPEED, newValue.getValue());
         }
     }
