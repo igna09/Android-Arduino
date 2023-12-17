@@ -28,6 +28,7 @@ import com.example.carduino.arduinolistener.TextUtil;
 import com.example.carduino.carduino.CarduinoActivity;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
+import com.example.carduino.shared.MyApplication;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.singletons.ArduinoSingleton;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
@@ -186,13 +187,6 @@ public class ArduinoService extends Service implements SerialListener {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
-        ContextsSingleton.getInstance().setArduinoService(this);
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
             LoggerUtilities.logMessage("service", "Stopping");
@@ -202,8 +196,8 @@ public class ArduinoService extends Service implements SerialListener {
             stopForeground(true);
             stopSelfResult(startId);
 
-            if(ContextsSingleton.getInstance().getApplicationContext() != null) {
-                ContextsSingleton.getInstance().getMainActivityContext().finishAffinity();
+            if(((MyApplication) getApplicationContext()).getForegroundActivity() != null) {
+                ((MyApplication) getApplicationContext()).getForegroundActivity().finishAndRemoveTask();
             }
 
 //            if(wakeLock.isHeld()){

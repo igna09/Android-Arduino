@@ -51,22 +51,22 @@ public class Test extends Fragment {
 
         Button button3 = r.findViewById(R.id.button3);
         button3.setOnClickListener(v -> {
-            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getServiceContext().getSystemService(Context.AUDIO_SERVICE);
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
         });
         r.findViewById(R.id.button3_2).setOnClickListener(v -> {
-            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getServiceContext().getSystemService(Context.AUDIO_SERVICE);
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
         });
 
         Button button4 = r.findViewById(R.id.button4);
         button4.setOnClickListener(v -> {
-            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getServiceContext().getSystemService(Context.AUDIO_SERVICE);
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_DOWN));
             audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_VOLUME_DOWN));
         });
         r.findViewById(R.id.button4_2).setOnClickListener(v -> {
-            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getServiceContext().getSystemService(Context.AUDIO_SERVICE);
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
             audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_VOLUME_UP));
         });

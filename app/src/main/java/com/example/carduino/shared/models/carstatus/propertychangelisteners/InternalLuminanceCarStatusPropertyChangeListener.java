@@ -15,7 +15,7 @@ import java.beans.PropertyChangeEvent;
 public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyChangeListener<LuxLuminance> {
     @Override
     public void onPropertyChange(String propertyName, LuxLuminance oldValue, LuxLuminance newValue) {
-        Settings.System.putInt(ContextsSingleton.getInstance().getServiceContext().getContentResolver(),
+        Settings.System.putInt(ContextsSingleton.getInstance().getApplicationContext().getContentResolver(),
                 Settings.System.SCREEN_BRIGHTNESS,
                 map(newValue.getValue(), 0, 5000, 0, 100));
     }

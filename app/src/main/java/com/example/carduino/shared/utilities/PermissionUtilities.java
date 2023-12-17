@@ -3,6 +3,7 @@ package com.example.carduino.shared.utilities;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
@@ -32,25 +33,25 @@ public class PermissionUtilities {
         return allPermissions && writePermission;
     }
 
-    public static void requestMissingPermissions() {
+    public static void requestMissingPermissions(Activity activity) {
         List<String> missingPermissions = Arrays.stream(permissions).filter(s -> {
-            int checkVal = ContextsSingleton.getInstance().getApplicationContext().checkCallingOrSelfPermission(s);
+            int checkVal = activity.checkCallingOrSelfPermission(s);
             return checkVal == PackageManager.PERMISSION_DENIED;
         }).collect(Collectors.toList());
         if(!missingPermissions.isEmpty()) {
             String[] a = new String[missingPermissions.size()];
             for(int i = 0; i < missingPermissions.size(); i++) a[i] = missingPermissions.get(i);
-            ActivityCompat.requestPermissions(ContextsSingleton.getInstance().getMainActivityContext(), a, 0);
+            ActivityCompat.requestPermissions(activity, a, 0);
         }
         Boolean writePermission = Settings.System.canWrite(ContextsSingleton.getInstance().getApplicationContext());
         if(!writePermission) {
-            requestWriteSettingsPermission();
+            requestWriteSettingsPermission(activity);
         }
     }
 
-    public static void requestWriteSettingsPermission() {
+    public static void requestWriteSettingsPermission(Activity activity) {
         Intent settingsIntent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
         settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(ContextsSingleton.getInstance().getMainActivityContext(), settingsIntent, null);
+        startActivity(activity, settingsIntent, null);
     }
 }

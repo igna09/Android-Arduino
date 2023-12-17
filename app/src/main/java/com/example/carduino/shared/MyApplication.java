@@ -1,6 +1,11 @@
 package com.example.carduino.shared;
 
+import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.carduino.shared.singletons.ArduinoSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
@@ -11,8 +16,9 @@ import com.example.carduino.shared.singletons.SettingsSingleton;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
 import com.example.carduino.shared.singletons.TripSingleton;
 
-public class MyApplication extends Application {
-    private boolean activityVisible;
+public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks {
+    //should this be an array (using oncreate and onremove)?
+    private Activity foregroundActivity;
 
     private ArduinoSingleton arduinoSingleton;
     private LoggerSingleton loggerSingleton;
@@ -37,6 +43,12 @@ public class MyApplication extends Application {
         appSwitchSingleton = AppSwitchSingleton.getInstance();
 
         contextsSingleton.setApplicationContext(this);
+
+        registerActivityLifecycleCallbacks(this);
+    }
+
+    public Activity getForegroundActivity() {
+        return foregroundActivity;
     }
 
     @Override
@@ -69,15 +81,38 @@ public class MyApplication extends Application {
         super.onTrimMemory(level);
     }
 
-    public boolean isActivityVisible() {
-        return activityVisible;
+    @Override
+    public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+
     }
 
-    public void activityResumed() {
-        activityVisible = true;
+    @Override
+    public void onActivityStarted(@NonNull Activity activity) {
+
     }
 
-    public void activityPaused() {
-        activityVisible = false;
+    @Override
+    public void onActivityResumed(@NonNull Activity activity) {
+        this.foregroundActivity = activity;
+    }
+
+    @Override
+    public void onActivityPaused(@NonNull Activity activity) {
+        this.foregroundActivity = null;
+    }
+
+    @Override
+    public void onActivityStopped(@NonNull Activity activity) {
+
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(@NonNull Activity activity) {
+
     }
 }

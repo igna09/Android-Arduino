@@ -72,11 +72,9 @@ public class CarduinoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carduino);
 
-        ContextsSingleton.getInstance().setMainActivityContext(this);
-
         getSupportFragmentManager().beginTransaction().replace(R.id.carduino_main_view, new Carstatus()).commit();
 
-        PermissionUtilities.requestMissingPermissions();
+        PermissionUtilities.requestMissingPermissions(this);
         if(!foregroundServiceRunning()) {
             LoggerUtilities.logMessage("Carduino", "service not running");
             if(PermissionUtilities.haveAllPermissions()) {
@@ -84,7 +82,7 @@ public class CarduinoActivity extends AppCompatActivity {
                 startArduinoService();
             } else {
                 LoggerUtilities.logMessage("Carduino", "application does not have all permissions, requesting them");
-                PermissionUtilities.requestMissingPermissions();
+                PermissionUtilities.requestMissingPermissions(this);
             }
         }
 
@@ -166,17 +164,5 @@ public class CarduinoActivity extends AppCompatActivity {
         Intent stopIntent = new Intent(CarduinoActivity.this, ArduinoService.class);
         stopIntent.setAction("STOP_FOREGROUND");
         startService(stopIntent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ContextsSingleton.getInstance().getApplicationContext().activityResumed();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        ContextsSingleton.getInstance().getApplicationContext().activityPaused();
     }
 }
