@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -23,6 +24,7 @@ import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 
 import java.beans.PropertyChangeListenerProxy;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -123,6 +125,23 @@ public class Trip extends Fragment {
             }
         });
         refreshThread.start();
+
+        AppCompatButton resetButton = r.findViewById(R.id.reset_button);
+        resetButton.setOnClickListener(v -> {
+            try {
+                TripSingleton.getInstance().resetTrip();
+            } catch (IOException e) {
+                LoggerUtilities.logException(e);
+            }
+        });
+        AppCompatButton restoreButton = r.findViewById(R.id.restore_button);
+        restoreButton.setOnClickListener(v -> {
+            try {
+                TripSingleton.getInstance().restoreTrip();
+            } catch (Exception e) {
+                LoggerUtilities.logException(e);
+            }
+        });
 
         return r;
     }

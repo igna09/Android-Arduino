@@ -142,6 +142,11 @@ public class TripSingleton {
         }
     }
 
+    public void resetTrip() throws IOException {
+        trip = new Trip();
+        backupTrip();
+    }
+
     public static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
