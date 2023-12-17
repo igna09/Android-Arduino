@@ -13,12 +13,6 @@ public class GeneralCarStatusPropertyChangeListener extends PropertyChangeListen
     public void onPropertyChange(String propertyName, Value oldValue, Value newValue) {
         Log.d("CarStatus", "Changed " + CarStatusEnum.valueOf(propertyName) + ", old value: " + getSafeValue(oldValue) + ", new value: " + getSafeValue(newValue));
         Log.d("CarStatus", CarStatusSingleton.getInstance().getCarStatus().toString());
-
-        switch (CarStatusEnum.valueOf(propertyName)) {
-            case SPEED:
-                //buzzer if over speed limit
-                break;
-        }
     }
 
     private String getSafeValue(Value value) {
