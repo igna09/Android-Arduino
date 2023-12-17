@@ -30,9 +30,14 @@ import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.shared.MyApplication;
 import com.example.carduino.shared.models.ArduinoMessage;
+import com.example.carduino.shared.singletons.AppSwitchSingleton;
 import com.example.carduino.shared.singletons.ArduinoSingleton;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.singletons.LoggerSingleton;
+import com.example.carduino.shared.singletons.SettingsSingleton;
+import com.example.carduino.shared.singletons.SharedDataSingleton;
+import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 import com.hoho.android.usbserial.driver.SerialTimeoutException;
@@ -90,7 +95,7 @@ public class ArduinoService extends Service implements SerialListener {
         }
     }
 
-    private static Thread testThread;
+    private static Thread keepAliveThread;
 
     class SerialBinder extends Binder {
         ArduinoService getService() { return ArduinoService.this; }
@@ -196,25 +201,33 @@ public class ArduinoService extends Service implements SerialListener {
         if (intent != null && intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
             LoggerUtilities.logMessage("service", "Stopping");
 
-            testThread.interrupt();
+            if(keepAliveThread != null && keepAliveThread.isAlive()) {
+                keepAliveThread.interrupt();
+            }
 
             stopForeground(true);
             stopSelfResult(startId);
 
             if(((MyApplication) getApplicationContext()).getForegroundActivity() != null) {
-                ((MyApplication) getApplicationContext()).getForegroundActivity().finishAndRemoveTask();
-            }
+                MyApplication myApplication = ((MyApplication) getApplicationContext());
+                myApplication.getForegroundActivity().finishAndRemoveTask();
 
-//            if(wakeLock.isHeld()){
-//                wakeLock.release();
-//            }
+                ArduinoSingleton.invalidate();
+                AppSwitchSingleton.invalidate();
+                SettingsSingleton.invalidate();
+                CarStatusSingleton.invalidate();
+                SharedDataSingleton.invalidate();
+                LoggerSingleton.invalidate();
+                TripSingleton.invalidate();
+                ContextsSingleton.invalidate();
+            }
 
             return START_NOT_STICKY;
         } else if(intent == null || (intent != null && intent.getAction() == null || (intent.getAction().equals("START_FOREGROUND")))) {
-            LoggerUtilities.logMessage("service", "Starting");
+            LoggerUtilities.logMessage("ArduinoService", "Starting service");
 
-            testThread = new Thread(new ArduinoRunnable());
-//            testThread.start();
+            keepAliveThread = new Thread(new ArduinoRunnable());
+            keepAliveThread.start();
 
             final String CHANNELID = "Foreground Service ID";
             NotificationChannel channel = new NotificationChannel(

@@ -85,4 +85,8 @@ public class LoggerSingleton {
     private void increaseCounter() {
         counter = counter + 1;
     }
+
+    public static void invalidate() {
+        instance = null;
+    }
 }

@@ -115,4 +115,68 @@ public class MyApplication extends Application implements Application.ActivityLi
     public void onActivityDestroyed(@NonNull Activity activity) {
 
     }
+
+    public ArduinoSingleton getArduinoSingleton() {
+        return arduinoSingleton;
+    }
+
+    public void setArduinoSingleton(ArduinoSingleton arduinoSingleton) {
+        this.arduinoSingleton = arduinoSingleton;
+    }
+
+    public LoggerSingleton getLoggerSingleton() {
+        return loggerSingleton;
+    }
+
+    public void setLoggerSingleton(LoggerSingleton loggerSingleton) {
+        this.loggerSingleton = loggerSingleton;
+    }
+
+    public ContextsSingleton getContextsSingleton() {
+        return contextsSingleton;
+    }
+
+    public void setContextsSingleton(ContextsSingleton contextsSingleton) {
+        this.contextsSingleton = contextsSingleton;
+    }
+
+    public FileSystemSingleton getFileSystemSingleton() {
+        return fileSystemSingleton;
+    }
+
+    public void setFileSystemSingleton(FileSystemSingleton fileSystemSingleton) {
+        this.fileSystemSingleton = fileSystemSingleton;
+    }
+
+    public SettingsSingleton getSettingsSingleton() {
+        return settingsSingleton;
+    }
+
+    public void setSettingsSingleton(SettingsSingleton settingsSingleton) {
+        this.settingsSingleton = settingsSingleton;
+    }
+
+    public SharedDataSingleton getSharedDataSingleton() {
+        return sharedDataSingleton;
+    }
+
+    public void setSharedDataSingleton(SharedDataSingleton sharedDataSingleton) {
+        this.sharedDataSingleton = sharedDataSingleton;
+    }
+
+    public TripSingleton getTripSingleton() {
+        return tripSingleton;
+    }
+
+    public void setTripSingleton(TripSingleton tripSingleton) {
+        this.tripSingleton = tripSingleton;
+    }
+
+    public AppSwitchSingleton getAppSwitchSingleton() {
+        return appSwitchSingleton;
+    }
+
+    public void setAppSwitchSingleton(AppSwitchSingleton appSwitchSingleton) {
+        this.appSwitchSingleton = appSwitchSingleton;
+    }
 }

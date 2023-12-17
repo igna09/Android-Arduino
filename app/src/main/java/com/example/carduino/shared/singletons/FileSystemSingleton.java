@@ -66,4 +66,8 @@ public class FileSystemSingleton {
             return false;
         }
     }
+
+    public static void invalidate() {
+        instance = null;
+    }
 }

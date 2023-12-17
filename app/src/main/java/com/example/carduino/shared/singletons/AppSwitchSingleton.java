@@ -31,4 +31,8 @@ public class AppSwitchSingleton {
         }
         nextPackageIndexToOpen++;
     }
+
+    public static void invalidate() {
+        instance = null;
+    }
 }

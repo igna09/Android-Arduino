@@ -1,7 +1,5 @@
 package com.example.carduino.shared.singletons;
 
-import android.view.View;
-
 import com.example.carduino.settings.settingviewfactory.SettingViewWrapper;
 import com.example.carduino.shared.models.Settings;
 
@@ -9,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SettingsSingleton {
-    private static SettingsSingleton settingsSingleton;
+    private static SettingsSingleton instance;
 
     private Settings settings;
     private Map<String, SettingViewWrapper> settingViews;
@@ -18,11 +16,11 @@ public class SettingsSingleton {
 
     public static SettingsSingleton getInstance()
     {
-        if (settingsSingleton == null)
+        if (instance == null)
         {
-            settingsSingleton = new SettingsSingleton();
+            instance = new SettingsSingleton();
         }
-        return settingsSingleton;
+        return instance;
     }
 
     public Settings getSettings() {
@@ -37,5 +35,9 @@ public class SettingsSingleton {
             this.settingViews = new HashMap<>();
         }
         return settingViews;
+    }
+
+    public static void invalidate() {
+        instance = null;
     }
 }

@@ -1,7 +1,5 @@
 package com.example.carduino.shared.singletons;
 
-import android.media.MediaScannerConnection;
-
 import com.example.carduino.shared.models.trip.Trip;
 import com.example.carduino.shared.models.trip.tripvalue.TripValue;
 import com.example.carduino.shared.models.trip.tripvalue.TripValueEnum;
@@ -13,10 +11,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,21 +22,31 @@ public class TripSingleton {
     private class TripValueDeserializer implements JsonDeserializer<TripValue> {
         @Override
         public TripValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            String stringType = json.getAsJsonObject().get("tripValueEnum").getAsString();
-            TripValueEnum type;
-            try {
-                type = TripValueEnum.valueOf(stringType);
-            } catch (IllegalArgumentException e) {
-                type = null;
-            }
-            if(type == null) {
-                throw new IllegalArgumentException("No TripValuEnum exists for" + stringType);
+            JsonElement jsonElement = json.getAsJsonObject().get("tripValueEnum");
+            if(jsonElement != null) {
+                String stringType = jsonElement.getAsString();
+                TripValueEnum type;
+                try {
+                    type = TripValueEnum.valueOf(stringType);
+                } catch (IllegalArgumentException e) {
+                    type = null;
+                }
+                if(type == null) {
+                    throw new IllegalArgumentException("No TripValuEnum exists for" + stringType);
+                } else {
+                    return context.deserialize(json, type.getClazz());
+                }
             } else {
-                return context.deserialize(json, type.getClazz());
+                return new TripValue() {
+                    @Override
+                    public void addValue(Object value) {
+
+                    }
+                };
             }
         }
     }
-    private static TripSingleton tripSingleton;
+    private static TripSingleton instance;
 
     private Trip trip;
 
@@ -88,10 +94,10 @@ public class TripSingleton {
     }
 
     public static TripSingleton getInstance() {
-        if(tripSingleton == null) {
-            tripSingleton = new TripSingleton();
+        if(instance == null) {
+            instance = new TripSingleton();
         }
-        return tripSingleton;
+        return instance;
     }
 
     public Trip getTrip() {
@@ -145,5 +151,9 @@ public class TripSingleton {
         }
         reader.close();
         return sb.toString();
+    }
+
+    public static void invalidate() {
+        instance = null;
     }
 }

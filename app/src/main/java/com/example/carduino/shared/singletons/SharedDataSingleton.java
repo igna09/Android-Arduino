@@ -6,17 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SharedDataSingleton {
-    private static SharedDataSingleton sharedDataSingleton;
+    private static SharedDataSingleton instance;
     private Map settings;
 
     private SharedDataSingleton(){}
     public static SharedDataSingleton getInstance()
     {
-        if (sharedDataSingleton == null)
+        if (instance == null)
         {
-            sharedDataSingleton = new SharedDataSingleton();
+            instance = new SharedDataSingleton();
         }
-        return sharedDataSingleton;
+        return instance;
     }
 
     public Map getSettings() {
@@ -29,5 +29,9 @@ public class SharedDataSingleton {
         }
 
         this.settings.put(setting.getId(), setting);
+    }
+
+    public static void invalidate() {
+        instance = null;
     }
 }

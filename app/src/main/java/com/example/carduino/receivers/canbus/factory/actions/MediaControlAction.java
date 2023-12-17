@@ -36,7 +36,7 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
                     @Override
                     public void run() {
                         final Instrumentation instrumentation = new Instrumentation();
-                        instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
+//                        instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
                     }
                 }).start();
                 break;
@@ -52,7 +52,7 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
                     @Override
                     public void run() {
                         final Instrumentation instrumentation = new Instrumentation();
-                        instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_DOWN);
+//                        instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_DOWN);
                     }
                 }).start();
                 break;
@@ -62,7 +62,7 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
                     audioManager1.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_NEXT));
                     audioManager1.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_NEXT));
                 }
-                instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_NEXT);
+//                instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_NEXT);
 //                    audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
                 break;
 
@@ -71,7 +71,7 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
                     audioManager1.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
                     audioManager1.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
                 }
-                instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+//                instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
                 break;
 
             case LONG_PRESS:

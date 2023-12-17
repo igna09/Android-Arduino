@@ -4,7 +4,7 @@ import com.example.carduino.shared.utilities.CircularArrayList;
 import com.example.carduino.services.ArduinoService;
 
 public class ArduinoSingleton {
-    private static ArduinoSingleton arduinoSingleton;
+    private static ArduinoSingleton instance;
 
     private ArduinoService arduinoService;
 
@@ -14,10 +14,14 @@ public class ArduinoSingleton {
     private ArduinoSingleton() {}
 
     public static ArduinoSingleton getInstance() {
-        if(arduinoSingleton == null) {
-            arduinoSingleton = new ArduinoSingleton();
+        if(instance == null) {
+            instance = new ArduinoSingleton();
         }
-        return arduinoSingleton;
+        return instance;
+    }
+
+    public static void invalidate() {
+        instance = null;
     }
 
     public ArduinoService getArduinoService() {

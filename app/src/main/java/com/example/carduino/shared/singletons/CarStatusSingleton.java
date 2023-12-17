@@ -3,7 +3,7 @@ package com.example.carduino.shared.singletons;
 import com.example.carduino.shared.models.carstatus.CarStatus;
 
 public class CarStatusSingleton {
-    private static CarStatusSingleton carStatusSingleton;
+    private static CarStatusSingleton instance;
 
     private CarStatus carStatus;
 
@@ -11,11 +11,11 @@ public class CarStatusSingleton {
 
     public static CarStatusSingleton getInstance()
     {
-        if (carStatusSingleton == null)
+        if (instance == null)
         {
-            carStatusSingleton = new CarStatusSingleton();
+            instance = new CarStatusSingleton();
         }
-        return carStatusSingleton;
+        return instance;
     }
 
     public CarStatus getCarStatus() {
@@ -27,5 +27,9 @@ public class CarStatusSingleton {
 
     public void setCarStatus(CarStatus carStatus) {
         this.carStatus = carStatus;
+    }
+
+    public static void invalidate() {
+        instance = null;
     }
 }

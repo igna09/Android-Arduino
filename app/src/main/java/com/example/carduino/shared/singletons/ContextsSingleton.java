@@ -1,22 +1,19 @@
 package com.example.carduino.shared.singletons;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.carduino.services.ArduinoService;
 import com.example.carduino.shared.MyApplication;
 
 public class ContextsSingleton {
-    private static ContextsSingleton contextsSingleton;
+    private static ContextsSingleton instance;
     private MyApplication applicationContext;
 
     private ContextsSingleton(){}
     public static ContextsSingleton getInstance()
     {
-        if (contextsSingleton == null)
+        if (instance == null)
         {
-            contextsSingleton = new ContextsSingleton();
+            instance = new ContextsSingleton();
         }
-        return contextsSingleton;
+        return instance;
     }
 
     public MyApplication getApplicationContext() {
@@ -25,5 +22,9 @@ public class ContextsSingleton {
 
     public void setApplicationContext(MyApplication applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    public static void invalidate() {
+        instance = null;
     }
 }
