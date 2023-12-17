@@ -2,6 +2,7 @@ package com.example.carduino.receivers.canbus.factory.actions;
 
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.view.KeyEvent;
@@ -9,6 +10,7 @@ import android.view.KeyEvent;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.models.MediaControl;
+import com.example.carduino.shared.singletons.AppSwitchSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 
 public class MediaControlAction implements ArduinoMessageExecutorInterface {
@@ -93,6 +95,9 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
                     }
                     instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
                     break;
+
+                case LONG_PRESS:
+                    AppSwitchSingleton.getInstance().openNextApplication();
             }
         }
     }

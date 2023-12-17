@@ -6,6 +6,7 @@ import com.example.carduino.shared.singletons.ArduinoSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.FileSystemSingleton;
 import com.example.carduino.shared.singletons.LoggerSingleton;
+import com.example.carduino.shared.singletons.AppSwitchSingleton;
 import com.example.carduino.shared.singletons.SettingsSingleton;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
 import com.example.carduino.shared.singletons.TripSingleton;
@@ -20,6 +21,7 @@ public class MyApplication extends Application {
     private SettingsSingleton settingsSingleton;
     private SharedDataSingleton sharedDataSingleton;
     private TripSingleton tripSingleton;
+    private AppSwitchSingleton appSwitchSingleton;
 
     @Override
     public void onCreate() {
@@ -32,6 +34,7 @@ public class MyApplication extends Application {
         settingsSingleton = SettingsSingleton.getInstance();
         sharedDataSingleton = SharedDataSingleton.getInstance();
         tripSingleton = TripSingleton.getInstance();
+        appSwitchSingleton = AppSwitchSingleton.getInstance();
 
         contextsSingleton.setApplicationContext(this);
     }

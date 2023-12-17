@@ -4,7 +4,8 @@ public enum MediaControl {
     NEXT("NEXT"),
     VOLUME_UP("VOLUME_UP"),
     VOLUME_DOWN("VOLUME_DOWN"),
-    PLAY_PAUSE("PLAY_PAUSE");
+    PLAY_PAUSE("PLAY_PAUSE"),
+    LONG_PRESS("LONG_PRESS");
 
     String id;
 
