@@ -12,7 +12,7 @@ public enum CarstatusCardEnum {
     COOLING_WATER("COOLING WATER", CarStatusEnum.ENGINE_WATER_COOLING_TEMPERATURE, 0, 3, new FloatTransformator("0.0")),
     FUEL_CONSUMPTION("FUEL CONSUMPTION", CarStatusEnum.FUEL_CONSUMPTION, 1, 0, new FloatTransformator("0.0")),
 //    EXTERNAL_TEMPERATURE("EXTERNAL TEMPERATURE", CarStatusEnum.EXTERNAL_TEMPERATURE, 1, 2, new FloatTransformator("0.0")),
-    EXTERNAL_TEMPERATURE("BATTERY VOLTAGE", CarStatusEnum.BATTERY_VOLTAGE, 1, 2, new FloatTransformator("0.0")),
+//    EXTERNAL_TEMPERATURE("BATTERY VOLTAGE", CarStatusEnum.BATTERY_VOLTAGE, 1, 2, new FloatTransformator("0.0")),
     INTERNAL_TEMPERATURE("INTERNAL TEMPERATURE", CarStatusEnum.INTERNAL_TEMPERATURE, 1, 3, new FloatTransformator("0.0"));
 
     String label;
