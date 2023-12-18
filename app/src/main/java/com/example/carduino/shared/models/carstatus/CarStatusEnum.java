@@ -12,6 +12,7 @@ import com.example.carduino.shared.models.carstatus.values.KmhSpeed;
 import com.example.carduino.shared.models.carstatus.values.BarPressure;
 import com.example.carduino.shared.models.carstatus.values.LuxLuminance;
 import com.example.carduino.shared.models.carstatus.values.Rpm;
+import com.example.carduino.shared.models.carstatus.values.ValueBoolean;
 import com.example.carduino.shared.models.carstatus.values.Voltage;
 import com.example.carduino.shared.models.trip.tripvalue.FloatTripValue;
 import com.example.carduino.shared.models.trip.tripvalue.IntegerTripValue;
@@ -33,6 +34,7 @@ public enum CarStatusEnum {
     TRIP_MAX_SPEED("TRIP_MAX_SPEED", Category.TRIP, KmhSpeed.class),
     INJECTED_QUANTITY("INJECTED_QUANTITY", Category.CAR, InjectedQuantity.class),
     FUEL_CONSUMPTION("FUEL_CONSUMPTION", Category.CAR, FuelConsumptionKmL.class, FuelConsumptionCarStatusPropertyChangeListener.class, FloatTripValue.class),
+    ENGINE_STARTED("ENGINE_STARTED", Category.CAR, ValueBoolean.class),
     BATTERY_VOLTAGE("BATTERY_VOLTAGE", Category.CAR, Voltage.class);
 
     private enum Category {
