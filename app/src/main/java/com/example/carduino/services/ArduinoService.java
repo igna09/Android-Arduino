@@ -52,20 +52,20 @@ public class ArduinoService extends Service implements SerialListener {
         Integer counter = 0;
         @Override
         public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
+            while (Thread.currentThread().isAlive() && !Thread.currentThread().isInterrupted()) {
 //                            Log.e("Service", "Service is running...");
 //                            Logger.getInstance().log("Service is running...");
                 try {
 //                    long s = getIntegerRandomNumber(1, 10) * 1000;
 //                    Log.d("sleep", "Sleeping for " + s);
 //                    Thread.sleep(s);
-                        onArduinoMessage("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200));
-                        onArduinoMessage("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10));
-                        onArduinoMessage("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500));
-                        onArduinoMessage("CAR_STATUS;BATTERY_VOLTAGE;" + getFloatRandomNumber(11, 14));
+//                        onArduinoMessage("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200));
+//                        onArduinoMessage("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10));
+//                        onArduinoMessage("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500));
+//                        onArduinoMessage("CAR_STATUS;BATTERY_VOLTAGE;" + getFloatRandomNumber(11, 14));
 //                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;");
-                    if(counter >= 10)
-                        onArduinoMessage("CAR_STATUS;ENGINE_RPM;" + getIntegerRandomNumber(900, 4000));
+//                    if(counter >= 10)
+//                        onArduinoMessage("CAR_STATUS;ENGINE_RPM;" + getIntegerRandomNumber(900, 4000));
 //                    if(counter % 5 == 0) {
 //                        if(counter % 2 == 0) {
 //                            onArduinoMessage("MEDIA_CONTROL;VOLUME_UP;0;");
@@ -79,8 +79,7 @@ public class ArduinoService extends Service implements SerialListener {
                     Thread.sleep(1000);
                     counter++;
                 } catch (InterruptedException e) {
-                    LoggerUtilities.logException(e);
-                    return;
+                    LoggerUtilities.logMessage("ArduinoService", "keepAliveThread interrupted while sleeping");
                 }
             }
             LoggerUtilities.logMessage("ArduinoService", "service stopped");
