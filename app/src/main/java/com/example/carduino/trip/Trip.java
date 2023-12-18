@@ -103,23 +103,25 @@ public class Trip extends Fragment {
             @Override
             public void run() {
                 while(refreshThread.isAlive() && !refreshThread.isInterrupted()) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            cards.forEach(card -> {
-                                TripValue tripValue = TripSingleton.getInstance().getTrip().getTripValues().get(card.carstatusEnum);
-                                if(tripValue != null) {
-                                    card.setAvgValueWithTransformator(tripValue.getAverage().toString());
-                                    card.setMaxValueWithTransformator(tripValue.getMax().toString());
-                                    updateCardView(card);
-                                }
-                            });
+                    if(getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cards.forEach(card -> {
+                                    TripValue tripValue = TripSingleton.getInstance().getTrip().getTripValues().get(card.carstatusEnum);
+                                    if(tripValue != null) {
+                                        card.setAvgValueWithTransformator(tripValue.getAverage().toString());
+                                        card.setMaxValueWithTransformator(tripValue.getMax().toString());
+                                        updateCardView(card);
+                                    }
+                                });
+                            }
+                        });
+                        try {
+                            Thread.sleep(10 * 1000);
+                        } catch (InterruptedException e) {
+                            LoggerUtilities.logMessage("Trip Fragment", "refreshThread interrupted while sleeping");
                         }
-                    });
-                    try {
-                        Thread.sleep(10 * 1000);
-                    } catch (InterruptedException e) {
-                        LoggerUtilities.logException(e);
                     }
                 }
             }
