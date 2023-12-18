@@ -96,6 +96,11 @@ public class Trip extends Fragment {
 
                     updateCardView(cardModel);
                 });
+
+                CardModel cardModel = new CardModel(0, 4);
+                cardModel.width = (viewWidth - ((VIEW_COLUMN_COUNT - viewColumnSpan) * (MARGIN * 2))) / VIEW_COLUMN_COUNT;
+                cardModel.height = (viewHeight - ((VIEW_ROW_COUNT - viewRowSpan) * (MARGIN * 2))) / VIEW_ROW_COUNT;
+                addCardButtonsView(gridLayout, cardModel);
             }
         });
 
@@ -128,24 +133,40 @@ public class Trip extends Fragment {
         });
         refreshThread.start();
 
-        AppCompatButton resetButton = r.findViewById(R.id.reset_button);
-        resetButton.setOnClickListener(v -> {
+        return r;
+    }
+
+    CardView addCardButtonsView(ViewGroup container, CardModel model){
+        CardView v = (CardView) LayoutInflater.from(getContext()).inflate(R.layout.card_trip_buttons, null);
+
+        AppCompatButton resetButton = v.findViewById(R.id.reset_button);
+        resetButton.setOnClickListener(e -> {
             try {
                 TripSingleton.getInstance().resetTrip();
-            } catch (IOException e) {
-                LoggerUtilities.logException(e);
+            } catch (IOException exception) {
+                LoggerUtilities.logException(exception);
             }
         });
-        AppCompatButton restoreButton = r.findViewById(R.id.restore_button);
-        restoreButton.setOnClickListener(v -> {
+        AppCompatButton restoreButton = v.findViewById(R.id.restore_button);
+        restoreButton.setOnClickListener(e -> {
             try {
                 TripSingleton.getInstance().restoreTrip();
-            } catch (Exception e) {
-                LoggerUtilities.logException(e);
+            } catch (Exception exception) {
+                LoggerUtilities.logException(exception);
             }
         });
 
-        return r;
+        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+        lp.setGravity(Gravity.CENTER);
+        lp.columnSpec = GridLayout.spec(model.column, model.columnSpan);
+        lp.rowSpec = GridLayout.spec(model.row, model.rowSpan);
+        lp.height = model.height != null ? model.height * model.rowSpan : GridLayout.LayoutParams.WRAP_CONTENT;
+        lp.width = model.width != null ? model.width * model.columnSpan : GridLayout.LayoutParams.WRAP_CONTENT;
+        lp.setMargins(MARGIN, MARGIN, MARGIN, MARGIN);
+
+        container.addView(v, lp);
+
+        return v;
     }
 
     CardView addCardView(ViewGroup container, CardModel model){
@@ -190,6 +211,7 @@ public class Trip extends Fragment {
         // TODO: move in onPause?
         cards.forEach(cardModel -> {
             CarStatusSingleton.getInstance().getCarStatus().removePropertyChangeListener(cardModel.propertyChangeListener);
+            cardModel.cardView = null;
         });
 
         super.onDestroy();
