@@ -25,7 +25,7 @@ public class UsbDeviceConnectedReceiver extends BroadcastReceiver {
                     if(ArduinoSingleton.getInstance().getArduinoService() != null && !ArduinoSingleton.getInstance().getArduinoService().isConnected()) {
                         UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                         if (device != null) {
-                            ArduinoSingleton.getInstance().getArduinoService().connectDevice(device.getDeviceId(), false);
+                            ArduinoSingleton.getInstance().getArduinoService().attemptConnect(device.getDeviceId(), false);
                         }
                     }
                 }

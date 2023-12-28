@@ -109,6 +109,8 @@ public class ArduinoService extends Service implements SerialListener {
 
     private final StringBuffer buffer;
 
+    private Thread connectThread;
+
     public ArduinoService() {
         binder = new SerialBinder();
 
@@ -117,7 +119,7 @@ public class ArduinoService extends Service implements SerialListener {
             public void onReceive(Context context, Intent intent) {
                 if(Constants.INTENT_ACTION_GRANT_USB.equals(intent.getAction())) {
                     Boolean granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false);
-                    connectDevice(deviceIdToConnect, granted);
+                    attemptConnect(deviceIdToConnect, granted);
                 }
             }
         };
@@ -200,8 +202,12 @@ public class ArduinoService extends Service implements SerialListener {
         if (intent != null && intent.getAction() != null && intent.getAction().equals("STOP_FOREGROUND")) {
             LoggerUtilities.logMessage("service", "Stopping");
 
-            if(keepAliveThread != null && keepAliveThread.isAlive()) {
+            if(keepAliveThread != null && keepAliveThread.isAlive() && !keepAliveThread.isInterrupted()) {
                 keepAliveThread.interrupt();
+            }
+
+            if(connectThread != null && connectThread.isAlive() && !connectThread.isInterrupted()) {
+                connectThread.interrupt();
             }
 
             stopForeground(true);
@@ -259,7 +265,7 @@ public class ArduinoService extends Service implements SerialListener {
             super.onStartCommand(intent, flags, startId);
 
             if(!isConnected()) {
-                connectDevice();
+                startConnectThread();
             }
 
             return Service.START_STICKY_COMPATIBILITY;
@@ -273,6 +279,14 @@ public class ArduinoService extends Service implements SerialListener {
 
         unregisterReceiver(broadcastReceiver);
         disconnect();
+
+        if(connectThread != null && connectThread.isAlive() && !connectThread.isInterrupted()) {
+            connectThread.interrupt();
+        }
+
+        if(keepAliveThread != null && keepAliveThread.isAlive() && !keepAliveThread.isInterrupted()) {
+            keepAliveThread.interrupt();
+        }
 
         super.onDestroy();
     }
@@ -324,21 +338,35 @@ public class ArduinoService extends Service implements SerialListener {
         }
     }
 
-    public void connectDevice() {
-        UsbDevice device = null;
-        UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-        for(UsbDevice v : usbManager.getDeviceList().values()) {
-            if (v.getVendorId() == 6790 && v.getProductId() == 29987) {
-                device = v;
-            }
-        }
+    public void startConnectThread() {
+        connectThread = new Thread(() -> {
+            while(!isConnected() && Thread.currentThread().isAlive() && !Thread.currentThread().isInterrupted()) {
+                UsbDevice device = null;
+                UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+                for(UsbDevice v : usbManager.getDeviceList().values()) {
+                    if (v.getVendorId() == 6790 && v.getProductId() == 29987) {
+                        device = v;
+                    }
+                }
 
-        if(device != null) {
-            connectDevice(device.getDeviceId(), false);
-        }
+                if(device != null) {
+                    attemptConnect(device.getDeviceId(), false);
+                }
+
+                if(!isConnected()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        LoggerUtilities.logException(e);
+                    }
+                }
+            }
+        });
+
+        connectThread.start();
     }
 
-    public void connectDevice(Integer deviceId, Boolean granted) {
+    public Boolean attemptConnect(Integer deviceId, Boolean granted) {
         LoggerUtilities.logMessage("ArduinoService::connectDevice()", "begin");
         deviceIdToConnect = deviceId;
 
@@ -352,7 +380,7 @@ public class ArduinoService extends Service implements SerialListener {
             }
         if(device == null) {
             LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connection failed: device not found");
-            return;
+            return false;
         } else {
             LoggerUtilities.logMessage("ArduinoService::connectDevice()", "found device " + device.getDeviceName());
         }
@@ -363,14 +391,14 @@ public class ArduinoService extends Service implements SerialListener {
         }
         if(driver == null) {
             LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connection failed: no driver for device");
-            return;
+            return false;
         } else {
             LoggerUtilities.logMessage("ArduinoService::connectDevice()", "found driver " + driver);
         }
 
         if(driver.getPorts().size() < portNum) {
             LoggerUtilities.logMessage("ArduinoService::connectDevice()","connection failed: not enough ports at device");
-            return;
+            return false;
         }
         UsbSerialPort usbSerialPort = driver.getPorts().get(portNum);
 
@@ -380,14 +408,14 @@ public class ArduinoService extends Service implements SerialListener {
             int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_MUTABLE : 0;
             PendingIntent usbPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(Constants.INTENT_ACTION_GRANT_USB), flags);
             usbManager.requestPermission(driver.getDevice(), usbPermissionIntent);
-            return;
+            return false;
         }
         if(usbConnection == null) {
             if (!usbManager.hasPermission(driver.getDevice()))
                 LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connection failed: permission denied");
             else
                 LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connection failed: open failed");
-            return;
+            return false;
         }
 
         try {
@@ -401,8 +429,10 @@ public class ArduinoService extends Service implements SerialListener {
             this.connect(socket);
         } catch (Exception e) {
             LoggerUtilities.logException(e);
+            return false;
         }
         LoggerUtilities.logMessage("ArduinoService::connectDevice()", "connected");
+        return true;
     }
 
     public Boolean isConnected() {
