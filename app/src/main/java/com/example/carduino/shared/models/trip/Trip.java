@@ -11,19 +11,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Trip {
+    public class Distance {
+//        public Float kmDistance;
+        public Date lastRead;
+    }
     private Boolean started;
     private Date begin;
     private Map<CarStatusEnum, TripValue> tripValues;
+    private Distance distance;
 
     public Trip() {
         started = false;
         begin = null;
         tripValues = new HashMap<>();
+        distance = new Distance();
     }
 
     public void startTrip() {
         started = true;
         begin = new Date();
+//        distance.kmDistance = (float) 0;
+        distance.lastRead = new Date();
     }
 
     public void stopTrip() {
@@ -49,5 +57,14 @@ public class Trip {
 
     public Map<CarStatusEnum, TripValue> getTripValues() {
         return tripValues;
+    }
+
+    /*public void addDistance(Float distance) {
+        this.distance.kmDistance += distance;
+        this.distance.lastRead = new Date();
+    }*/
+
+    public Distance getDistance() {
+        return distance;
     }
 }
