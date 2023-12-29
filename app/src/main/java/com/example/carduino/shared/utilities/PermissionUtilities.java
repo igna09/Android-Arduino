@@ -4,6 +4,7 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
@@ -43,9 +44,12 @@ public class PermissionUtilities {
             for(int i = 0; i < missingPermissions.size(); i++) a[i] = missingPermissions.get(i);
             ActivityCompat.requestPermissions(activity, a, 0);
         }
-        Boolean writePermission = Settings.System.canWrite(ContextsSingleton.getInstance().getApplicationContext());
-        if(!writePermission) {
-            requestWriteSettingsPermission(activity);
+        Context context = activity.getApplicationContext();
+        if(context != null) {
+            Boolean writePermission = Settings.System.canWrite(context);
+            if(!writePermission) {
+                requestWriteSettingsPermission(activity);
+            }
         }
     }
 

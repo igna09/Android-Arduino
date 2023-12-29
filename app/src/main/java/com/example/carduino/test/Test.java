@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -99,6 +100,34 @@ public class Test extends Fragment {
             }
         });
 
+        r.findViewById(R.id.button7).setOnClickListener(v -> {
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+        });
+        r.findViewById(R.id.button7_2).setOnClickListener(v -> {
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+        });
+
+        r.findViewById(R.id.button8).setOnClickListener(v -> {
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+        });
+        r.findViewById(R.id.button8_2).setOnClickListener(v -> {
+            AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+        });
+
+        r.findViewById(R.id.button9).setOnClickListener(v -> {
+            changeStreamVolume(-1);
+        });
+        r.findViewById(R.id.button9_2).setOnClickListener(v -> {
+            changeStreamVolume(1);
+        });
+
+        AudioManager audioManager = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        Toast.makeText(ContextsSingleton.getInstance().getApplicationContext(), audioManager.isVolumeFixed() ? "Volume fixed" : "volume NOT fixed", Toast.LENGTH_SHORT).show();
+
         return r;
     }
 
@@ -115,5 +144,27 @@ public class Test extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    public static boolean changeStreamVolume(int sign) {
+        final AudioManager am = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        final int currentVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+        final int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+        if (sign == 1 && currentVolume >= maxVolume) {
+            return false;
+        }
+        else if (sign == -1 && currentVolume <= 0) {
+            return false;
+        }
+
+        // Why 11? Why not? :-)
+        final int delta = (maxVolume >= 11? maxVolume / 11  : 1) * sign;
+        int newVolume = (currentVolume + delta > maxVolume ? maxVolume : currentVolume + delta);
+        if (newVolume < 0) {
+            newVolume = 0;
+        }
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, AudioManager.FLAG_SHOW_UI);
+        return true;
     }
 }

@@ -189,12 +189,13 @@ public class ArduinoService extends Service implements SerialListener {
 
     public void onSerialIoError(Exception e) {
         LoggerUtilities.logMessage("ArduinoService::onSerialIoError()", "");
-        LoggerUtilities.logException(e);
+//        LoggerUtilities.logException(e);
         if(connected == CarduinoActivity.Connected.True) {
             synchronized (this) {
                 connected = CarduinoActivity.Connected.False;
             }
         }
+        startConnectThread();
     }
 
     @Override
@@ -340,6 +341,7 @@ public class ArduinoService extends Service implements SerialListener {
 
     public void startConnectThread() {
         connectThread = new Thread(() -> {
+            LoggerUtilities.logMessage("startConnectThread()", "starting connection thread");
             while(!isConnected() && Thread.currentThread().isAlive() && !Thread.currentThread().isInterrupted()) {
                 UsbDevice device = null;
                 UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
@@ -359,6 +361,8 @@ public class ArduinoService extends Service implements SerialListener {
                     } catch (InterruptedException e) {
                         LoggerUtilities.logException(e);
                     }
+                } else {
+                    LoggerUtilities.logMessage("startConnectThread()", "connected");
                 }
             }
         });
