@@ -21,8 +21,8 @@ public class SpeedCarStatusPropertyChangeListener extends PropertyChangeListener
             Float avgSpeed = new Float((oldValue.getValue() + newValue.getValue()) / 2.0);
             Float deltaT = ((Double)(Math.abs((new Date()).getTime() - TripSingleton.getInstance().getTrip().getDistance().lastRead.getTime()) / 1000.0)).floatValue();
             Float distance = (((avgSpeed * deltaT) / 3600) * 1/*distCorrVal*/);
-            LoggerUtilities.logMessage("SpeedCarStatusPropertyChangeListener", "Distance " + distance);
-            TripSingleton.getInstance().getTrip().addTripValue(CarStatusEnum.DISTANCE, (((avgSpeed * deltaT) / 3600) * 1/*distCorrVal*/));
+//            LoggerUtilities.logMessage("SpeedCarStatusPropertyChangeListener", "Distance " + distance);
+            TripSingleton.getInstance().getTrip().addTripValue(CarStatusEnum.DISTANCE, distance);
             TripSingleton.getInstance().getTrip().getDistance().lastRead = new Date();
         }
     }
