@@ -7,7 +7,8 @@ public enum SettingsEnum {
     /**
      * TODO: add executor class to manage setting change value?
      */
-    OTA_MODE("Enter ota mode", BooleanSetting.class, BooleanSettingViewWrapper.class);
+    OTA_MODE("Enter ota mode", BooleanSetting.class, BooleanSettingViewWrapper.class),
+    RESTART("Restart all nodes", BooleanSetting.class, BooleanSettingViewWrapper.class);
 
     private String label;
     private Class settingType;
