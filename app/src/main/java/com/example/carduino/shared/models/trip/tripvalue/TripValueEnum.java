@@ -2,7 +2,8 @@ package com.example.carduino.shared.models.trip.tripvalue;
 
 public enum TripValueEnum {
     FUEL_CONSUMPTION(FloatTripValue.class),
-    SPEED(IntegerTripValue.class);
+    SPEED(IntegerTripValue.class),
+    DISTANCE(FloatTripValue.class);
 
     private Class clazz;
 

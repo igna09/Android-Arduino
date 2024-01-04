@@ -5,14 +5,16 @@ import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 import java.util.Date;
 
 public abstract class TripValue<T> {
-    private CarStatusEnum carStatusEnum;
+    private TripValueEnum tripValueEnum;
     private T average;
     private T max;
     private T sum;
     private Integer readings;
     private Date lastReading;
 
-    public abstract void addValue(T value);
+    public void addValue(T value) {
+        setLastReading(new Date());
+    };
 
     public T getAverage() {
         return average;
@@ -54,11 +56,11 @@ public abstract class TripValue<T> {
         this.sum = sum;
     }
 
-    public CarStatusEnum getTripValueEnum() {
-        return carStatusEnum;
+    public TripValueEnum getTripValueEnum() {
+        return tripValueEnum;
     }
 
-    public void setTripValueEnum(CarStatusEnum carStatusEnum) {
-        this.carStatusEnum = carStatusEnum;
+    public void setTripValueEnum(TripValueEnum tripValueEnum) {
+        this.tripValueEnum = tripValueEnum;
     }
 }

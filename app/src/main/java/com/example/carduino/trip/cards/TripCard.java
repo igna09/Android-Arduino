@@ -9,6 +9,7 @@ import androidx.cardview.widget.CardView;
 import com.example.carduino.shared.Transformator;
 import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 import com.example.carduino.shared.models.trip.tripvalue.TripValue;
+import com.example.carduino.shared.models.trip.tripvalue.TripValueEnum;
 import com.example.carduino.trip.transformators.CardTransformator;
 
 public abstract class TripCard {
@@ -21,7 +22,7 @@ public abstract class TripCard {
     private Integer width;
     private Integer height;
     private Integer margin;
-    private CarStatusEnum carstatusEnum;
+    private TripValueEnum tripValueEnum;
     private String title;
     private CardTransformator valueTransformator;
 
@@ -113,12 +114,12 @@ public abstract class TripCard {
         this.height = height;
     }
 
-    public CarStatusEnum getCarstatusEnum() {
-        return carstatusEnum;
+    public TripValueEnum getTripValueEnum() {
+        return tripValueEnum;
     }
 
-    public void setCarstatusEnum(CarStatusEnum carstatusEnum) {
-        this.carstatusEnum = carstatusEnum;
+    public void setTripValueEnum(TripValueEnum tripValueEnum) {
+        this.tripValueEnum = tripValueEnum;
     }
 
     public Integer getMargin() {

@@ -1,15 +1,13 @@
 package com.example.carduino.trip.cards;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
 import com.example.carduino.R;
+import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 import com.example.carduino.shared.models.carstatus.values.Value;
 import com.example.carduino.shared.models.trip.tripvalue.TripValue;
 
@@ -19,7 +17,7 @@ public class AvgMaxTripCard extends TripCard {
     @Override
     public void init() {
         try {
-            this.unit = ((Value) getCarstatusEnum().getType().newInstance()).getUnit();
+            this.unit = ((Value) CarStatusEnum.valueOf(getTripValueEnum().name()).getType().newInstance()).getUnit();
         } catch (IllegalAccessException | java.lang.InstantiationException e) {
             throw new RuntimeException(e);
         }
@@ -28,10 +26,10 @@ public class AvgMaxTripCard extends TripCard {
     @Override
     public void updateCard(TripValue value) {
         TextView avgTextView = getCardView().findViewById(R.id.avg_value);
-        avgTextView.setText(getTransformedValue(value.getAverage().toString()));
+        avgTextView.setText(getTransformedValue(value.getAverage() != null ? value.getAverage().toString() : null));
         avgTextView.requestLayout();
         TextView maxTextView = getCardView().findViewById(R.id.max_value);
-        maxTextView.setText(getTransformedValue(value.getMax().toString()));
+        maxTextView.setText(getTransformedValue(value.getMax() != null ? value.getMax().toString() : null));
         maxTextView.requestLayout();
     }
 

@@ -17,8 +17,10 @@ public class RpmCarStatusPropertyChangeListener extends PropertyChangeListener<R
             }
         }
         if(!TripSingleton.getInstance().getTrip().isStarted() && newValue.getValue() > 0) {
-            if (TripSingleton.getInstance().tripBackupAvailable() && !DialogUtilities.isShowingDialog()) {
-                DialogUtilities.showContinueTripSession();
+            if(TripSingleton.getInstance().tripBackupAvailable()) {
+                if(!DialogUtilities.isShowingDialog()) {
+                    DialogUtilities.showContinueTripSession();
+                }
             } else {
                 TripSingleton.getInstance().startTrip();
             }

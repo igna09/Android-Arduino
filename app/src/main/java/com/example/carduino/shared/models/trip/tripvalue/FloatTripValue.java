@@ -12,7 +12,7 @@ public class FloatTripValue extends TripValue<Float> {
 
     @Override
     public void addValue(Float value) {
-        setLastReading(new Date());
+        super.addValue(value);
         if(value > getMax()) {
             setMax(value);
         }

@@ -12,7 +12,7 @@ public class IntegerTripValue extends TripValue<Integer> {
 
     @Override
     public void addValue(Integer value) {
-        setLastReading(new Date());
+        super.addValue(value);
         if(value > getMax()) {
             setMax(value);
         }

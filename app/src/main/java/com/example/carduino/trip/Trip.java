@@ -1,28 +1,22 @@
 package com.example.carduino.trip;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.GridLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
 import com.example.carduino.shared.models.trip.tripvalue.TripValue;
-import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 import com.example.carduino.trip.cards.TripCard;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,7 +47,7 @@ public class Trip extends Fragment {
             }
             card.setColumn(tripCardEnum.column);
             card.setRow(tripCardEnum.row);
-            card.setCarstatusEnum(tripCardEnum.carstatusEnum);
+            card.setTripValueEnum(tripCardEnum.tripValueEnum);
             card.setTitle(tripCardEnum.label);
             card.setMargin(MARGIN);
             card.setValueTransformator(tripCardEnum.transformator);
@@ -82,8 +76,8 @@ public class Trip extends Fragment {
 
                     gridLayout.addView(card.getCardView(), card.getLayoutParams());
 
-                    if(card.getCarstatusEnum()!= null && trip.getTripValues().containsKey(card.getCarstatusEnum().name()) && trip.getTripValues().get(card.getCarstatusEnum().name()) != null) {
-                        TripValue v = (TripValue) trip.getTripValues().get(card.getCarstatusEnum().name());
+                    if(card.getTripValueEnum()!= null && trip.getTripValues().containsKey(card.getTripValueEnum().name()) && trip.getTripValues().get(card.getTripValueEnum().name()) != null) {
+                        TripValue v = (TripValue) trip.getTripValues().get(card.getTripValueEnum().name());
                         card.updateCard(v);
                     }
                 });
@@ -94,7 +88,7 @@ public class Trip extends Fragment {
             while(refreshThread.isAlive() && !refreshThread.isInterrupted()) {
                 if(getActivity() != null) {
                     getActivity().runOnUiThread(() -> cards.forEach(card -> {
-                        TripValue tripValue = TripSingleton.getInstance().getTrip().getTripValues().get(card.getCarstatusEnum());
+                        TripValue tripValue = TripSingleton.getInstance().getTrip().getTripValues().get(card.getTripValueEnum());
                         if(tripValue != null) {
                             card.updateCard(tripValue);
                         }

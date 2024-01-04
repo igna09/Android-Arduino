@@ -10,7 +10,7 @@ public class FuelConsumptionCarStatusPropertyChangeListener extends PropertyChan
     @Override
     public void onPropertyChange(String propertyName, FuelConsumptionKmL oldValue, FuelConsumptionKmL newValue) {
         if(TripSingleton.getInstance().getTrip().isStarted() && newValue.getValue() > 0 && newValue.getValue() < 50) { // avoiding abnormal values
-            TripSingleton.getInstance().getTrip().addTripValue(CarStatusEnum.FUEL_CONSUMPTION, newValue.getValue());
+            TripSingleton.getInstance().getTrip().addTripValue(TripValueEnum.FUEL_CONSUMPTION, newValue.getValue());
         }
     }
 }

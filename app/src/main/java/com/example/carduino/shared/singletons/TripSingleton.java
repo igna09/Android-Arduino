@@ -40,7 +40,7 @@ public class TripSingleton {
                 return new TripValue() {
                     @Override
                     public void addValue(Object value) {
-
+                        super.addValue(value);
                     }
                 };
             }
@@ -129,7 +129,7 @@ public class TripSingleton {
 
             FileInputStream fin = new FileInputStream(tripFile);
             String json = convertStreamToString(fin);
-            fin.close();;
+            fin.close();
 
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(TripValue.class, new TripValueDeserializer())
