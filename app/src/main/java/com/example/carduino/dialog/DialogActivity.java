@@ -51,7 +51,7 @@ public class DialogActivity extends AppCompatActivity {
                         }
                         if(alertDialog.isShowing()) {
                             alertDialog.dismiss();
-                            dialogEnum.getPositiveCallback().onClick(alertDialog, -1);
+                            runOnUiThread(() -> dialogEnum.getTimedDialogAction().getOnClickListener().onClick(alertDialog, -1));
                         }
                     }
                 });

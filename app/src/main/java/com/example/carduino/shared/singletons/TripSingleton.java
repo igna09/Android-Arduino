@@ -63,8 +63,8 @@ public class TripSingleton {
             public void run() {
                 try {
                     while(backupThread.isAlive() && !backupThread.isInterrupted()) {
-                        backupTrip();
                         Thread.sleep(15 * 1000);
+                        backupTrip();
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
