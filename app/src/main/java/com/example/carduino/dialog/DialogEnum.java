@@ -14,7 +14,7 @@ public enum DialogEnum {
         }
     }, (dialog, which) -> {
         TripSingleton.getInstance().startTrip();
-    }, Duration.SHORT);
+    }, Duration.LONG);
 
     private DialogInterface.OnClickListener positiveCallback;
     private DialogInterface.OnClickListener negativeCallback;
