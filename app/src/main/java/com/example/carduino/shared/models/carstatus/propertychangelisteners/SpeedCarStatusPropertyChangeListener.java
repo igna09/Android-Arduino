@@ -13,17 +13,19 @@ public class SpeedCarStatusPropertyChangeListener extends PropertyChangeListener
             TripSingleton.getInstance().getTrip().addTripValue(TripValueEnum.SPEED, newValue.getValue());
         }
         if(TripSingleton.getInstance().getTrip().isStarted() && newValue.getValue() > 0) {
-            Float avgSpeed = new Float((oldValue.getValue() + newValue.getValue()) / 2.0);
             if (TripSingleton.getInstance().getTrip().getTripValues().get(TripValueEnum.DISTANCE) == null) { //first insertion
                 TripSingleton.getInstance().getTrip().addTripValue(TripValueEnum.DISTANCE, Float.valueOf(0));
             }
             if (TripSingleton.getInstance().getTrip().getTripValues().get(TripValueEnum.DISTANCE).getLastReading() == null) {
                 TripSingleton.getInstance().getTrip().getTripValues().get(TripValueEnum.DISTANCE).setLastReading(new Date());
             }
-            Float deltaT = ((Double) (Math.abs((new Date()).getTime() - TripSingleton.getInstance().getTrip().getTripValues().get(TripValueEnum.DISTANCE).getLastReading().getTime()) / 1000.0)).floatValue();
-            Float distance = (((avgSpeed * deltaT) / 3600) * 1/*distCorrVal*/);
+            if(oldValue.getValue() > 0) { // excluding first speed after start to avoid wrong values when app doesn't remove singleton from memory at car shutdown
+                Float avgSpeed = new Float((oldValue.getValue() + newValue.getValue()) / 2.0);
+                Float deltaT = ((Double) (Math.abs((new Date()).getTime() - TripSingleton.getInstance().getTrip().getTripValues().get(TripValueEnum.DISTANCE).getLastReading().getTime()) / 1000.0)).floatValue();
+                Float distance = (((avgSpeed * deltaT) / 3600) * 1/*distCorrVal*/);
 //            LoggerUtilities.logMessage("SpeedCarStatusPropertyChangeListener", "Distance " + distance);
-            TripSingleton.getInstance().getTrip().addTripValue(TripValueEnum.DISTANCE, distance);
+                TripSingleton.getInstance().getTrip().addTripValue(TripValueEnum.DISTANCE, distance);
+            }
         }
     }
 }
