@@ -63,8 +63,8 @@ public class ArduinoService extends Service implements SerialListener {
 //                        onArduinoMessage("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10));
 //                        onArduinoMessage("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500));
 //                        onArduinoMessage("CAR_STATUS;BATTERY_VOLTAGE;" + getFloatRandomNumber(11, 14));
-//                    onArduinoMessage(("READ_SETTING;OTA_MODE;true;");
-//                    if(counter >= 10)
+//                    onArduinoMessage("READ_SETTINGS;RESTART;false;");
+//                    if(counter >= 5)
 //                        onArduinoMessage("CAR_STATUS;ENGINE_RPM;" + getIntegerRandomNumber(900, 4000));
 //                    if(counter % 5 == 0) {
 //                        if(counter % 2 == 0) {
