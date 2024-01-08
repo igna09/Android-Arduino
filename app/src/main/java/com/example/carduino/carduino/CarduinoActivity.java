@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -19,7 +21,9 @@ import com.example.carduino.carstatus.Carstatus;
 import com.example.carduino.services.ArduinoService;
 import com.example.carduino.settings.fragments.Settings;
 import com.example.carduino.shared.MyApplication;
+import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.singletons.SharedDataSingleton;
 import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.LoggerUtilities;
 import com.example.carduino.shared.utilities.PermissionUtilities;
@@ -28,8 +32,10 @@ import com.example.carduino.trip.Trip;
 import com.google.android.material.navigationrail.NavigationRailView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CarduinoActivity extends AppCompatActivity {
     class MyMenuItem {
@@ -37,34 +43,21 @@ public class CarduinoActivity extends AppCompatActivity {
         String title;
         Integer icon;
         Class clazz;
+        Boolean advancedMode;
 
-        public MyMenuItem(Integer id, String title, Integer icon, Class clazz) {
+        public MyMenuItem(Integer id, String title, Integer icon, Class clazz, Boolean advancedMode) {
             this.id = id;
             this.title = title;
             this.clazz = clazz;
             this.icon = icon;
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public Class getClazz() {
-            return clazz;
-        }
-
-        public Integer getIcon() {
-            return icon;
+            this.advancedMode = advancedMode;
         }
     }
 
     public enum Connected { False, Pending, True }
-
+    NavigationRailView navigationView;
     List<MyMenuItem> menuItems;
+    private PropertyChangeListener advancedModePropertyChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,23 +80,29 @@ public class CarduinoActivity extends AppCompatActivity {
         }
 
         menuItems = new ArrayList<>();
-        menuItems.add(new MyMenuItem(0, "Carstatus", R.drawable.baseline_directions_car_24, Carstatus.class));
-        menuItems.add(new MyMenuItem(4, "Trip", R.drawable.baseline_bar_chart_24, Trip.class));
-        menuItems.add(new MyMenuItem(2, "CAN bus", R.drawable.baseline_usb_24, Canbus.class));
-        menuItems.add(new MyMenuItem(1, "Settings", R.drawable.baseline_settings_24, Settings.class));
-        menuItems.add(new MyMenuItem(3, "Test", R.drawable.baseline_tips_and_updates_24, Test.class));
+        Arrays.stream(MenuEnum.values()).forEach(menuEnum -> {
+            menuItems.add(new MyMenuItem(menuEnum.id, menuEnum.title, menuEnum.iconResource, menuEnum.fragmentClass, menuEnum.advancedMode));
+        });
 
-        NavigationRailView navigationView = findViewById(R.id.navigation_rail);
+        navigationView = findViewById(R.id.navigation_rail);
         for(int i = 0; i < menuItems.size(); i++) {
             MyMenuItem e = menuItems.get(i);
-            MenuItem menuItem = navigationView.getMenu().add(Menu.NONE, e.getId(), i, e.title);
-            menuItem.setIcon(e.getIcon());
+            MenuItem menuItem = navigationView.getMenu().add(e.advancedMode ? 2 : Menu.NONE, e.id, i, e.title);
+            menuItem.setIcon(e.icon);
         }
+        setAdvancedMenu(false);
+        advancedModePropertyChangeListener = new PropertyChangeListener<Boolean>() {
+            @Override
+            public void onPropertyChange(String propertyName, Boolean oldValue, Boolean newValue) {
+                setAdvancedMenu(newValue);
+            }
+        };
+        SharedDataSingleton.getInstance().addAdvancedModeChangeListener(advancedModePropertyChangeListener);
         navigationView.setOnItemSelectedListener(item -> {
-            Optional<MyMenuItem> optionalMyMenuItem = menuItems.stream().filter(e -> e.getId() == item.getItemId()).findFirst();
+            Optional<MyMenuItem> optionalMyMenuItem = menuItems.stream().filter(e -> e.id == item.getItemId()).findFirst();
             if(optionalMyMenuItem.isPresent()) {
                 try {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.carduino_main_view, (Fragment) optionalMyMenuItem.get().getClazz().newInstance()).addToBackStack(null).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.carduino_main_view, (Fragment) optionalMyMenuItem.get().clazz.newInstance()).addToBackStack(null).commit();
                     return true;
                 } catch (Exception e) {
                     LoggerUtilities.logException(e);
@@ -132,6 +131,7 @@ public class CarduinoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        SharedDataSingleton.getInstance().removeAdvancedModeChangeListener(advancedModePropertyChangeListener);
         LoggerUtilities.logMessage("CarduinoActivity", "onDestroy");
     }
 
@@ -158,6 +158,17 @@ public class CarduinoActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    public void setAdvancedMenu(Boolean advancedMode) {
+//        List<MyMenuItem> menuItemsFilteredList = menuItems.stream().filter(e -> advancedMode || (!advancedMode && !e.advancedMode)).collect(Collectors.toList());
+//        navigationView.getMenu().clear();
+//        for(int i = 0; i < menuItems.size(); i++) {
+//            MyMenuItem e = menuItems.get(i);
+//            MenuItem menuItem = navigationView.getMenu().add(e.advancedMode ? 2 : Menu.NONE, e.id, i, e.title);
+//            menuItem.setIcon(e.icon);
+//        }
+        navigationView.getMenu().setGroupVisible(2, advancedMode);
     }
 
     public void stopForegroundService() {

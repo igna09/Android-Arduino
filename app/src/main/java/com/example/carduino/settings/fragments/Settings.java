@@ -12,13 +12,17 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.carduino.R;
+import com.example.carduino.carduino.CarduinoActivity;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.settings.settingfactory.Setting;
+import com.example.carduino.settings.settingviewfactory.BooleanSettingViewWrapper;
 import com.example.carduino.settings.settingviewfactory.SettingViewFactory;
 import com.example.carduino.settings.settingviewfactory.SettingViewWrapper;
+import com.example.carduino.shared.MyApplication;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
 import com.example.carduino.shared.singletons.SettingsSingleton;
+import com.example.carduino.shared.singletons.SharedDataSingleton;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 
 /**
@@ -57,6 +61,15 @@ public class Settings extends Fragment {
             });
         });
 
+        BooleanSettingViewWrapper advancedModeSetting = new BooleanSettingViewWrapper();
+        advancedModeSetting.generateView("Advanced mode");
+        SwitchCompat booleanSettingSwitch = advancedModeSetting.getView().findViewById(R.id.boolean_setting_switch);
+        booleanSettingSwitch.setChecked(SharedDataSingleton.getInstance().getAdvancedMode());
+        booleanSettingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            SharedDataSingleton.getInstance().setAdvancedMode(isChecked);
+        });
+        settingsList.addView(advancedModeSetting.getView());
+
         pcl = new PropertyChangeListener<Setting>() {
             @Override
             public void onPropertyChange(String propertyName, Setting oldValue, Setting newValue) {
@@ -81,11 +94,6 @@ public class Settings extends Fragment {
             }
         };
         SettingsSingleton.getInstance().getSettings().addPropertyChangeListener(pcl);
-
-        /*// TODO: remove
-        if(!SettingsSingleton.getInstance().getSettings().getSettings().containsKey("OTA_MODE")) {
-            SettingsSingleton.getInstance().getSettings().addSetting(SettingsFactory.getSetting("OTA_MODE", "false"));
-        }*/
 
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.READ_SETTINGS, "OTA_MODE", "false"));
     }
