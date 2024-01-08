@@ -17,7 +17,7 @@ public class DialogUtilities {
     }
     public static void showContinueTripSession() {
         Intent intent = new Intent(ContextsSingleton.getInstance().getApplicationContext(), DialogActivity.class);
-        intent.putExtra("DIALOG", "CONTINUE_LAST_TRIP");
+        intent.putExtra("DIALOG", "START_NEW_TRIP_IN_PLACE_OF_LAST_SESSION");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ContextsSingleton.getInstance().getApplicationContext().startActivity(intent);
     }
