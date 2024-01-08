@@ -5,29 +5,31 @@ import android.content.DialogInterface;
 import com.example.carduino.shared.singletons.TripSingleton;
 
 public enum DialogEnum {
-    CONTINUE_LAST_TRIP("Continue trip", "Would you like to continue last trip session", (dialog, which) -> {
-        try {
-            TripSingleton.getInstance().restoreTrip();
-            TripSingleton.getInstance().startTrip();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }, (dialog, which) -> {
-        TripSingleton.getInstance().startTrip();
-    }, Duration.LONG);
+    CONTINUE_LAST_TRIP("Restart trip", "Would you like to start new trip in place of restoring last session?", (dialog, which) -> {
+                TripSingleton.getInstance().startTrip();
+            },
+            null,
+            new TimedDialogAction(Duration.SHORT, (dialog, which) -> {
+                try {
+                    TripSingleton.getInstance().restoreTrip();
+                    TripSingleton.getInstance().startTrip();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }));
 
     private DialogInterface.OnClickListener positiveCallback;
     private DialogInterface.OnClickListener negativeCallback;
     private String message;
     private String title;
-    private Duration duration;
+    private TimedDialogAction timedDialogAction;
 
-    DialogEnum(String title, String message, DialogInterface.OnClickListener positiveCallback, DialogInterface.OnClickListener negativeCallback, Duration duration) {
+    DialogEnum(String title, String message, DialogInterface.OnClickListener positiveCallback, DialogInterface.OnClickListener negativeCallback, TimedDialogAction timedDialogAction) {
         this.positiveCallback = positiveCallback;
         this.negativeCallback = negativeCallback;
         this.title = title;
         this.message = message;
-        this.duration = duration;
+        this.timedDialogAction = timedDialogAction;
     }
 
     public DialogInterface.OnClickListener getPositiveCallback() {
@@ -46,7 +48,7 @@ public enum DialogEnum {
         return title;
     }
 
-    public Duration getDuration() {
-        return duration;
+    public TimedDialogAction getTimedDialogAction() {
+        return timedDialogAction;
     }
 }

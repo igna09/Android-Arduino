@@ -34,11 +34,11 @@ public class DialogActivity extends AppCompatActivity {
             AlertDialog alertDialog = builder.create();
             runOnUiThread(() -> alertDialog.show());
 
-            if(dialogEnum.getDuration() != null) {
+            if(dialogEnum.getTimedDialogAction() != null) {
                 Thread autoCloseDialogThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int leftDuration = dialogEnum.getDuration().getDuration();
+                        int leftDuration = dialogEnum.getTimedDialogAction().getDuration().getDuration();
                         while(leftDuration > 0) {
                             int finalLeftDuration = leftDuration;
                             runOnUiThread(() -> alertDialog.setTitle(dialogEnum.getTitle() + " (" + finalLeftDuration + ")"));
