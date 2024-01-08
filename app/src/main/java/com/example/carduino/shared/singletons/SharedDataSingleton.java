@@ -43,9 +43,9 @@ public class SharedDataSingleton {
     }
 
     public void setAdvancedMode(Boolean advancedMode) {
-        boolean oldValue = advancedMode;
+        Boolean oldValue = Boolean.valueOf(this.advancedMode);
         this.advancedMode = advancedMode;
-        this.advancedModepropertyChangeSupport.firePropertyChange("ADVANCED_MODE", oldValue, this.advancedMode.booleanValue());
+        this.advancedModepropertyChangeSupport.firePropertyChange("ADVANCED_MODE", oldValue, this.advancedMode);
     }
 
     public Boolean getAdvancedMode() {
