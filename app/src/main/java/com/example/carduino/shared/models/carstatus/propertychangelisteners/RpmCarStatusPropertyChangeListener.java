@@ -4,6 +4,7 @@ import com.example.carduino.shared.models.carstatus.CarStatusFactory;
 import com.example.carduino.shared.models.carstatus.values.Rpm;
 import com.example.carduino.shared.models.carstatus.values.Value;
 import com.example.carduino.shared.singletons.CarStatusSingleton;
+import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.DialogUtilities;
 
@@ -18,8 +19,17 @@ public class RpmCarStatusPropertyChangeListener extends PropertyChangeListener<R
         }
         if(!TripSingleton.getInstance().getTrip().isStarted() && newValue.getValue() > 0) {
             if(TripSingleton.getInstance().tripBackupAvailable()) {
-                if(!DialogUtilities.isShowingDialog()) {
-                    DialogUtilities.showContinueTripSession();
+                if(ContextsSingleton.getInstance().getApplicationContext().isShowingApplication()) {
+                    if(!DialogUtilities.isShowingDialog()) {
+                        DialogUtilities.showContinueTripSession();
+                    }
+                } else { // application not in foreground continuing last trip
+                    try {
+                        TripSingleton.getInstance().restoreTrip();
+                        TripSingleton.getInstance().startTrip();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             } else {
                 TripSingleton.getInstance().startTrip();

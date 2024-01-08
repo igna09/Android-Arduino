@@ -91,6 +91,10 @@ public class MyApplication extends Application implements Application.ActivityLi
 
     }
 
+    /**
+     * should i use started and stopped?
+     * @param activity
+     */
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
         this.foregroundActivity = activity;
@@ -99,6 +103,20 @@ public class MyApplication extends Application implements Application.ActivityLi
     @Override
     public void onActivityPaused(@NonNull Activity activity) {
         this.foregroundActivity = null;
+    }
+
+    public Boolean isShowingApplication() {
+        /**
+         * ActivityManager am = (ActivityManager) AppService.this.getSystemService(ACTIVITY_SERVICE);
+         * // The first in the list of RunningTasks is always the foreground task.
+         * RunningTaskInfo foregroundTaskInfo = am.getRunningTasks(1).get(0);
+         * String foregroundTaskPackageName = foregroundTaskInfo .topActivity.getPackageName();
+         * PackageManager pm = AppService.this.getPackageManager();
+         * PackageInfo foregroundAppPackageInfo = pm.getPackageInfo(foregroundTaskPackageName, 0);
+         * String foregroundTaskAppName = foregroundAppPackageInfo.applicationInfo.loadLabel(pm).toString();
+         * <uses-permission android:name="android.permission.GET_TASKS" />
+         */
+        return foregroundActivity != null;
     }
 
     @Override
