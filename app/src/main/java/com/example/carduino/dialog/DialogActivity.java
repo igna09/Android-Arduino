@@ -32,7 +32,7 @@ public class DialogActivity extends AppCompatActivity {
                 finish();
             });
             AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+            runOnUiThread(() -> alertDialog.show());
 
             if(dialogEnum.getDuration() != null) {
                 Thread autoCloseDialogThread = new Thread(new Runnable() {
@@ -40,7 +40,8 @@ public class DialogActivity extends AppCompatActivity {
                     public void run() {
                         int leftDuration = dialogEnum.getDuration().getDuration();
                         while(leftDuration > 0) {
-                            alertDialog.setTitle(dialogEnum.getTitle() + " (" + leftDuration + ")");
+                            int finalLeftDuration = leftDuration;
+                            runOnUiThread(() -> alertDialog.setTitle(dialogEnum.getTitle() + " (" + finalLeftDuration + ")"));
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException e) {
