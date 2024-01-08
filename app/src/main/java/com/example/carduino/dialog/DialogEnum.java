@@ -14,18 +14,20 @@ public enum DialogEnum {
         }
     }, (dialog, which) -> {
         TripSingleton.getInstance().startTrip();
-    });
+    }, Duration.SHORT);
 
     private DialogInterface.OnClickListener positiveCallback;
     private DialogInterface.OnClickListener negativeCallback;
     private String message;
     private String title;
+    private Duration duration;
 
-    DialogEnum(String title, String message, DialogInterface.OnClickListener positiveCallback, DialogInterface.OnClickListener negativeCallback) {
+    DialogEnum(String title, String message, DialogInterface.OnClickListener positiveCallback, DialogInterface.OnClickListener negativeCallback, Duration duration) {
         this.positiveCallback = positiveCallback;
         this.negativeCallback = negativeCallback;
         this.title = title;
         this.message = message;
+        this.duration = duration;
     }
 
     public DialogInterface.OnClickListener getPositiveCallback() {
@@ -42,5 +44,9 @@ public enum DialogEnum {
 
     public String getTitle() {
         return title;
+    }
+
+    public Duration getDuration() {
+        return duration;
     }
 }
