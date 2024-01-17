@@ -25,10 +25,4 @@ public class BooleanSetting extends Setting<Boolean> {
     public void setValueFromString(String value) {
         this.setValue(value.equals("true"));
     }
-
-    @Override
-    public void onValueChange(Boolean newValue) {
-        super.onValueChange(newValue);
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, getId(), getValue() ? "true" : "false"));
-    }
 }

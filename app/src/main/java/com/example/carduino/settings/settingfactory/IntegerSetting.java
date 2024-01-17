@@ -16,10 +16,4 @@ public class IntegerSetting extends Setting<Integer> {
     public void setValueFromString(String value) {
         this.setValue(Integer.parseInt(value));
     }
-
-    @Override
-    public void onValueChange(Integer newValue) {
-        super.onValueChange(newValue);
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, getId(), getValue().toString()));
-    }
 }

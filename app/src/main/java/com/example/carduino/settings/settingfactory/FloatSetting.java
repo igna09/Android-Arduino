@@ -16,10 +16,4 @@ public class FloatSetting extends Setting<Float> {
     public void setValueFromString(String value) {
         this.setValue(Float.parseFloat(value));
     }
-
-    @Override
-    public void onValueChange(Float newValue) {
-        super.onValueChange(newValue);
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, getId(), getValue().toString()));
-    }
 }

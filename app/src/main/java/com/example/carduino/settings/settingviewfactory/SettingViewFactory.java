@@ -10,6 +10,7 @@ public class SettingViewFactory {
         } catch (IllegalAccessException | InstantiationException e) {
             throw new RuntimeException(e);
         }
+        settingViewWrapper.setCallback(SettingsEnum.valueOf(id).getSettingCallback());
         return settingViewWrapper;
     }
 }

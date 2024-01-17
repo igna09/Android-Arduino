@@ -66,7 +66,7 @@ public class Settings extends Fragment {
         });
 
         BooleanSettingViewWrapper advancedModeSetting = new BooleanSettingViewWrapper();
-        advancedModeSetting.generateView("Advanced mode");
+        advancedModeSetting.generateView(null, "Advanced mode");
         SwitchCompat booleanSettingSwitch = advancedModeSetting.getView().findViewById(R.id.boolean_setting_switch);
         booleanSettingSwitch.setChecked(SharedDataSingleton.getInstance().getAdvancedMode());
         booleanSettingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -76,24 +76,17 @@ public class Settings extends Fragment {
 
         pcl = new PropertyChangeListener<Setting>() {
             @Override
-            public void onPropertyChange(String propertyName, Setting oldValue, Setting newValue) {
+            public void onPropertyChange(String propertyName, Setting oldSetting, Setting newSetting) {
                 if(!SettingsSingleton.getInstance().getSettingViews().containsKey(propertyName)) {
                     SettingViewWrapper settingViewWrapper = SettingViewFactory.getSettingView(propertyName);
-                    settingViewWrapper.generateView(newValue.getLabel());
-                    // TODO: move this logic to booleanview
-                    SwitchCompat switchCompat = (SwitchCompat) settingViewWrapper.getView().findViewById(R.id.boolean_setting_switch);
-                    switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (switchCompat.isPressed()) {
-                            newValue.onValueChange(isChecked);
-                        }
-                    });
+                    settingViewWrapper.generateView(newSetting, newSetting.getLabel());
                     SettingsSingleton.getInstance().getSettingViews().put(propertyName, settingViewWrapper);
                     getActivity().runOnUiThread(() -> {
                         addSettingView(settingViewWrapper.getView());
                     });
                 }
                 getActivity().runOnUiThread(() -> {
-                    SettingsSingleton.getInstance().getSettingViews().get(propertyName).updateView(newValue.getValue());
+                    SettingsSingleton.getInstance().getSettingViews().get(propertyName).updateView(newSetting.getValue());
                 });
             }
         };

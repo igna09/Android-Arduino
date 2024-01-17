@@ -46,8 +46,4 @@ public abstract class Setting<T> {
     }
 
     public abstract void setValueFromString(String value);
-
-    public void onValueChange(T newValue) {
-        this.value = newValue;
-    }
 }
