@@ -35,6 +35,9 @@ import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
  */
 public class Settings extends Fragment {
     private PropertyChangeListener pcl;
+    private Integer settingsViewCounter = 0;
+    private LinearLayout settingsListLeft;
+    private LinearLayout settingsListRight;
 
     @Nullable
     @Override
@@ -46,7 +49,8 @@ public class Settings extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout settingsList = (LinearLayout) view.findViewById(R.id.settings_list);
+        settingsListLeft = (LinearLayout) view.findViewById(R.id.settings_list_left);
+        settingsListRight = (LinearLayout) view.findViewById(R.id.settings_list_right);
 
         /**
          * reusing already existing view
@@ -57,7 +61,7 @@ public class Settings extends Fragment {
                 parent.removeView(settingViewWrapper.getView());
             }
             getActivity().runOnUiThread(() -> {
-                settingsList.addView(settingViewWrapper.getView());
+                addSettingView(settingViewWrapper.getView());
             });
         });
 
@@ -68,7 +72,7 @@ public class Settings extends Fragment {
         booleanSettingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             SharedDataSingleton.getInstance().setAdvancedMode(isChecked);
         });
-        settingsList.addView(advancedModeSetting.getView());
+        addSettingView(advancedModeSetting.getView());
 
         pcl = new PropertyChangeListener<Setting>() {
             @Override
@@ -85,7 +89,7 @@ public class Settings extends Fragment {
                     });
                     SettingsSingleton.getInstance().getSettingViews().put(propertyName, settingViewWrapper);
                     getActivity().runOnUiThread(() -> {
-                        settingsList.addView(settingViewWrapper.getView());
+                        addSettingView(settingViewWrapper.getView());
                     });
                 }
                 getActivity().runOnUiThread(() -> {
@@ -96,6 +100,15 @@ public class Settings extends Fragment {
         SettingsSingleton.getInstance().getSettings().addPropertyChangeListener(pcl);
 
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.READ_SETTINGS, "OTA_MODE", "false"));
+    }
+
+    private void addSettingView(View settingView) {
+        if(settingsViewCounter % 2 == 0) {
+            settingsListLeft.addView(settingView);
+        } else {
+            settingsListRight.addView(settingView);
+        }
+        settingsViewCounter++;
     }
 
     @Override
