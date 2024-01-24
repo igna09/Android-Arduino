@@ -10,6 +10,6 @@ public class SettingAction implements ArduinoMessageExecutorInterface {
     @Override
     public void execute(ArduinoMessage message) {
         Setting setting = SettingsFactory.getSetting(message.getKey(), message.getValue());
-        SettingsSingleton.getInstance().getSettings().addSetting(setting);
+        SettingsSingleton.getInstance().addSetting(setting);
     }
 }

@@ -90,7 +90,7 @@ public class Settings extends Fragment {
                 });
             }
         };
-        SettingsSingleton.getInstance().getSettings().addPropertyChangeListener(pcl);
+        SettingsSingleton.getInstance().addPropertyChangeListener(pcl);
 
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.READ_SETTINGS, "OTA_MODE", "false"));
     }
@@ -107,6 +107,6 @@ public class Settings extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        SettingsSingleton.getInstance().getSettings().removePropertyChangeListener(pcl);
+        SettingsSingleton.getInstance().removePropertyChangeListener(pcl);
     }
 }

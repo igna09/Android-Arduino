@@ -120,7 +120,7 @@ public class TripSingleton {
     }
 
     public Boolean tripBackupAvailable() {
-        return new File(fileSystemSingleton.getCarduinoRootFolder(), TRIP_FILE_NAME).exists();
+        return fileSystemSingleton.existsInRoot(TRIP_FILE_NAME);
     }
 
     public Boolean restoreTrip() throws Exception {

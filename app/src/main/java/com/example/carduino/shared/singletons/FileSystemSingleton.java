@@ -67,6 +67,10 @@ public class FileSystemSingleton {
         }
     }
 
+    public Boolean existsInRoot(String fileName) {
+        return new File(getCarduinoRootFolder(), fileName).exists();
+    }
+
     public static void invalidate() {
         instance = null;
     }

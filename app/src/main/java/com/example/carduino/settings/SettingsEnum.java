@@ -2,6 +2,7 @@ package com.example.carduino.settings;
 
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.settings.settingfactory.BooleanSetting;
+import com.example.carduino.settings.settingfactory.IntegerSetting;
 import com.example.carduino.settings.settingviewfactory.BooleanSettingViewWrapper;
 import com.example.carduino.settings.settingviewfactory.ButtonSettingViewWrapper;
 import com.example.carduino.shared.models.ArduinoMessage;
@@ -13,7 +14,9 @@ public enum SettingsEnum {
     }),
     RESTART("Restart all nodes", BooleanSetting.class, ButtonSettingViewWrapper.class, (value) -> {
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "RESTART", "true"));
-    });
+    }),
+    MAX_LUMINANCE("Minimum internal luminance", IntegerSetting.class),
+    MIN_LUMINANCE("Maximum internal luminance", IntegerSetting.class);
 
     private String label;
     private Class settingType;
@@ -25,6 +28,10 @@ public enum SettingsEnum {
         this.label = label;
         this.settingViewType = settingViewType;
         this.settingCallback = settingCallback;
+    }
+
+    SettingsEnum(String label, Class settingType) {
+        this(label, settingType, null, null);
     }
 
     SettingsEnum(String label, Class settingType, Class settingViewType) {
