@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.Date;
 
 public class TripSingleton {
     private class TripValueDeserializer implements JsonDeserializer<TripValue> {
@@ -136,6 +137,10 @@ public class TripSingleton {
                     .create();
             trip = gson.fromJson(json, Trip.class);
 
+            if(trip.getTripValues().containsKey(TripValueEnum.DISTANCE)) {
+                trip.getTripValues().get(TripValueEnum.DISTANCE).setLastReading(new Date());
+            }
+
             return true;
         } else {
             return false;
@@ -159,6 +164,7 @@ public class TripSingleton {
     }
 
     public static void invalidate() {
+        instance.backupThread.interrupt();
         instance = null;
     }
 }
