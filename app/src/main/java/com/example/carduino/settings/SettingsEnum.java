@@ -15,8 +15,8 @@ public enum SettingsEnum {
     RESTART("Restart all nodes", BooleanSetting.class, ButtonSettingViewWrapper.class, (value) -> {
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "RESTART", "true"));
     }),
-    MAX_LUMINANCE("Minimum internal luminance", IntegerSetting.class),
-    MIN_LUMINANCE("Maximum internal luminance", IntegerSetting.class);
+    MAX_LUMINANCE("Maximum internal luminance", IntegerSetting.class),
+    MIN_LUMINANCE("Minimum internal luminance", IntegerSetting.class);
 
     private String label;
     private Class settingType;
