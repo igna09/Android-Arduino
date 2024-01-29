@@ -36,4 +36,12 @@ public class CircularArrayList<T> {
             nextElementIndex = 0;
         }
     }
+
+    public ArrayList<T> getList() {
+        return list;
+    }
+
+    public Integer getMaxListSize() {
+        return listSize;
+    }
 }

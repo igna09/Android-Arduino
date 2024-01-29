@@ -1,6 +1,7 @@
 package com.example.carduino.shared.singletons;
 
 import com.example.carduino.settings.settingfactory.Setting;
+import com.example.carduino.shared.utilities.CircularArrayList;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -9,13 +10,16 @@ import java.util.Map;
 
 public class SharedDataSingleton {
     private static SharedDataSingleton instance;
-    private Map settings;
     private Boolean advancedMode;
     public PropertyChangeSupport advancedModepropertyChangeSupport;
+    private CircularArrayList<Integer> luminanceReadings;
+    private Integer maxDisplayBrightness;
 
     private SharedDataSingleton(){
         advancedMode = false;
         advancedModepropertyChangeSupport = new PropertyChangeSupport(this);
+        luminanceReadings = new CircularArrayList<>(5);
+        maxDisplayBrightness = null;
     }
     public static SharedDataSingleton getInstance()
     {
@@ -24,18 +28,6 @@ public class SharedDataSingleton {
             instance = new SharedDataSingleton();
         }
         return instance;
-    }
-
-    public Map getSettings() {
-        return settings;
-    }
-
-    public void setSettings(Setting setting) {
-        if(this.settings == null) {
-            this.settings = new HashMap<String, Setting>();
-        }
-
-        this.settings.put(setting.getId(), setting);
     }
 
     public static void invalidate() {
@@ -58,5 +50,17 @@ public class SharedDataSingleton {
 
     public void removeAdvancedModeChangeListener(PropertyChangeListener pcl) {
         advancedModepropertyChangeSupport.removePropertyChangeListener(pcl);
+    }
+
+    public CircularArrayList<Integer> getLuminanceReadings() {
+        return luminanceReadings;
+    }
+
+    public Integer getMaxDisplayBrightness() {
+        return maxDisplayBrightness;
+    }
+
+    public void setMaxDisplayBrightness(Integer maxDisplayBrightness) {
+        this.maxDisplayBrightness = maxDisplayBrightness;
     }
 }

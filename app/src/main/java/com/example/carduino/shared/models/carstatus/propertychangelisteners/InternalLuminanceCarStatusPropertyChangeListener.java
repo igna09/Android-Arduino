@@ -1,9 +1,7 @@
 package com.example.carduino.shared.models.carstatus.propertychangelisteners;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.app.Application;
-import android.content.Intent;
+import android.content.Context;
+import android.os.PowerManager;
 import android.provider.Settings;
 
 import com.example.carduino.settings.SettingsEnum;
@@ -11,9 +9,9 @@ import com.example.carduino.settings.settingfactory.SettingsFactory;
 import com.example.carduino.shared.models.carstatus.values.LuxLuminance;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.SettingsSingleton;
-import com.example.carduino.shared.utilities.PermissionUtilities;
+import com.example.carduino.shared.singletons.SharedDataSingleton;
 
-import java.beans.PropertyChangeEvent;
+import java.lang.reflect.Field;
 
 public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyChangeListener<LuxLuminance> {
     @Override
@@ -40,12 +38,46 @@ public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyCh
                 SettingsSingleton.getInstance().getSettings().get(SettingsEnum.MAX_LUMINANCE.name()).setValue(maxLuminance);
             }
 
-            if(maxLuminance > minLuminance) {
+            SharedDataSingleton.getInstance().getLuminanceReadings().add(newValue.getValue());
+
+            Integer sum = SharedDataSingleton.getInstance().getLuminanceReadings().getList().stream().reduce(0, Integer::sum);
+            Integer avg = sum / SharedDataSingleton.getInstance().getLuminanceReadings().getList().size();
+
+            if(SharedDataSingleton.getInstance().getMaxDisplayBrightness() == null) {
+                SharedDataSingleton.getInstance().setMaxDisplayBrightness(getMaxBrightness(ContextsSingleton.getInstance().getApplicationContext(), 255));
+            }
+
+            Integer mappedValue = map(avg, minLuminance, maxLuminance, 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
+
+            if(maxLuminance > minLuminance) { //no luminance readings yet
                 Settings.System.putInt(ContextsSingleton.getInstance().getApplicationContext().getContentResolver(),
-                        Settings.System.SCREEN_BRIGHTNESS,
-                        map(newValue.getValue(), minLuminance, maxLuminance, 0, 100));
+                        Settings.System.SCREEN_BRIGHTNESS, mappedValue);
+            }
+
+//            LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + avg + ", min: " + minLuminance + ", max: " + maxLuminance + ", mapped: " + mappedValue);
+        }
+    }
+
+    public Integer getMaxBrightness(Context context, Integer defaultValue){
+
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if(powerManager != null) {
+            Field[] fields = powerManager.getClass().getDeclaredFields();
+            for (Field field: fields) {
+
+                //https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/os/PowerManager.java
+
+                if(field.getName().equals("BRIGHTNESS_ON")) {
+                    field.setAccessible(true);
+                    try {
+                        return (Integer) field.get(powerManager);
+                    } catch (IllegalAccessException e) {
+                        return defaultValue;
+                    }
+                }
             }
         }
+        return defaultValue;
     }
 
     public static Integer map(Integer x, Integer in_min, Integer in_max, Integer out_min, Integer out_max)
