@@ -7,6 +7,7 @@ import com.example.carduino.shared.singletons.CarStatusSingleton;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.DialogUtilities;
+import com.example.carduino.shared.utilities.LoggerUtilities;
 
 public class RpmCarStatusPropertyChangeListener extends PropertyChangeListener<Rpm> {
     @Override
@@ -15,6 +16,16 @@ public class RpmCarStatusPropertyChangeListener extends PropertyChangeListener<R
             Value value = CarStatusFactory.getCarStatusValue("ENGINE_STARTED", "true");
             if (value != null) {
                 CarStatusSingleton.getInstance().getCarStatus().putValue(value);
+            }
+        }
+        if((oldValue.getValue() != null && oldValue.getValue() > 0) && (newValue.getValue() == 0 || newValue.getValue() == null)) { //Engine turned off
+            LoggerUtilities.logMessage("RpmCarStatusPropertyChangeListener", "engine turned off");
+            Value value = CarStatusFactory.getCarStatusValue("ENGINE_STARTED", "false");
+            if (value != null) {
+                CarStatusSingleton.getInstance().getCarStatus().putValue(value);
+            }
+            if(TripSingleton.getInstance().getTrip().isStarted()) {
+                TripSingleton.getInstance().stopTrip();
             }
         }
         if(!TripSingleton.getInstance().getTrip().isStarted() && newValue.getValue() > 0) {
