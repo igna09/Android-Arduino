@@ -21,7 +21,7 @@ public class RpmCarStatusPropertyChangeListener extends PropertyChangeListener<R
             if(TripSingleton.getInstance().tripBackupAvailable()) {
                 if(ContextsSingleton.getInstance().getApplicationContext().isShowingApplication()) {
                     if(!DialogUtilities.isShowingDialog()) {
-                        DialogUtilities.openStartNewTripInPlaceOfLastSession();
+                        DialogUtilities.openContinueLastTrip();
                     }
                 } else { // application not in foreground continuing last trip
                     try {

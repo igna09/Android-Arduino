@@ -9,9 +9,9 @@ public class DialogUtilities {
     public static Boolean isShowingDialog() {
         return ContextsSingleton.getInstance().getApplicationContext().getForegroundActivity().getLocalClassName().equals("dialog.DialogActivity");
     }
-    public static void openStartNewTripInPlaceOfLastSession() {
+    public static void openContinueLastTrip() {
         Intent intent = new Intent(ContextsSingleton.getInstance().getApplicationContext(), DialogActivity.class);
-        intent.putExtra("DIALOG", "START_NEW_TRIP_IN_PLACE_OF_LAST_SESSION");
+        intent.putExtra("DIALOG", "CONTINUE_LAST_TRIP");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ContextsSingleton.getInstance().getApplicationContext().startActivity(intent);
     }

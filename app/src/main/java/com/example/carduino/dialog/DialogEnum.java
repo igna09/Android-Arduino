@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import com.example.carduino.shared.singletons.TripSingleton;
 
 public enum DialogEnum {
-    START_NEW_TRIP_IN_PLACE_OF_LAST_SESSION("Restart trip", "Would you like to start new trip in place of restoring last session?", (dialog, which) -> {
+    CONTINUE_LAST_TRIP("Continue last trip", "Would you like to continue last trip?", (dialog, which) -> {
                 TripSingleton.getInstance().startTrip();
             },
             null,
