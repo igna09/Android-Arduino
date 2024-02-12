@@ -27,6 +27,7 @@ import com.example.carduino.arduinolistener.StringBuffer;
 import com.example.carduino.arduinolistener.TextUtil;
 import com.example.carduino.carduino.CarduinoActivity;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
+import com.example.carduino.receivers.BootReceiver;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
 import com.example.carduino.shared.MyApplication;
 import com.example.carduino.shared.models.ArduinoMessage;
@@ -123,6 +124,13 @@ public class ArduinoService extends Service implements SerialListener {
                 }
             }
         };
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        BroadcastReceiver mReceiver = new BootReceiver();
+        registerReceiver(mReceiver, filter);
 
         buffer = new StringBuffer();
 
