@@ -1,5 +1,6 @@
 package com.example.carduino.dialog;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -41,7 +42,7 @@ public class DialogActivity extends AppCompatActivity {
                         int leftDuration = dialogEnum.getTimedDialogAction().getDuration().getDuration();
                         while(leftDuration > 0) {
                             int finalLeftDuration = leftDuration;
-                            runOnUiThread(() -> alertDialog.setTitle(dialogEnum.getTitle() + " (" + finalLeftDuration + ")"));
+                            runOnUiThread(() -> alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText(String.format("Yes (%d)", finalLeftDuration)));
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException e) {

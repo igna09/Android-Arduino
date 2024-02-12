@@ -6,9 +6,20 @@ import com.example.carduino.shared.singletons.TripSingleton;
 
 public enum DialogEnum {
     CONTINUE_LAST_TRIP("Continue last trip", "Would you like to continue last trip?", (dialog, which) -> {
+                try {
+                    TripSingleton.getInstance().restoreTrip();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 TripSingleton.getInstance().startTrip();
             },
-            null,
+            (dialog, which) -> {
+                try {
+                    TripSingleton.getInstance().resetTrip();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            },
             new TimedDialogAction(Duration.SHORT, (dialog, which) -> {
                 try {
                     TripSingleton.getInstance().restoreTrip();
