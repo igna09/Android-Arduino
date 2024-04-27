@@ -5,7 +5,8 @@ import android.content.DialogInterface;
 import com.example.carduino.shared.singletons.TripSingleton;
 
 public enum DialogEnum {
-    CONTINUE_LAST_TRIP("Continue last trip", "Would you like to continue last trip?", (dialog, which) -> {
+    CONTINUE_LAST_TRIP("Continue last trip", "Would you like to continue last trip?",
+            (dialog, which) -> {
                 try {
                     TripSingleton.getInstance().restoreTrip();
                 } catch (Exception e) {
@@ -19,14 +20,15 @@ public enum DialogEnum {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+                TripSingleton.getInstance().startTrip();
             },
             new TimedDialogAction(Duration.SHORT, (dialog, which) -> {
                 try {
                     TripSingleton.getInstance().restoreTrip();
-                    TripSingleton.getInstance().startTrip();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+                TripSingleton.getInstance().startTrip();
             }));
 
     private DialogInterface.OnClickListener positiveCallback;
