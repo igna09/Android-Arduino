@@ -25,7 +25,7 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
             audioManager1 = (AudioManager) ContextsSingleton.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         Instrumentation instrumentation = new Instrumentation();
         switch(mediaControl) {
-            case VOLUME_UP:
+            /*case VOLUME_UP:
                 if(audioManager1 != null) {
                     audioManager1.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
                     audioManager1.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
@@ -72,7 +72,7 @@ public class MediaControlAction implements ArduinoMessageExecutorInterface {
                     audioManager1.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
                 }
 //                instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
-                break;
+                break;*/
 
             case LONG_PRESS:
                 AppSwitchSingleton.getInstance().openNextApplication();
