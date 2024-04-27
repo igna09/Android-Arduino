@@ -118,19 +118,19 @@ public class ArduinoService extends Service implements SerialListener {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(Constants.INTENT_ACTION_GRANT_USB.equals(intent.getAction())) {
-                    Boolean granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false);
-                    attemptConnect(deviceIdToConnect, granted);
-                }
+            if(Constants.INTENT_ACTION_GRANT_USB.equals(intent.getAction())) {
+                Boolean granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false);
+                attemptConnect(deviceIdToConnect, granted);
+            }
             }
         };
 
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        /*IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_USER_PRESENT);
         BroadcastReceiver mReceiver = new BootReceiver();
-        registerReceiver(mReceiver, filter);
+        registerReceiver(mReceiver, filter);*/
 
         buffer = new StringBuffer();
 
