@@ -16,7 +16,10 @@ public enum SettingsEnum {
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "RESTART", "true"));
     }),
     MAX_LUMINANCE("Maximum internal luminance", IntegerSetting.class),
-    MIN_LUMINANCE("Minimum internal luminance", IntegerSetting.class);
+    MIN_LUMINANCE("Minimum internal luminance", IntegerSetting.class),
+    SWC_PAIR("SWC pairing", BooleanSetting.class, ButtonSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "SWC_PAIR", "true"));
+    });
 
     private String label;
     private Class settingType;
