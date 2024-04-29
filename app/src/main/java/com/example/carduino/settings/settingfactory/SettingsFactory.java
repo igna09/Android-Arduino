@@ -6,7 +6,7 @@ public class SettingsFactory {
     public static Setting getSetting(String id, String value) {
         Setting setting;
         try {
-            setting =  (Setting) SettingsEnum.valueOf(id).getSettingType().newInstance();
+            setting =  (Setting) SettingsEnum.valueOf(id).getSettingValueType().newInstance();
         } catch (IllegalAccessException | InstantiationException e) {
             throw new RuntimeException(e);
         }

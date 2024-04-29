@@ -1,5 +1,6 @@
 package com.example.carduino.shared.singletons;
 
+import com.example.carduino.settings.SettingsEnum;
 import com.example.carduino.settings.settingfactory.Setting;
 import com.example.carduino.settings.settingfactory.SettingsFactory;
 import com.example.carduino.settings.settingviewfactory.SettingViewWrapper;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +32,9 @@ public class SettingsSingleton {
     private HashMap<String, Setting> settings;
     public PropertyChangeSupport support;
 
+    /**
+     * makes any sense to store views?
+     */
     private Map<String, SettingViewWrapper> settingViews;
 
     private final FileSystemSingleton fileSystemSingleton;
@@ -69,11 +74,21 @@ public class SettingsSingleton {
             }
         });
 
-        try {
-            restoreSettings();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if(settingsBackupAvailable()) {
+            try {
+                restoreSettings();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
+
+        Arrays.stream(SettingsEnum.values())
+                .filter(settingEnum -> settingEnum.getSettingType() == SettingsEnum.SettingType.APP)
+                .forEach(settingEnum -> {
+                    if(!this.getSettings().containsKey(settingEnum.name())) { // if setting does not exists i create it
+                        this.addSetting(SettingsFactory.getSetting(settingEnum.name(), null));
+                    }
+                });
 
         backupThread.start();
     }
@@ -137,22 +152,18 @@ public class SettingsSingleton {
     }
 
     public Boolean restoreSettings() throws Exception {
-        if(settingsBackupAvailable()) {
-            File tripFile = getSettingsFile();
+        File tripFile = getSettingsFile();
 
-            FileInputStream fin = new FileInputStream(tripFile);
-            String json = convertStreamToString(fin);
-            fin.close();
+        FileInputStream fin = new FileInputStream(tripFile);
+        String json = convertStreamToString(fin);
+        fin.close();
 
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(HashMap.class, new SettingsSingleton.SettingsValueDeserializer())
-                    .create();
-            settings = gson.fromJson(json, HashMap.class);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(HashMap.class, new SettingsSingleton.SettingsValueDeserializer())
+                .create();
+        settings = gson.fromJson(json, HashMap.class);
 
-            return true;
-        } else {
-            return false;
-        }
+        return true;
     }
 
     public void resetSettings() throws IOException {

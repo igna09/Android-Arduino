@@ -19,10 +19,12 @@ import com.example.carduino.R;
 import com.example.carduino.canbus.fragments.Canbus;
 import com.example.carduino.carstatus.Carstatus;
 import com.example.carduino.services.ArduinoService;
+import com.example.carduino.settings.SettingsEnum;
 import com.example.carduino.settings.fragments.Settings;
 import com.example.carduino.shared.MyApplication;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.PropertyChangeListener;
 import com.example.carduino.shared.singletons.ContextsSingleton;
+import com.example.carduino.shared.singletons.SettingsSingleton;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
 import com.example.carduino.shared.singletons.TripSingleton;
 import com.example.carduino.shared.utilities.LoggerUtilities;
@@ -90,7 +92,9 @@ public class CarduinoActivity extends AppCompatActivity {
             MenuItem menuItem = navigationView.getMenu().add(e.advancedMode ? 2 : Menu.NONE, e.id, i, e.title);
             menuItem.setIcon(e.icon);
         }
-        setAdvancedMenu(false);
+        Boolean advancedMenu = (Boolean) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.ADVANCED_MODE.name()).getValue();
+        setAdvancedMenu(advancedMenu);
+        SharedDataSingleton.getInstance().setAdvancedMode(advancedMenu);
         advancedModePropertyChangeListener = new PropertyChangeListener<Boolean>() {
             @Override
             public void onPropertyChange(String propertyName, Boolean oldValue, Boolean newValue) {

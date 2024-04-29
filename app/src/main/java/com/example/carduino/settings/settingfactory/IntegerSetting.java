@@ -14,6 +14,10 @@ public class IntegerSetting extends Setting<Integer> {
 
     @Override
     public void setValueFromString(String value) {
-        this.setValue(Integer.parseInt(value));
+        if(value != null) {
+            this.setValue(Integer.parseInt(value));
+        } else {
+            this.setValue(0);
+        }
     }
 }

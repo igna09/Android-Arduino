@@ -14,6 +14,10 @@ public class FloatSetting extends Setting<Float> {
 
     @Override
     public void setValueFromString(String value) {
-        this.setValue(Float.parseFloat(value));
+        if(value != null) {
+            this.setValue(Float.parseFloat(value));
+        } else {
+            this.setValue((float) 0);
+        }
     }
 }

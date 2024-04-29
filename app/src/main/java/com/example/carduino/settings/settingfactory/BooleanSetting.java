@@ -23,6 +23,10 @@ public class BooleanSetting extends Setting<Boolean> {
 
     @Override
     public void setValueFromString(String value) {
-        this.setValue(value.equals("true"));
+        if(value != null) {
+            this.setValue(value.equals("true"));
+        } else {
+            this.setValue(false);
+        }
     }
 }
