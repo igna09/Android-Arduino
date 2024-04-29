@@ -10,6 +10,7 @@ import com.example.carduino.shared.models.carstatus.values.LuxLuminance;
 import com.example.carduino.shared.singletons.ContextsSingleton;
 import com.example.carduino.shared.singletons.SettingsSingleton;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
+import com.example.carduino.shared.utilities.LoggerUtilities;
 
 import java.lang.reflect.Field;
 
@@ -52,9 +53,9 @@ public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyCh
                 Integer mappedValue = map(avg, minLuminance, maxLuminance, 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
                 Settings.System.putInt(ContextsSingleton.getInstance().getApplicationContext().getContentResolver(),
                         Settings.System.SCREEN_BRIGHTNESS, mappedValue);
-            }
 
-//            LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + avg + ", min: " + minLuminance + ", max: " + maxLuminance + ", mapped: " + mappedValue);
+                LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + avg + ", min: " + minLuminance + ", max: " + maxLuminance + ", mapped: " + mappedValue);
+            }
         }
     }
 
@@ -70,13 +71,17 @@ public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyCh
                 if(field.getName().equals("BRIGHTNESS_ON")) {
                     field.setAccessible(true);
                     try {
+                        LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "reading max brightness value " + (Integer) field.get(powerManager));
                         return (Integer) field.get(powerManager);
                     } catch (IllegalAccessException e) {
+                        LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "exception, returning default value");
+                        LoggerUtilities.logException(e);
                         return defaultValue;
                     }
                 }
             }
         }
+        LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "returning default value");
         return defaultValue;
     }
 
