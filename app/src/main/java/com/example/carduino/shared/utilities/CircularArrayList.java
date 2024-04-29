@@ -6,14 +6,12 @@ import java.util.ArrayList;
 
 public class CircularArrayList<T> {
     private Integer listSize;
-    private Integer nextElementIndex;
     private ArrayList<T> list;
 
     private PropertyChangeSupport support;
 
     public CircularArrayList(Integer size) {
         listSize = size;
-        nextElementIndex = 0;
         list = new ArrayList<>();
         support = new PropertyChangeSupport(this);
     }
@@ -27,13 +25,12 @@ public class CircularArrayList<T> {
     }
 
     public void add(T e) {
-        list.add(nextElementIndex, e);
+        list.add(e);
 
         support.firePropertyChange(null, null, e);
 
-        nextElementIndex++;
-        if(nextElementIndex >= listSize) {
-            nextElementIndex = 0;
+        if(list.size() > this.listSize) {
+            list.remove(0);
         }
     }
 
