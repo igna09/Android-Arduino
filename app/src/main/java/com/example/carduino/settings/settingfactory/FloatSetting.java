@@ -17,7 +17,7 @@ public class FloatSetting extends Setting<Float> {
         if(value != null) {
             this.setValue(Float.parseFloat(value));
         } else {
-            this.setValue((float) 0);
+            this.setValue(null);
         }
     }
 }

@@ -12,13 +12,15 @@ public class SharedDataSingleton {
     private static SharedDataSingleton instance;
     private Boolean advancedMode;
     public PropertyChangeSupport advancedModepropertyChangeSupport;
-    private CircularArrayList<Integer> luminanceReadings;
+    private CircularArrayList<Integer> minMaxluminanceReadings;
+    private CircularArrayList<Integer> avgluminanceReadings;
     private Integer maxDisplayBrightness;
 
     private SharedDataSingleton(){
         advancedMode = false;
         advancedModepropertyChangeSupport = new PropertyChangeSupport(this);
-        luminanceReadings = new CircularArrayList<>(5);
+        avgluminanceReadings = new CircularArrayList<>(5); // luminance reading every second so last 5 seconds readings
+        minMaxluminanceReadings = new CircularArrayList<>(60); // luminance reading every second so last 1 minutes readings
         maxDisplayBrightness = null;
     }
     public static SharedDataSingleton getInstance()
@@ -52,15 +54,19 @@ public class SharedDataSingleton {
         advancedModepropertyChangeSupport.removePropertyChangeListener(pcl);
     }
 
-    public CircularArrayList<Integer> getLuminanceReadings() {
-        return luminanceReadings;
-    }
-
     public Integer getMaxDisplayBrightness() {
         return maxDisplayBrightness;
     }
 
     public void setMaxDisplayBrightness(Integer maxDisplayBrightness) {
         this.maxDisplayBrightness = maxDisplayBrightness;
+    }
+
+    public CircularArrayList<Integer> getMinMaxluminanceReadings() {
+        return minMaxluminanceReadings;
+    }
+
+    public CircularArrayList<Integer> getAvgluminanceReadings() {
+        return avgluminanceReadings;
     }
 }

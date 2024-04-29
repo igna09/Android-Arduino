@@ -47,7 +47,8 @@ public class SettingsSingleton {
         public HashMap deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             HashMap<String, Setting> settings = new HashMap<>();
             json.getAsJsonObject().keySet().forEach(key -> {
-                Setting setting = SettingsFactory.getSetting(key, json.getAsJsonObject().get(key).getAsJsonObject().get("value").toString());
+                JsonElement jsonElement = json.getAsJsonObject().get(key).getAsJsonObject().get("value");
+                Setting setting = SettingsFactory.getSetting(key, jsonElement != null ? jsonElement.toString() : null);
                 settings.put(key, setting);
             });
             return settings;

@@ -17,7 +17,7 @@ public class IntegerSetting extends Setting<Integer> {
         if(value != null) {
             this.setValue(Integer.parseInt(value));
         } else {
-            this.setValue(0);
+            this.setValue(null);
         }
     }
 }

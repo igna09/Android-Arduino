@@ -18,43 +18,24 @@ public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyCh
     @Override
     public void onPropertyChange(String propertyName, LuxLuminance oldValue, LuxLuminance newValue) {
         if(newValue.getValue() != null) {
-            Integer maxLuminance = null;
-            Integer minLuminance = null;
+            SharedDataSingleton.getInstance().getAvgluminanceReadings().add(newValue.getValue());
+            SharedDataSingleton.getInstance().getMinMaxluminanceReadings().add(newValue.getValue());
 
-            if(!SettingsSingleton.getInstance().getSettings().containsKey(SettingsEnum.MIN_LUMINANCE.name())) {
-                SettingsSingleton.getInstance().addSetting(SettingsFactory.getSetting(SettingsEnum.MIN_LUMINANCE.name(), "1000"));
-            }
-            minLuminance = (Integer) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.MIN_LUMINANCE.name()).getValue();
-            if(!SettingsSingleton.getInstance().getSettings().containsKey(SettingsEnum.MAX_LUMINANCE.name())) {
-                SettingsSingleton.getInstance().addSetting(SettingsFactory.getSetting(SettingsEnum.MAX_LUMINANCE.name(), "0"));
-            }
-            maxLuminance = (Integer) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.MAX_LUMINANCE.name()).getValue();
-
-            if(newValue.getValue() < minLuminance) {
-                minLuminance = newValue.getValue();
-                SettingsSingleton.getInstance().getSettings().get(SettingsEnum.MIN_LUMINANCE.name()).setValue(minLuminance);
-            }
-            if(newValue.getValue() > maxLuminance) {
-                maxLuminance = newValue.getValue();
-                SettingsSingleton.getInstance().getSettings().get(SettingsEnum.MAX_LUMINANCE.name()).setValue(maxLuminance);
-            }
-
-            SharedDataSingleton.getInstance().getLuminanceReadings().add(newValue.getValue());
-
-            Integer sum = SharedDataSingleton.getInstance().getLuminanceReadings().getList().stream().reduce(0, Integer::sum);
-            Integer avg = sum / SharedDataSingleton.getInstance().getLuminanceReadings().getList().size();
+            Integer lastReadingsAvg = SharedDataSingleton.getInstance().getAvgluminanceReadings().getList().stream().reduce(0, Integer::sum) / SharedDataSingleton.getInstance().getAvgluminanceReadings().getList().size();
+            Integer lastReadingsMax = SharedDataSingleton.getInstance().getMinMaxluminanceReadings().getList().stream().max(Integer::compareTo).get();
+            Integer lastReadingsMin = SharedDataSingleton.getInstance().getMinMaxluminanceReadings().getList().stream().min(Integer::compareTo).get();
 
             if(SharedDataSingleton.getInstance().getMaxDisplayBrightness() == null) {
                 SharedDataSingleton.getInstance().setMaxDisplayBrightness(getMaxBrightness(ContextsSingleton.getInstance().getApplicationContext(), 255));
             }
 
 
-            if((Boolean) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.AUTO_BRIGHTNESS.name()).getValue() && maxLuminance > minLuminance) { //no luminance readings yet
-                Integer mappedValue = map(avg, minLuminance, maxLuminance, 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
+            if((Boolean) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.AUTO_BRIGHTNESS.name()).getValue() && lastReadingsMax > lastReadingsMin) { //no luminance readings yet
+                Integer mappedValue = map(lastReadingsAvg, lastReadingsMin, lastReadingsMax, 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
                 Settings.System.putInt(ContextsSingleton.getInstance().getApplicationContext().getContentResolver(),
                         Settings.System.SCREEN_BRIGHTNESS, mappedValue);
 
-                LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + avg + ", min: " + minLuminance + ", max: " + maxLuminance + ", mapped: " + mappedValue);
+                LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + lastReadingsAvg + ", min: " + lastReadingsMin + ", max: " + lastReadingsMax + ", mapped: " + mappedValue);
             }
         }
     }
