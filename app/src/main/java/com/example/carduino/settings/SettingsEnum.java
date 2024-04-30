@@ -13,8 +13,6 @@ public enum SettingsEnum {
     ADVANCED_MODE("Advanced mode", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class, (value) -> {
         SharedDataSingleton.getInstance().setAdvancedMode((Boolean) value);
     }),
-    MAX_LUMINANCE("Maximum internal luminance", IntegerSetting.class, SettingType.APP),
-    MIN_LUMINANCE("Minimum internal luminance", IntegerSetting.class, SettingType.APP),
     AUTO_BRIGHTNESS("Auto brightness", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class),
     SWC_PAIR("SWC pairing", BooleanSetting.class, SettingType.ARDUINO, ButtonSettingViewWrapper.class, (value) -> {
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "SWC_PAIR", "true"));
