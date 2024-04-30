@@ -17,6 +17,9 @@ public enum SettingsEnum {
     SWC_PAIR("SWC pairing", BooleanSetting.class, SettingType.ARDUINO, ButtonSettingViewWrapper.class, (value) -> {
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "SWC_PAIR", "true"));
     }),
+    ON_REVERSE_LOWER_MIRRORS("Lower mirrors on reverse", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "ON_REVERSE_LOWER_MIRRORS", (Boolean) value ? "true" : "false"));
+    }),
     OTA_MODE("Enter OTA mode", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "OTA_MODE", (Boolean) value ? "true" : "false"));
     }),
