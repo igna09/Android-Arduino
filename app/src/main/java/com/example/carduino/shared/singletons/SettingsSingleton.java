@@ -49,7 +49,9 @@ public class SettingsSingleton {
             json.getAsJsonObject().keySet().forEach(key -> {
                 JsonElement jsonElement = json.getAsJsonObject().get(key).getAsJsonObject().get("value");
                 Setting setting = SettingsFactory.getSetting(key, jsonElement != null ? jsonElement.toString() : null);
-                settings.put(key, setting);
+                if(setting != null) {
+                    settings.put(key, setting);
+                }
             });
             return settings;
         }

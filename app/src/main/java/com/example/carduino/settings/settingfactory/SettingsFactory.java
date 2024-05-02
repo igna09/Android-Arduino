@@ -7,8 +7,9 @@ public class SettingsFactory {
         Setting setting;
         try {
             setting =  (Setting) SettingsEnum.valueOf(id).getSettingValueType().newInstance();
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new RuntimeException(e);
+        } catch (IllegalAccessException | InstantiationException | IllegalArgumentException e) {
+//            throw new RuntimeException(e);
+            return null;
         }
 
         setting.setId(id);
