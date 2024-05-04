@@ -94,7 +94,7 @@ public class Settings extends Fragment {
         };
         SettingsSingleton.getInstance().addPropertyChangeListener(pcl);
 
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.READ_SETTINGS, "OTA_MODE", "false")); // start reading all node settings
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.GET_SETTINGS, "OTA_MODE", "false")); // start reading all node settings
     }
 
     private void renderViews() {

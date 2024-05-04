@@ -7,10 +7,11 @@ import com.example.carduino.receivers.canbus.factory.actions.SettingAction;
 import java.util.Arrays;
 
 public enum CanbusActions {
-    READ_SETTINGS(SettingAction.class, "READ_SETTINGS"),
+    READ_SETTING(SettingAction.class, "READ_SETTING"),
     CAR_STATUS(CarStatusAction.class, "CAR_STATUS"),
     WRITE_SETTING("WRITE_SETTING"),
-    MEDIA_CONTROL(MediaControlAction .class, "MEDIA_CONTROL");
+    MEDIA_CONTROL(MediaControlAction .class, "MEDIA_CONTROL"),
+    GET_SETTINGS("GET_SETTINGS");
 
     private Class clazz;
     private String id;
