@@ -31,7 +31,8 @@ public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyCh
 
 
             if((Boolean) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.AUTO_BRIGHTNESS.name()).getValue() && lastReadingsMax > lastReadingsMin) { //no luminance readings yet
-                Integer mappedValue = map(lastReadingsAvg, lastReadingsMin, lastReadingsMax, 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
+//                Integer mappedValue = map(lastReadingsAvg, lastReadingsMin, lastReadingsMax, 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
+                Integer mappedValue = map(lastReadingsAvg, 0, (Integer) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.AUTO_BRIGHTNESS.name()).getValue(), 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
                 Settings.System.putInt(ContextsSingleton.getInstance().getApplicationContext().getContentResolver(),
                         Settings.System.SCREEN_BRIGHTNESS, mappedValue);
 

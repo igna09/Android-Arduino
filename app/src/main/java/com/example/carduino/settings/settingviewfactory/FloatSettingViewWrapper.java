@@ -36,10 +36,7 @@ public class FloatSettingViewWrapper extends SettingViewWrapper<Float> {
 
     @Override
     public void updateView(Float value) {
-        View view = LayoutInflater.from(ContextsSingleton.getInstance().getApplicationContext()).inflate(R.layout.float_setting, null);
-
-        EditText floatSettingInput = view.findViewById(R.id.float_setting_input);
-
-        floatSettingInput.setText(value.toString());
+        EditText floatSettingInput = this.getView().findViewById(R.id.float_setting_input);
+        floatSettingInput.setText(value != null ? value.toString() : "");
     }
 }

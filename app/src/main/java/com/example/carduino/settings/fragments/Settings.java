@@ -24,7 +24,9 @@ import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -37,9 +39,9 @@ import java.util.stream.Collectors;
  */
 public class Settings extends Fragment {
     private PropertyChangeListener pcl;
-    private Integer settingsViewCounter = 0;
     private LinearLayout settingsListLeft;
     private LinearLayout settingsListRight;
+    Map<String, SettingViewWrapper> settingViews;
 
     @Nullable
     @Override
@@ -54,6 +56,8 @@ public class Settings extends Fragment {
         settingsListLeft = (LinearLayout) view.findViewById(R.id.settings_list_left);
         settingsListRight = (LinearLayout) view.findViewById(R.id.settings_list_right);
 
+        settingViews = new HashMap<>();
+
         /**
          * creating view for only app settings
          */
@@ -62,65 +66,56 @@ public class Settings extends Fragment {
                 .forEach(settingEnum -> {
                     Setting setting = SettingsSingleton.getInstance().getSettings().get(settingEnum.name());
                     if(setting != null) {
-                        if(!SettingsSingleton.getInstance().getSettingViews().containsKey(settingEnum.name())) {
+                        if(!settingViews.containsKey(settingEnum.name())) {
                             SettingViewWrapper settingViewWrapper = SettingViewFactory.getSettingView(settingEnum.name());
                             settingViewWrapper.generateView(setting, settingEnum.getLabel());
-                            SettingsSingleton.getInstance().getSettingViews().put(settingEnum.name(), settingViewWrapper);
+                            settingViews.put(settingEnum.name(), settingViewWrapper);
                         }
-                        // to remove? settings can be changed only from this view
-                        getActivity().runOnUiThread(() -> {
-                            SettingsSingleton.getInstance().getSettingViews().get(settingEnum.name()).updateView(setting.getValue());
-                        });
                     }
                 });
-
         renderViews();
 
         pcl = new PropertyChangeListener<Setting>() {
             @Override
             public void onPropertyChange(String propertyName, Setting oldSetting, Setting newSetting) {
-                if(!SettingsSingleton.getInstance().getSettingViews().containsKey(propertyName)) {
+                if(!settingViews.containsKey(propertyName)) {
                     SettingViewWrapper settingViewWrapper = SettingViewFactory.getSettingView(propertyName);
                     settingViewWrapper.generateView(newSetting, newSetting.getLabel());
-                    SettingsSingleton.getInstance().getSettingViews().put(propertyName, settingViewWrapper);
-                    getActivity().runOnUiThread(() -> {
-                        renderViews();
-                    });
+                    settingViews.put(propertyName, settingViewWrapper);
+                    renderViews();
                 }
-                getActivity().runOnUiThread(() -> {
-                    SettingsSingleton.getInstance().getSettingViews().get(propertyName).updateView(newSetting.getValue());
-                });
             }
         };
         SettingsSingleton.getInstance().addPropertyChangeListener(pcl);
 
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.GET_SETTINGS, "OTA_MODE", "false")); // start reading all node settings
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.READ_SETTINGS, "OTA_MODE", "false")); // start reading all node settings
     }
 
     private void renderViews() {
-        settingsListLeft.removeAllViews();
-        settingsListRight.removeAllViews();
+        getActivity().runOnUiThread(() -> {
+            settingsListLeft.removeAllViews();
+            settingsListRight.removeAllViews();
 
-        Integer index = 0;
-        for(int i = 0; i < SettingsEnum.values().length; i++) {
-            SettingsEnum settingEnum = SettingsEnum.values()[i];
-            if(SettingsSingleton.getInstance().getSettingViews().containsKey(settingEnum.name())) {
-                SettingViewWrapper settingViewWrapper = SettingsSingleton.getInstance().getSettingViews().get(settingEnum.name());
-                ViewGroup parent = (ViewGroup) settingViewWrapper.getView().getParent();
-                if (parent != null) {
-                    parent.removeView(settingViewWrapper.getView());
-                }
-                final int j = index;
-                getActivity().runOnUiThread(() -> {
+            Integer index = 0;
+            for(int i = 0; i < SettingsEnum.values().length; i++) {
+                SettingsEnum settingEnum = SettingsEnum.values()[i];
+                if(settingViews.containsKey(settingEnum.name())) {
+                    SettingViewWrapper settingViewWrapper = settingViews.get(settingEnum.name());
+                    settingViewWrapper.updateView(SettingsSingleton.getInstance().getSettings().get(settingEnum.name()).getValue());
+                    ViewGroup parent = (ViewGroup) settingViewWrapper.getView().getParent();
+                    if (parent != null) {
+                        parent.removeView(settingViewWrapper.getView());
+                    }
+                    final int j = index;
                     if(j % 2 == 0) {
                         settingsListLeft.addView(settingViewWrapper.getView());
                     } else {
                         settingsListRight.addView(settingViewWrapper.getView());
                     }
-                });
-                index++;
+                    index++;
+                }
             }
-        }
+        });
     }
 
     @Override

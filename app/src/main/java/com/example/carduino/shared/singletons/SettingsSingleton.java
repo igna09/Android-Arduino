@@ -31,12 +31,6 @@ public class SettingsSingleton {
     private static SettingsSingleton instance;
     private HashMap<String, Setting> settings;
     public PropertyChangeSupport support;
-
-    /**
-     * makes any sense to store views?
-     */
-    private Map<String, SettingViewWrapper> settingViews;
-
     private final FileSystemSingleton fileSystemSingleton;
     private static final String SETTINGS_FILE_NAME = "settings.json";
 
@@ -122,13 +116,6 @@ public class SettingsSingleton {
 
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         support.removePropertyChangeListener(pcl);
-    }
-
-    public Map<String, SettingViewWrapper> getSettingViews() {
-        if(settingViews == null) {
-            this.settingViews = new HashMap<>();
-        }
-        return settingViews;
     }
 
     public HashMap<String, Setting> getSettings() {
