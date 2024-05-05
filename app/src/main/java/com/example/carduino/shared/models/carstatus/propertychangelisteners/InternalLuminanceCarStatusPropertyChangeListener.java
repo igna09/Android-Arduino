@@ -29,14 +29,20 @@ public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyCh
                 SharedDataSingleton.getInstance().setMaxDisplayBrightness(getMaxBrightness(ContextsSingleton.getInstance().getApplicationContext(), 255));
             }
 
-
             if((Boolean) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.AUTO_BRIGHTNESS.name()).getValue() && lastReadingsMax > lastReadingsMin) { //no luminance readings yet
 //                Integer mappedValue = map(lastReadingsAvg, lastReadingsMin, lastReadingsMax, 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
-                Integer mappedValue = map(lastReadingsAvg, 0, (Integer) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.AUTO_BRIGHTNESS.name()).getValue(), 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
+                Integer luminanceHigherLimit = (Integer) SettingsSingleton.getInstance().getSettings().get(SettingsEnum.MAX_BRIGHTNESS.name()).getValue();
+                Integer valueToMap;
+                if(lastReadingsAvg > luminanceHigherLimit) {
+                    valueToMap = luminanceHigherLimit;
+                } else {
+                    valueToMap = lastReadingsAvg;
+                }
+                Integer mappedValue = map(valueToMap, 0, luminanceHigherLimit, 0, SharedDataSingleton.getInstance().getMaxDisplayBrightness());
                 Settings.System.putInt(ContextsSingleton.getInstance().getApplicationContext().getContentResolver(),
                         Settings.System.SCREEN_BRIGHTNESS, mappedValue);
 
-                LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + lastReadingsAvg + ", min: " + lastReadingsMin + ", max: " + lastReadingsMax + ", mapped: " + mappedValue);
+                LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + lastReadingsAvg + ", valueToMap: " + valueToMap + ", min: " + lastReadingsMin + ", max: " + lastReadingsMax + ", mapped: " + mappedValue);
             }
         }
     }
