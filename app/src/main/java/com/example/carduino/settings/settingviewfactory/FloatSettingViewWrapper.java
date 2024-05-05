@@ -15,7 +15,7 @@ public class FloatSettingViewWrapper extends SettingViewWrapper<Float> {
 
     @Override
     public void generateView(Setting setting, String label) {
-        View view = LayoutInflater.from(ContextsSingleton.getInstance().getApplicationContext()).inflate(R.layout.float_setting, null);
+        View view = LayoutInflater.from(ContextsSingleton.getInstance().getApplicationContext().getForegroundActivity()).inflate(R.layout.float_setting, null);
 
         TextView floatSettingLabel = view.findViewById(R.id.float_setting_label);
         floatSettingLabel.setText(label);

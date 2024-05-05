@@ -13,7 +13,7 @@ public class IntegerSettingViewWrapper extends SettingViewWrapper<Integer> {
 
     @Override
     public void generateView(Setting setting, String label) {
-        View view = LayoutInflater.from(ContextsSingleton.getInstance().getApplicationContext()).inflate(R.layout.integer_setting, null);
+        View view = LayoutInflater.from(ContextsSingleton.getInstance().getApplicationContext().getForegroundActivity()).inflate(R.layout.integer_setting, null);
 
         if(setting != null) {
             EditText editText = view.findViewById(R.id.integer_setting_input);
