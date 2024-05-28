@@ -37,7 +37,9 @@ public enum CarStatusEnum {
     FUEL_CONSUMPTION("FUEL_CONSUMPTION", Category.CAR, FuelConsumptionKmL.class, FuelConsumptionCarStatusPropertyChangeListener.class, FloatTripValue.class),
     ENGINE_STARTED("ENGINE_STARTED", Category.CAR, ValueBoolean.class),
     BATTERY_VOLTAGE("BATTERY_VOLTAGE", Category.CAR, Voltage.class),
-    DISTANCE("DISTANCE", Category.CAR, KmDistance.class, null, FloatTripValue.class);
+    DISTANCE("DISTANCE", Category.CAR, KmDistance.class, null, FloatTripValue.class),
+    IS_REVERSE("IS_REVERSE", Category.CAR, ValueBoolean.class),
+    IS_KEY_ON("IS_KEY_ON", Category.CAR, ValueBoolean.class);
 
     private enum Category {
         ENGINE,
