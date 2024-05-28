@@ -14,25 +14,25 @@ import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 import java.util.Arrays;
 
 public enum SettingsEnum {
-    AUTO_BRIGHTNESS("Auto brightness", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class),
-    MAX_BRIGHTNESS("Max brightness", IntegerSetting.class, SettingType.APP, IntegerSettingViewWrapper.class),
-    ON_REVERSE_LOWER_MIRRORS("Lower mirrors on reverse", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "ON_REVERSE_LOWER_MIRRORS", (Boolean) value ? "true" : "false"));
+    AUTO_BRIGHTNESS(null, "Auto brightness", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class),
+    MAX_BRIGHTNESS(null, "Max brightness", IntegerSetting.class, SettingType.APP, IntegerSettingViewWrapper.class),
+    ON_REVERSE_LOWER_MIRRORS(0x04, "Lower mirrors on reverse", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("ON_REVERSE_LOWER_MIRRORS").getId().toString(), (Boolean) value ? "true" : "false"));
     }),
-    AUTO_CLOSE_REARVIEW_MIRRORS("Auto close mirrors on turn off", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "AUTO_CLOSE_REARVIEW_MIRRORS", (Boolean) value ? "true" : "false"));
+    AUTO_CLOSE_REARVIEW_MIRRORS(0x00, "Auto close mirrors on turn off", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("AUTO_CLOSE_REARVIEW_MIRRORS").getId().toString(), (Boolean) value ? "true" : "false"));
     }),
-    ADVANCED_MODE("Advanced mode", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class, (value) -> {
+    ADVANCED_MODE(null, "Advanced mode", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class, (value) -> {
         SharedDataSingleton.getInstance().setAdvancedMode((Boolean) value);
     }),
-    SWC_PAIR("SWC pairing", BooleanSetting.class, SettingType.ARDUINO, ButtonSettingViewWrapper.class, (value) -> {
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "SWC_PAIR", "true"));
+    SWC_PAIR(0x03, "SWC pairing", BooleanSetting.class, SettingType.ARDUINO, ButtonSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("SWC_PAIR").getId().toString(), "true"));
     }),
-    OTA_MODE("Enter OTA mode", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "OTA_MODE", (Boolean) value ? "true" : "false"));
+    OTA_MODE(0x01, "Enter OTA mode", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("OTA_MODE").getId().toString(), (Boolean) value ? "true" : "false"));
     }),
-    RESTART("Restart all nodes", BooleanSetting.class, SettingType.ARDUINO, ButtonSettingViewWrapper.class, (value) -> {
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, "RESTART", "true"));
+    RESTART(0x02, "Restart all nodes", BooleanSetting.class, SettingType.ARDUINO, ButtonSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("RESTART").getId().toString(), "true"));
     });
 
     public enum SettingType {
@@ -47,7 +47,8 @@ public enum SettingsEnum {
     private SettingType settingType;
     private Integer id;
 
-    SettingsEnum(String label, Class settingValueType, SettingType settingType, Class settingViewType, SettingCallback settingCallback) {
+    SettingsEnum(Integer id, String label, Class settingValueType, SettingType settingType, Class settingViewType, SettingCallback settingCallback) {
+        this.id = id;
         this.settingValueType = settingValueType;
         this.label = label;
         this.settingViewType = settingViewType;
@@ -55,12 +56,12 @@ public enum SettingsEnum {
         this.settingType = settingType;
     }
 
-    SettingsEnum(String label, Class settingValueType, SettingType settingType) {
-        this(label, settingValueType, settingType, null, null);
+    SettingsEnum(Integer id, String label, Class settingValueType, SettingType settingType) {
+        this(id, label, settingValueType, settingType, null, null);
     }
 
-    SettingsEnum(String label, Class settingValueType, SettingType settingType, Class settingViewType) {
-        this(label, settingValueType, settingType, settingViewType, null);
+    SettingsEnum(Integer id, String label, Class settingValueType, SettingType settingType, Class settingViewType) {
+        this(id, label, settingValueType, settingType, settingViewType, null);
     }
 
     public String getLabel() {

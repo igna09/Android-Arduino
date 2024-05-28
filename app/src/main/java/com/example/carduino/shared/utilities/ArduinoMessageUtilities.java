@@ -17,7 +17,10 @@ public class ArduinoMessageUtilities {
     }
 
     public static void sendArduinoMessage(ArduinoMessage message) {
-        ArduinoSingleton.getInstance().getArduinoService().sendMessageToArduino(stringifyArduinoMessage(message));
+        String parsedMessage = message.getAction().getId() + ";" + message.getKey() + ";" + message.getValue() + ";";
+        LoggerUtilities.logArduinoMessage("ArduinoService", "sending " + parsedMessage);
+//        ArduinoSingleton.getInstance().getArduinoService().sendMessageToArduino(stringifyArduinoMessage(message));
+        ArduinoSingleton.getInstance().getArduinoService().sendMessageToArduino(parsedMessage);
     }
 
     public static String stringifyArduinoMessage(ArduinoMessage message) {

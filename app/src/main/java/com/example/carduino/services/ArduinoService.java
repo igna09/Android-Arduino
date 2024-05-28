@@ -335,7 +335,7 @@ public class ArduinoService extends Service implements SerialListener {
     }
 
     public void sendMessageToArduino(String message) {
-        LoggerUtilities.logArduinoMessage("sending", message);
+//        LoggerUtilities.logArduinoMessage("sending", message);
         if(connected != CarduinoActivity.Connected.True) {
             LoggerUtilities.logMessage("not connected");
             return;
