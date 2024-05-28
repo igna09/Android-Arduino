@@ -7,8 +7,11 @@ import com.example.carduino.settings.settingviewfactory.BooleanSettingViewWrappe
 import com.example.carduino.settings.settingviewfactory.ButtonSettingViewWrapper;
 import com.example.carduino.settings.settingviewfactory.IntegerSettingViewWrapper;
 import com.example.carduino.shared.models.ArduinoMessage;
+import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
+
+import java.util.Arrays;
 
 public enum SettingsEnum {
     AUTO_BRIGHTNESS("Auto brightness", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class),
@@ -42,6 +45,7 @@ public enum SettingsEnum {
     private Class settingViewType;
     private SettingCallback settingCallback;
     private SettingType settingType;
+    private Integer id;
 
     SettingsEnum(String label, Class settingValueType, SettingType settingType, Class settingViewType, SettingCallback settingCallback) {
         this.settingValueType = settingValueType;
@@ -77,5 +81,17 @@ public enum SettingsEnum {
 
     public SettingType getSettingType() {
         return settingType;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public static Enum getEnumById(Integer id) {
+        return Arrays.stream(SettingsEnum.values()).filter(carStatusEnum -> carStatusEnum.getId().equals(id)).findFirst().orElse(null);
     }
 }

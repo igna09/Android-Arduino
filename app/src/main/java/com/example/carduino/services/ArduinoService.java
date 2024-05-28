@@ -303,26 +303,30 @@ public class ArduinoService extends Service implements SerialListener {
     public void onArduinoMessage(String message) {
         try {
             if(message.trim().length() > 0) {
-                LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + message);
-                ArduinoSingleton.getInstance().getCircularArrayList().add(message);
-
                 String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
                 if (splittedMessage.length == 3) {
-                    boolean existsAction = true;
-                    try {
-                        CanbusActions.valueOf(splittedMessage[0]);
-                    } catch (IllegalArgumentException e) {
-                        existsAction = false;
-                    }
+                    boolean existsAction = CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0])) != null;
+//                    try {
+//                        CanbusActions.valueOf(splittedMessage[0]);
+//                    } catch (IllegalArgumentException e) {
+//                        existsAction = false;
+//                    }
                     if (existsAction) {
-                        ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
+                        ArduinoMessage arduinoMessage = new ArduinoMessage((CanbusActions) CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0])), splittedMessage[1], splittedMessage[2]);
+
+                        String parsedMessage = arduinoMessage.getAction() + ";" + arduinoMessage.getAction().getGetActionEnumFromId().apply(Integer.parseInt(splittedMessage[1])).name() + ";" + arduinoMessage.getValue() + ";";
+                        LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + parsedMessage);
+                        ArduinoSingleton.getInstance().getCircularArrayList().add(parsedMessage);
+
                         ArduinoMessageExecutorInterface action = null;
                         action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();
                         action.execute(arduinoMessage);
+                    } else {
+                        LoggerUtilities.logArduinoMessage("ArduinoService", "Action not existing " + message);
                     }
                 } else {
-                    LoggerUtilities.logArduinoMessage("ArduinoService", "malformed message");
+                    LoggerUtilities.logArduinoMessage("ArduinoService", "malformed message " + message);
                 }
             }
         } catch (Exception e) {

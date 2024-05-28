@@ -21,25 +21,25 @@ import com.example.carduino.shared.models.trip.tripvalue.IntegerTripValue;
 import java.util.Arrays;
 
 public enum CarStatusEnum {
-    EXTERNAL_TEMPERATURE("EXTERNAL_TEMPERATURE", Category.CAR, CelsiusTemperature.class),
-    INTERNAL_TEMPERATURE("INTERNAL_TEMPERATURE", Category.CAR, CelsiusTemperature.class),
-    SPEED("SPEED", Category.CAR, KmhSpeed.class, SpeedCarStatusPropertyChangeListener.class, IntegerTripValue.class),
-    INTERNAL_LUMINANCE("INTERNAL_LUMINANCE", Category.CAR, LuxLuminance.class, InternalLuminanceCarStatusPropertyChangeListener.class),
-    FRONT_DISTANCE("FRONT_DISTANCE", Category.CAR, CmDistance.class),
-    ENGINE_WATER_COOLING_TEMPERATURE("ENGINE_WATER_COOLING_TEMPERATURE", Category.ENGINE, CelsiusTemperature.class/*, EngineWaterCoolingTemperatureCarStatusPropertyChangeListener.class*/),
-    ENGINE_OIL_TEMPERATURE("ENGINE_OIL_TEMPERATURE", Category.ENGINE, CelsiusTemperature.class),
-    ENGINE_INTAKE_MANIFOLD_PRESSURE("ENGINE_INTAKE_MANIFOLD_PRESSURE", Category.ENGINE, BarPressure.class),
-    ENGINE_RPM("ENGINE_RPM", Category.ENGINE, Rpm.class, RpmCarStatusPropertyChangeListener.class),
-    //TRIP_DURATION("TRIP_DURATION", Category.TRIP, Duration.class),
-    TRIP_AVERAGE_SPEED("TRIP_AVERAGE_SPEED", Category.TRIP, KmhSpeed.class),
-    TRIP_MAX_SPEED("TRIP_MAX_SPEED", Category.TRIP, KmhSpeed.class),
-    INJECTED_QUANTITY("INJECTED_QUANTITY", Category.CAR, InjectedQuantity.class),
-    FUEL_CONSUMPTION("FUEL_CONSUMPTION", Category.CAR, FuelConsumptionKmL.class, FuelConsumptionCarStatusPropertyChangeListener.class, FloatTripValue.class),
-    ENGINE_STARTED("ENGINE_STARTED", Category.CAR, ValueBoolean.class),
-    BATTERY_VOLTAGE("BATTERY_VOLTAGE", Category.CAR, Voltage.class),
-    DISTANCE("DISTANCE", Category.CAR, KmDistance.class, null, FloatTripValue.class),
-    IS_REVERSE("IS_REVERSE", Category.CAR, ValueBoolean.class),
-    IS_KEY_ON("IS_KEY_ON", Category.CAR, ValueBoolean.class);
+    EXTERNAL_TEMPERATURE(0x00, Category.CAR, CelsiusTemperature.class),
+    INTERNAL_TEMPERATURE(0x01, Category.CAR, CelsiusTemperature.class),
+    SPEED(0x02, Category.CAR, KmhSpeed.class, SpeedCarStatusPropertyChangeListener.class, IntegerTripValue.class),
+    INTERNAL_LUMINANCE(0x03, Category.CAR, LuxLuminance.class, InternalLuminanceCarStatusPropertyChangeListener.class),
+    FRONT_DISTANCE(0x04, Category.CAR, CmDistance.class),
+    ENGINE_WATER_COOLING_TEMPERATURE(0x05, Category.ENGINE, CelsiusTemperature.class/*, EngineWaterCoolingTemperatureCarStatusPropertyChangeListener.class*/),
+    ENGINE_OIL_TEMPERATURE(0x06, Category.ENGINE, CelsiusTemperature.class),
+    ENGINE_INTAKE_MANIFOLD_PRESSURE(0x07, Category.ENGINE, BarPressure.class),
+    ENGINE_RPM(0x08, Category.ENGINE, Rpm.class, RpmCarStatusPropertyChangeListener.class),
+    //TRIP_DURATION(0x09, Category.TRIP, Duration.class),
+    TRIP_AVERAGE_SPEED(0x0A, Category.TRIP, KmhSpeed.class),
+    TRIP_MAX_SPEED(0x0B, Category.TRIP, KmhSpeed.class),
+    INJECTED_QUANTITY(0x0C, Category.CAR, InjectedQuantity.class),
+    FUEL_CONSUMPTION(0x0D, Category.CAR, FuelConsumptionKmL.class, FuelConsumptionCarStatusPropertyChangeListener.class, FloatTripValue.class),
+    ENGINE_STARTED(null, Category.CAR, ValueBoolean.class),
+    BATTERY_VOLTAGE(0x0E, Category.CAR, Voltage.class),
+    DISTANCE(null, Category.CAR, KmDistance.class, null, FloatTripValue.class),
+    IS_REVERSE(0x10, Category.CAR, ValueBoolean.class),
+    IS_KEY_ON(0x11, Category.CAR, ValueBoolean.class);
 
     private enum Category {
         ENGINE,
@@ -47,13 +47,13 @@ public enum CarStatusEnum {
         CAR;
     }
 
-    private String id;
+    private Integer id;
     private Category category;
     private Class type;
     private Class propertyChangeListener;
     private Class tripType;
 
-    CarStatusEnum(String id, Category category, Class type, Class propertyChangeListener, Class tripType) {
+    CarStatusEnum(Integer id, Category category, Class type, Class propertyChangeListener, Class tripType) {
         this.id = id;
         this.category = category;
         this.type = type;
@@ -61,7 +61,7 @@ public enum CarStatusEnum {
         this.tripType = tripType;
     }
 
-    CarStatusEnum(String id, Category category, Class type, Class propertyChangeListener) {
+    CarStatusEnum(Integer id, Category category, Class type, Class propertyChangeListener) {
         this.id = id;
         this.category = category;
         this.type = type;
@@ -69,7 +69,7 @@ public enum CarStatusEnum {
         this.tripType = null;
     }
 
-    CarStatusEnum(String id, Category category, Class type) {
+    CarStatusEnum(Integer id, Category category, Class type) {
         this.id = id;
         this.category = category;
         this.type = type;
@@ -77,7 +77,7 @@ public enum CarStatusEnum {
         this.tripType = null;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -93,8 +93,8 @@ public enum CarStatusEnum {
         return propertyChangeListener;
     }
 
-    public static CarStatusEnum getCarStatusEnumById(String id) {
-        return Arrays.stream(CarStatusEnum.values()).filter(carStatusEnum -> carStatusEnum.getId().equals(id)).findFirst().orElse(null);
+    public static Enum getEnumById(Integer id) {
+        return Arrays.stream(CarStatusEnum.values()).filter(carStatusEnum -> carStatusEnum.getId() != null && carStatusEnum.getId().equals(id)).findFirst().orElse(null);
     }
 
     public Class getTripType() {

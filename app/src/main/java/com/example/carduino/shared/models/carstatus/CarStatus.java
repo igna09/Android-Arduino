@@ -20,8 +20,8 @@ public class CarStatus {
         Arrays.stream(CarStatusEnum.values()).forEach(carStatusEnum -> {
             try {
                 Value v = (Value) carStatusEnum.getType().newInstance();
-                v.setId(carStatusEnum.getId());
-                this.carStatusValues.put(carStatusEnum.getId(), v);
+                v.setId(carStatusEnum.name());
+                this.carStatusValues.put(carStatusEnum.name(), v);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             } catch (InstantiationException e) {
