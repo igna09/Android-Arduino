@@ -28,7 +28,6 @@ import com.example.carduino.arduinolistener.TextUtil;
 import com.example.carduino.carduino.CarduinoActivity;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
-import com.example.carduino.shared.BaseEnum;
 import com.example.carduino.shared.MyApplication;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.singletons.AppSwitchSingleton;
@@ -65,7 +64,11 @@ public class ArduinoService extends Service implements SerialListener {
 //                        onArduinoMessage("0;13;" + getFloatRandomNumber(0, 10));
 //                        onArduinoMessage("0;7;" + getFloatRandomNumber(1000, 2500));
 //                        onArduinoMessage("0;14;" + getFloatRandomNumber(11, 14) + ";");
-//                        onArduinoMessage("0;3;11;");
+//                        onArduinoMessage("1;1;false;");
+//                    onArduinoMessage("1;2;false;");
+//                    onArduinoMessage("1;3;false;");
+//                        onArduinoMessage("1;4;true;");
+//                    onArduinoMessage("1;0;true;");
 //                    onArduinoMessage("READ_SETTINGS;RESTART;false;");
 //                    onArduinoMessage("READ_SETTING;OTA_MODE;false;");
 //                    onArduinoMessage("CAR_STATUS;BATTERY_VOLTAGE;12.45;");
@@ -307,44 +310,36 @@ public class ArduinoService extends Service implements SerialListener {
 
     public void onArduinoMessage(String message) {
         try {
-            if(message.trim().length() > 0) {
+            if(!message.trim().isEmpty()) {
                 String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
                 if (splittedMessage.length == 3) {
                     boolean isNumericMode = ArduinoMessageUtilities.isNumeric(splittedMessage[0]);
 
-                    boolean existsAction;
                     if(isNumericMode) {
-                        existsAction = CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0])) != null;
-                    } else {
-                        try {
-                            CanbusActions.valueOf(splittedMessage[0]);
-                            existsAction = true;
-                        } catch (IllegalArgumentException e) {
-                            existsAction = false;
-                        }
+                        splittedMessage[0] = ((CanbusActions) CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0]))).name();
+                        splittedMessage[1] = ((Enum<?>) CanbusActions.valueOf(splittedMessage[0]).getActionEnumById().apply(Integer.parseInt(splittedMessage[1]))).name();
                     }
+
+                    boolean existsAction;
+                    try {
+                        CanbusActions.valueOf(splittedMessage[0]);
+                        existsAction = true;
+                    } catch (IllegalArgumentException e) {
+                        existsAction = false;
+                    }
+
 //                    try {
 //                        CanbusActions.valueOf(splittedMessage[0]);
 //                    } catch (IllegalArgumentException e) {
 //                        existsAction = false;
 //                    }
-                    if (existsAction) {
-                        ArduinoMessage arduinoMessage;
-                        if(isNumericMode) {
-                            arduinoMessage = new ArduinoMessage((CanbusActions) CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0])), splittedMessage[1], splittedMessage[2]);
-                        } else {
-                            arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), ((BaseEnum) CanbusActions.valueOf(splittedMessage[0]).getActionEnumFromName().apply(splittedMessage[1])).getId().toString(), splittedMessage[2]);
-                        }
 
-                        if(isNumericMode) {
-                            String parsedMessage = arduinoMessage.getAction() + ";" + ((Enum) arduinoMessage.getAction().getActionEnumFromId().apply(Integer.parseInt(splittedMessage[1]))).name() + ";" + arduinoMessage.getValue() + ";";
-                            LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + parsedMessage);
-                            ArduinoSingleton.getInstance().getCircularArrayList().add(parsedMessage);
-                        } else {
-                            LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + message);
-                            ArduinoSingleton.getInstance().getCircularArrayList().add(message);
-                        }
+                    if (existsAction) {
+                        ArduinoMessage arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), splittedMessage[1], splittedMessage[2]);
+
+                        LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + arduinoMessage.toSerialString());
+                        ArduinoSingleton.getInstance().getCircularArrayList().add(arduinoMessage.toSerialString());
 
                         ArduinoMessageExecutorInterface action = null;
                         action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();

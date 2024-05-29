@@ -47,7 +47,7 @@ public enum CanbusActions implements BaseEnum {
         return id;
     }
 
-    public Function<Integer, BaseEnum> getActionEnumFromId() {
+    public Function<Integer, BaseEnum> getActionEnumById() {
         return actionEnumFromId;
     }
 
@@ -56,6 +56,6 @@ public enum CanbusActions implements BaseEnum {
     }
 
     public static BaseEnum getEnumById(Integer id) {
-        return Arrays.stream(CanbusActions.values()).filter(canbusActions -> canbusActions.getId().equals(id)).findFirst().orElse(null);
+        return Arrays.stream(CanbusActions.values()).filter(canbusActions -> canbusActions.getId() != null && canbusActions.getId().equals(id)).findFirst().orElse(null);
     }
 }

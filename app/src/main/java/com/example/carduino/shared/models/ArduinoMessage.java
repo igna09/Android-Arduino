@@ -48,4 +48,13 @@ public class ArduinoMessage {
     public void setAction(CanbusActions action) {
         this.action = action;
     }
+
+    public String toSerialString() {
+        return  this.action.name() +
+                ";" +
+                this.getKey() +
+                ";" +
+                this.getValue() +
+                ";";
+    }
 }

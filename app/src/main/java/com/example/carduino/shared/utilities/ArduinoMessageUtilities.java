@@ -23,16 +23,6 @@ public class ArduinoMessageUtilities {
         ArduinoSingleton.getInstance().getArduinoService().sendMessageToArduino(parsedMessage);
     }
 
-    public static String stringifyArduinoMessage(ArduinoMessage message) {
-        String builder = message.getAction().name() +
-                ";" +
-                message.getKey() +
-                ";" +
-                message.getValue() +
-                ";";
-        return builder;
-    }
-
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;

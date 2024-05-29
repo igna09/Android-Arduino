@@ -94,7 +94,7 @@ public enum SettingsEnum implements BaseEnum {
     }
 
     public static BaseEnum getEnumById(Integer id) {
-        return Arrays.stream(SettingsEnum.values()).filter(carStatusEnum -> carStatusEnum.getId().equals(id)).findFirst().orElse(null);
+        return Arrays.stream(SettingsEnum.values()).filter(carStatusEnum -> carStatusEnum.getId() != null && carStatusEnum.getId().equals(id)).findFirst().orElse(null);
     }
 
     public static BaseEnum getEnumByName(String name) {

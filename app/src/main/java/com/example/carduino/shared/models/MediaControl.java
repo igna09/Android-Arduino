@@ -22,7 +22,7 @@ public enum MediaControl implements BaseEnum {
     }
 
     public static BaseEnum getEnumById(Integer id) {
-        return Arrays.stream(MediaControl.values()).filter(mediaControlEnum -> mediaControlEnum.getId().equals(id)).findFirst().orElse(null);
+        return Arrays.stream(MediaControl.values()).filter(mediaControlEnum -> mediaControlEnum.getId() != null && mediaControlEnum.getId().equals(id)).findFirst().orElse(null);
     }
 
     public static BaseEnum getEnumByName(String name) {
