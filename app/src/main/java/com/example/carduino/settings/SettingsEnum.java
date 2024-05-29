@@ -6,6 +6,7 @@ import com.example.carduino.settings.settingfactory.IntegerSetting;
 import com.example.carduino.settings.settingviewfactory.BooleanSettingViewWrapper;
 import com.example.carduino.settings.settingviewfactory.ButtonSettingViewWrapper;
 import com.example.carduino.settings.settingviewfactory.IntegerSettingViewWrapper;
+import com.example.carduino.shared.BaseEnum;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
@@ -13,7 +14,7 @@ import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
 
 import java.util.Arrays;
 
-public enum SettingsEnum {
+public enum SettingsEnum implements BaseEnum {
     AUTO_BRIGHTNESS(null, "Auto brightness", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class),
     MAX_BRIGHTNESS(null, "Max brightness", IntegerSetting.class, SettingType.APP, IntegerSettingViewWrapper.class),
     ON_REVERSE_LOWER_MIRRORS(0x04, "Lower mirrors on reverse", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
@@ -92,7 +93,11 @@ public enum SettingsEnum {
         this.id = id;
     }
 
-    public static Enum getEnumById(Integer id) {
+    public static BaseEnum getEnumById(Integer id) {
         return Arrays.stream(SettingsEnum.values()).filter(carStatusEnum -> carStatusEnum.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public static BaseEnum getEnumByName(String name) {
+        return SettingsEnum.valueOf(name);
     }
 }

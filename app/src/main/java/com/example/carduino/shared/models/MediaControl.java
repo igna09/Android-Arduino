@@ -1,8 +1,10 @@
 package com.example.carduino.shared.models;
 
+import com.example.carduino.shared.BaseEnum;
+
 import java.util.Arrays;
 
-public enum MediaControl {
+public enum MediaControl implements BaseEnum {
     VOLUME_UP(0x00),
     VOLUME_DOWN(0x01),
     PLAY_PAUSE(0x02),
@@ -19,7 +21,11 @@ public enum MediaControl {
         return id;
     }
 
-    public static Enum getEnumById(Integer id) {
+    public static BaseEnum getEnumById(Integer id) {
         return Arrays.stream(MediaControl.values()).filter(mediaControlEnum -> mediaControlEnum.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public static BaseEnum getEnumByName(String name) {
+        return MediaControl.valueOf(name);
     }
 }

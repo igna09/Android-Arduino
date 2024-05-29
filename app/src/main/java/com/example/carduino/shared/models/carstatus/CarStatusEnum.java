@@ -1,5 +1,6 @@
 package com.example.carduino.shared.models.carstatus;
 
+import com.example.carduino.shared.BaseEnum;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.FuelConsumptionCarStatusPropertyChangeListener;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.InternalLuminanceCarStatusPropertyChangeListener;
 import com.example.carduino.shared.models.carstatus.propertychangelisteners.RpmCarStatusPropertyChangeListener;
@@ -20,7 +21,7 @@ import com.example.carduino.shared.models.trip.tripvalue.IntegerTripValue;
 
 import java.util.Arrays;
 
-public enum CarStatusEnum {
+public enum CarStatusEnum implements BaseEnum {
     EXTERNAL_TEMPERATURE(0x00, Category.CAR, CelsiusTemperature.class),
     INTERNAL_TEMPERATURE(0x01, Category.CAR, CelsiusTemperature.class),
     SPEED(0x02, Category.CAR, KmhSpeed.class, SpeedCarStatusPropertyChangeListener.class, IntegerTripValue.class),
@@ -93,8 +94,12 @@ public enum CarStatusEnum {
         return propertyChangeListener;
     }
 
-    public static Enum getEnumById(Integer id) {
+    public static BaseEnum getEnumById(Integer id) {
         return Arrays.stream(CarStatusEnum.values()).filter(carStatusEnum -> carStatusEnum.getId() != null && carStatusEnum.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public static BaseEnum getEnumByName(String name) {
+        return CarStatusEnum.valueOf(name);
     }
 
     public Class getTripType() {

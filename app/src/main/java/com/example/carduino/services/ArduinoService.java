@@ -27,8 +27,8 @@ import com.example.carduino.arduinolistener.StringBuffer;
 import com.example.carduino.arduinolistener.TextUtil;
 import com.example.carduino.carduino.CarduinoActivity;
 import com.example.carduino.receivers.ArduinoMessageExecutorInterface;
-import com.example.carduino.receivers.BootReceiver;
 import com.example.carduino.receivers.canbus.factory.CanbusActions;
+import com.example.carduino.shared.BaseEnum;
 import com.example.carduino.shared.MyApplication;
 import com.example.carduino.shared.models.ArduinoMessage;
 import com.example.carduino.shared.singletons.AppSwitchSingleton;
@@ -61,10 +61,14 @@ public class ArduinoService extends Service implements SerialListener {
 //                    Log.d("sleep", "Sleeping for " + s);
 //                    Thread.sleep(s);
 //                        onArduinoMessage("CAR_STATUS;SPEED;" + getIntegerRandomNumber(0, 200));
-//                        onArduinoMessage("CAR_STATUS;FUEL_CONSUMPTION;" + getFloatRandomNumber(0, 10));
-//                        onArduinoMessage("CAR_STATUS;ENGINE_INTAKE_MANIFOLD_PRESSURE;" + getFloatRandomNumber(1000, 2500));
-//                        onArduinoMessage("CAR_STATUS;BATTERY_VOLTAGE;" + getFloatRandomNumber(11, 14));
+//                        onArduinoMessage("0;2;" + getIntegerRandomNumber(0, 200));
+//                        onArduinoMessage("0;13;" + getFloatRandomNumber(0, 10));
+//                        onArduinoMessage("0;7;" + getFloatRandomNumber(1000, 2500));
+//                        onArduinoMessage("0;14;" + getFloatRandomNumber(11, 14) + ";");
+//                        onArduinoMessage("0;3;11;");
 //                    onArduinoMessage("READ_SETTINGS;RESTART;false;");
+//                    onArduinoMessage("READ_SETTING;OTA_MODE;false;");
+//                    onArduinoMessage("CAR_STATUS;BATTERY_VOLTAGE;12.45;");
 //                    if(counter >= 5)
 //                        onArduinoMessage("CAR_STATUS;ENGINE_RPM;" + getIntegerRandomNumber(900, 4000));
 //                    if(counter % 5 == 0) {
@@ -73,6 +77,7 @@ public class ArduinoService extends Service implements SerialListener {
 //                        } else {
 //                            onArduinoMessage("MEDIA_CONTROL;VOLUME_DOWN;0;");
 //                        }
+//                        onArduinoMessage("CAR_STATUS;INTERNAL_LUMINANCE;" + getIntegerRandomNumber(0, 1000));
 //                    }
 //                    if(counter % 15 == 0) {
 //                        onArduinoMessage("MEDIA_CONTROL;LONG_PRESS;0;");
@@ -306,18 +311,40 @@ public class ArduinoService extends Service implements SerialListener {
                 String[] splittedMessage = ArduinoMessageUtilities.parseArduinoMessage(message.trim());
 
                 if (splittedMessage.length == 3) {
-                    boolean existsAction = CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0])) != null;
+                    boolean isNumericMode = ArduinoMessageUtilities.isNumeric(splittedMessage[0]);
+
+                    boolean existsAction;
+                    if(isNumericMode) {
+                        existsAction = CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0])) != null;
+                    } else {
+                        try {
+                            CanbusActions.valueOf(splittedMessage[0]);
+                            existsAction = true;
+                        } catch (IllegalArgumentException e) {
+                            existsAction = false;
+                        }
+                    }
 //                    try {
 //                        CanbusActions.valueOf(splittedMessage[0]);
 //                    } catch (IllegalArgumentException e) {
 //                        existsAction = false;
 //                    }
                     if (existsAction) {
-                        ArduinoMessage arduinoMessage = new ArduinoMessage((CanbusActions) CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0])), splittedMessage[1], splittedMessage[2]);
+                        ArduinoMessage arduinoMessage;
+                        if(isNumericMode) {
+                            arduinoMessage = new ArduinoMessage((CanbusActions) CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0])), splittedMessage[1], splittedMessage[2]);
+                        } else {
+                            arduinoMessage = new ArduinoMessage(CanbusActions.valueOf(splittedMessage[0]), ((BaseEnum) CanbusActions.valueOf(splittedMessage[0]).getActionEnumFromName().apply(splittedMessage[1])).getId().toString(), splittedMessage[2]);
+                        }
 
-                        String parsedMessage = arduinoMessage.getAction() + ";" + arduinoMessage.getAction().getGetActionEnumFromId().apply(Integer.parseInt(splittedMessage[1])).name() + ";" + arduinoMessage.getValue() + ";";
-                        LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + parsedMessage);
-                        ArduinoSingleton.getInstance().getCircularArrayList().add(parsedMessage);
+                        if(isNumericMode) {
+                            String parsedMessage = arduinoMessage.getAction() + ";" + ((Enum) arduinoMessage.getAction().getActionEnumFromId().apply(Integer.parseInt(splittedMessage[1]))).name() + ";" + arduinoMessage.getValue() + ";";
+                            LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + parsedMessage);
+                            ArduinoSingleton.getInstance().getCircularArrayList().add(parsedMessage);
+                        } else {
+                            LoggerUtilities.logArduinoMessage("ArduinoService", "receiving " + message);
+                            ArduinoSingleton.getInstance().getCircularArrayList().add(message);
+                        }
 
                         ArduinoMessageExecutorInterface action = null;
                         action = (ArduinoMessageExecutorInterface) arduinoMessage.getAction().getClazz().newInstance();
