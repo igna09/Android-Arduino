@@ -20,14 +20,14 @@ public class RpmCarStatusPropertyChangeListener extends PropertyChangeListener<R
         LoggerUtilities.logMessage("RpmCarStatusPropertyChangeListener", "oldValue: " + (oldValue.getValue() != null ? oldValue.getValue().toString() : "null") + ", newValue: " + (newValue.getValue() != null ? newValue.getValue() : "null") + ", tripStarted: " + TripSingleton.getInstance().getTrip().isStarted());
         // CARSTATUS
         if((oldValue.getValue() == null || oldValue.getValue() == 0) && newValue.getValue() > 0) { //Engine turned on
-            Value value = CarStatusFactory.getCarStatusValue("ENGINE_STARTED", "true");
+            Value value = CarStatusFactory.getCarStatusValue("ENGINE_STARTED", "TRUE");
             if (value != null) {
                 CarStatusSingleton.getInstance().getCarStatus().putValue(value);
             }
         }
         if((oldValue.getValue() != null && oldValue.getValue() > 0) && (newValue.getValue() == 0 || newValue.getValue() == null)) { //Engine turned off
             LoggerUtilities.logMessage("RpmCarStatusPropertyChangeListener", "engine turned off");
-            Value value = CarStatusFactory.getCarStatusValue("ENGINE_STARTED", "false");
+            Value value = CarStatusFactory.getCarStatusValue("ENGINE_STARTED", "FALSE");
             if (value != null) {
                 CarStatusSingleton.getInstance().getCarStatus().putValue(value);
             }
