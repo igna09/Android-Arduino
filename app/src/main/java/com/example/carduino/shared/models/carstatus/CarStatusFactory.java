@@ -6,8 +6,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeListenerProxy;
 
 public class CarStatusFactory {
-    public static Value getCarStatusValue(String id, String value) {
-        CarStatusEnum carStatusEnum = (CarStatusEnum) CarStatusEnum.getEnumById(Integer.parseInt(id));
+    public static Value getCarStatusValue(String enumName, String value) {
+        CarStatusEnum carStatusEnum = CarStatusEnum.valueOf(enumName);
         if(carStatusEnum != null) {
             try {
                 Value v = (Value) carStatusEnum.getType().newInstance();

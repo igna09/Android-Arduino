@@ -45,6 +45,8 @@ import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.io.IOException;
 
 public class ArduinoService extends Service implements SerialListener {
@@ -64,12 +66,13 @@ public class ArduinoService extends Service implements SerialListener {
 //                        onArduinoMessage("0;13;" + getFloatRandomNumber(0, 10));
 //                        onArduinoMessage("0;7;" + getFloatRandomNumber(1000, 2500));
 //                        onArduinoMessage("0;14;" + getFloatRandomNumber(11, 14) + ";");
-//                        onArduinoMessage("1;1;false;");
-//                    onArduinoMessage("1;2;false;");
-//                    onArduinoMessage("1;3;false;");
+//                        onArduinoMessage("1;1;FALSE;");
+//                    onArduinoMessage("1;2;FALSE;");
+//                    onArduinoMessage("1;3;FALSE;");
 //                        onArduinoMessage("1;4;true;");
 //                    onArduinoMessage("1;0;true;");
 //                    onArduinoMessage("READ_SETTINGS;RESTART;false;");
+//                    onArduinoMessage("0;7;1017.90;");
 //                    onArduinoMessage("READ_SETTING;OTA_MODE;false;");
 //                    onArduinoMessage("CAR_STATUS;BATTERY_VOLTAGE;12.45;");
 //                    if(counter >= 5)
@@ -348,7 +351,7 @@ public class ArduinoService extends Service implements SerialListener {
                         LoggerUtilities.logArduinoMessage("ArduinoService", "Action not existing " + message);
                     }
                 } else {
-                    LoggerUtilities.logArduinoMessage("ArduinoService", "malformed message " + message);
+                    LoggerUtilities.logArduinoMessage("ArduinoService", "malformed message " + StringEscapeUtils.escapeJava(message));
                 }
             }
         } catch (Exception e) {
