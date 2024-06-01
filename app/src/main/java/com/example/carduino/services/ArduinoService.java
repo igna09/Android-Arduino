@@ -58,6 +58,18 @@ public class ArduinoService extends Service implements SerialListener {
 //                            Log.e("Service", "Service is running...");
 //                            Logger.getInstance().log("Service is running...");
                 try {
+//                    onSerialRead("1;1;FALSE;\r\n0;7;1017.90;\r\n1;2;FALSE;\r\n".getBytes());
+//                    onSerialRead("1;2;FALSE;\r\n".getBytes());
+//                    onSerialRead("1;3;FALSE;\r\n".getBytes());
+//                    onSerialRead("0;7;1017.90;\r\n".getBytes());
+//                    onSerialRead("1;1;FALSE;\r\n".getBytes());
+//                    onSerialRead("1;2;FALSE;\r\n".getBytes());
+//                    onSerialRead("1;3;FALSE;\r\n".getBytes());
+//                    onSerialRead("0;7;1017.90;\r\n".getBytes());
+//                    onSerialRead("1;1;FALSE;\r\n".getBytes());
+//                    onSerialRead("1;2;FALSE;\r\n".getBytes());
+//                    onSerialRead("1;3;FALSE;\r\n".getBytes());
+//                    onSerialRead("0;7;1017.90;\r\n".getBytes());
 //                    long s = getIntegerRandomNumber(1, 10) * 1000;
 //                    Log.d("sleep", "Sleeping for " + s);
 //                    Thread.sleep(s);
@@ -88,7 +100,7 @@ public class ArduinoService extends Service implements SerialListener {
 //                    if(counter % 15 == 0) {
 //                        onArduinoMessage("MEDIA_CONTROL;LONG_PRESS;0;");
 //                    }
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                     counter++;
                 } catch (InterruptedException e) {
                     LoggerUtilities.logMessage("ArduinoService", "keepAliveThread interrupted while sleeping");

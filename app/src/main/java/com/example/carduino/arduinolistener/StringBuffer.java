@@ -15,9 +15,9 @@ public class StringBuffer {
 
     public String readUntil(char c) {
         if(buffer.indexOf(c) > -1) {
-            String r = buffer.substring(0, buffer.indexOf(c));
-            buffer = buffer.replace(r, "");
-            buffer = buffer.replace("\n", "");
+            int indexOfChar = buffer.indexOf(c);
+            String r = buffer.substring(0, indexOfChar);
+            buffer = buffer.substring(indexOfChar + 1);
             return r;
         } else {
             return null;
