@@ -70,6 +70,7 @@ public class ArduinoService extends Service implements SerialListener {
 //                    onSerialRead("1;2;FALSE;\r\n".getBytes());
 //                    onSerialRead("1;3;FALSE;\r\n".getBytes());
 //                    onSerialRead("0;7;1017.90;\r\n".getBytes());
+//                    onSerialRead("4;3;8@TRUE;\r\n".getBytes());
 //                    long s = getIntegerRandomNumber(1, 10) * 1000;
 //                    Log.d("sleep", "Sleeping for " + s);
 //                    Thread.sleep(s);
@@ -333,7 +334,9 @@ public class ArduinoService extends Service implements SerialListener {
 
                     if(isNumericMode) {
                         splittedMessage[0] = ((CanbusActions) CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0]))).name();
-                        splittedMessage[1] = ((Enum<?>) CanbusActions.valueOf(splittedMessage[0]).getActionEnumById().apply(Integer.parseInt(splittedMessage[1]))).name();
+                        if((Enum<?>) CanbusActions.valueOf(splittedMessage[0]).getActionEnumById() != null) {
+                            splittedMessage[1] = ((Enum<?>) CanbusActions.valueOf(splittedMessage[0]).getActionEnumById().apply(Integer.parseInt(splittedMessage[1]))).name();
+                        }
                     }
 
                     boolean existsAction;
