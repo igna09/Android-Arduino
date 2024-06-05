@@ -24,7 +24,7 @@ public class BooleanSetting extends Setting<Boolean> {
     @Override
     public void setValueFromString(String value) {
         if(value != null) {
-            this.setValue(value.equals("TRUE"));
+            this.setValue(value.equalsIgnoreCase("TRUE"));
         } else {
             this.setValue(false);
         }
