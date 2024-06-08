@@ -334,7 +334,7 @@ public class ArduinoService extends Service implements SerialListener {
 
                     if(isNumericMode) {
                         splittedMessage[0] = ((CanbusActions) CanbusActions.getEnumById(Integer.parseInt(splittedMessage[0]))).name();
-                        if((Enum<?>) CanbusActions.valueOf(splittedMessage[0]).getActionEnumById() != null) {
+                        if(CanbusActions.valueOf(splittedMessage[0]).getActionEnumById() != null) {
                             splittedMessage[1] = ((Enum<?>) CanbusActions.valueOf(splittedMessage[0]).getActionEnumById().apply(Integer.parseInt(splittedMessage[1]))).name();
                         }
                     }
