@@ -477,7 +477,7 @@ public class ArduinoService extends Service implements SerialListener {
         try {
             usbSerialPort.open(usbConnection);
             try {
-                usbSerialPort.setParameters(9600, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
+                usbSerialPort.setParameters(115200, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
             } catch (UnsupportedOperationException e) {
                 LoggerUtilities.logException(e);
             }
