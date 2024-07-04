@@ -18,11 +18,17 @@ public class DialogActivity extends AppCompatActivity {
         try {
             Intent intent = getIntent();
             DialogEnum dialogEnum = DialogEnum.valueOf(intent.getStringExtra("DIALOG"));
+            String message;
+            if(intent.getStringExtra("MESSAGE") != null) {
+                message = intent.getStringExtra("MESSAGE");
+            } else {
+                message = dialogEnum.getMessage();
+            }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(dialogEnum.getMessage());
+            builder.setMessage(message);
             builder.setTitle(dialogEnum.getTitle());
-            builder.setCancelable(false);
+            builder.setCancelable(dialogEnum.getPositiveCallback() == null && dialogEnum.getNegativeCallback() == null);
             if(dialogEnum.getPositiveCallback() != null) {
                 builder.setPositiveButton("Yes", dialogEnum.getPositiveCallback());
             }

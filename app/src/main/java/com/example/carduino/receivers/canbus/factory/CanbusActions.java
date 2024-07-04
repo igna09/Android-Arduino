@@ -1,6 +1,7 @@
 package com.example.carduino.receivers.canbus.factory;
 
 import com.example.carduino.receivers.canbus.factory.actions.CarStatusAction;
+import com.example.carduino.receivers.canbus.factory.actions.EventAction;
 import com.example.carduino.receivers.canbus.factory.actions.LogAction;
 import com.example.carduino.receivers.canbus.factory.actions.MediaControlAction;
 import com.example.carduino.receivers.canbus.factory.actions.SettingAction;
@@ -8,6 +9,7 @@ import com.example.carduino.settings.SettingsEnum;
 import com.example.carduino.shared.BaseEnum;
 import com.example.carduino.shared.models.MediaControl;
 import com.example.carduino.shared.models.carstatus.CarStatusEnum;
+import com.example.carduino.shared.models.Event;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -19,7 +21,7 @@ public enum CanbusActions implements BaseEnum {
     WRITE_SETTING(0x03),
     LOG(0x04, LogAction.class, null, null),
 //    ERROR(0x05),
-//    EVENT(0x06),
+    EVENT(0x06, EventAction.class, Event::getEnumById, Event::getEnumByName),
     GET_SETTINGS(0x07);
 
     private Class clazz;

@@ -29,7 +29,11 @@ public enum DialogEnum {
                     throw new RuntimeException(e);
                 }
                 TripSingleton.getInstance().startTrip();
-            }));
+            })),
+    BLE_PAIRING_CODE("BLE pairing code", "code",
+            null,
+            null,
+            null);
 
     private DialogInterface.OnClickListener positiveCallback;
     private DialogInterface.OnClickListener negativeCallback;

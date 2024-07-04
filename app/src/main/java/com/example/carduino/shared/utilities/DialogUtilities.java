@@ -15,4 +15,11 @@ public class DialogUtilities {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ContextsSingleton.getInstance().getApplicationContext().startActivity(intent);
     }
+    public static void openDialogBLEPairingCode(String code) {
+        Intent intent = new Intent(ContextsSingleton.getInstance().getApplicationContext(), DialogActivity.class);
+        intent.putExtra("DIALOG", "BLE_PAIRING_CODE");
+        intent.putExtra("MESSAGE", code);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ContextsSingleton.getInstance().getApplicationContext().startActivity(intent);
+    }
 }

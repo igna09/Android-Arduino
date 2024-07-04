@@ -21,7 +21,6 @@ public class LogAction implements ArduinoMessageExecutorInterface {
     private static final String LOGS_FOLDER_NAME = "LOGS";
     @Override
     public void execute(ArduinoMessage message) {
-        //TODO: write MessageLog (key=nodeId, value=logId@value) to log file
         String nodeId = message.getKey();
         String[] splittedValues = message.getValue().split("@");
         String logId = splittedValues[0];

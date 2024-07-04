@@ -101,7 +101,10 @@ public class ArduinoService extends Service implements SerialListener {
 //                    if(counter % 15 == 0) {
 //                        onArduinoMessage("MEDIA_CONTROL;LONG_PRESS;0;");
 //                    }
-                    Thread.sleep(500);
+//                    if(counter == 10) {
+//                        onArduinoMessage("EVENT;BLE_PAIRING_CODE;123456;");
+//                    }
+                    Thread.sleep(1000);
                     counter++;
                 } catch (InterruptedException e) {
                     LoggerUtilities.logMessage("ArduinoService", "keepAliveThread interrupted while sleeping");
