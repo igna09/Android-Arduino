@@ -5,10 +5,8 @@ import com.example.carduino.shared.BaseEnum;
 import java.util.Arrays;
 
 public enum Event implements BaseEnum {
-    ENABLE_NEW_BLE_PAIRING(0x0B),
-    DISABLE_NEW_BLE_PAIRING(0x0C),
-    RESET_WEBAPP(0x0E),
-    BLE_PAIRING_CODE(0x0F);
+    RESET_WEBAPP(0x0C),
+    BLE_PAIRING_CODE(0x0D);
 
     private Integer id;
 
