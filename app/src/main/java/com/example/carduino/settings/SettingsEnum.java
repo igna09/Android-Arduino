@@ -8,6 +8,7 @@ import com.example.carduino.settings.settingviewfactory.ButtonSettingViewWrapper
 import com.example.carduino.settings.settingviewfactory.IntegerSettingViewWrapper;
 import com.example.carduino.shared.BaseEnum;
 import com.example.carduino.shared.models.ArduinoMessage;
+import com.example.carduino.shared.models.Event;
 import com.example.carduino.shared.models.carstatus.CarStatusEnum;
 import com.example.carduino.shared.singletons.SharedDataSingleton;
 import com.example.carduino.shared.utilities.ArduinoMessageUtilities;
@@ -26,8 +27,8 @@ public enum SettingsEnum implements BaseEnum {
     ADVANCED_MODE(null, "Advanced mode", BooleanSetting.class, SettingType.APP, BooleanSettingViewWrapper.class, (value) -> {
         SharedDataSingleton.getInstance().setAdvancedMode((Boolean) value);
     }),
-    SWC_PAIR(0x03, "SWC pairing", BooleanSetting.class, SettingType.ARDUINO, ButtonSettingViewWrapper.class, (value) -> {
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("SWC_PAIR").getId().toString(), "TRUE"));
+    SWC_PAIR(0x03, "SWC pairing", BooleanSetting.class, SettingType.APP, ButtonSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.EVENT, Event.valueOf("SWC_PAIR").getId().toString(), "0"));
     }),
     OTA_MODE(0x01, "Enter OTA mode", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("OTA_MODE").getId().toString(), (Boolean) value ? "TRUE" : "FALSE"));
@@ -35,8 +36,8 @@ public enum SettingsEnum implements BaseEnum {
     BLE_PAIRING(0x05, "Enter BLE pairing mode", BooleanSetting.class, SettingType.ARDUINO, BooleanSettingViewWrapper.class, (value) -> {
         ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("BLE_PAIRING").getId().toString(), (Boolean) value ? "TRUE" : "FALSE"));
     }),
-    RESTART(0x02, "Restart all nodes", BooleanSetting.class, SettingType.ARDUINO, ButtonSettingViewWrapper.class, (value) -> {
-        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.WRITE_SETTING, SettingsEnum.valueOf("RESTART").getId().toString(), "TRUE"));
+    RESTART(0x02, "Restart all nodes", BooleanSetting.class, SettingType.APP, ButtonSettingViewWrapper.class, (value) -> {
+        ArduinoMessageUtilities.sendArduinoMessage(new ArduinoMessage(CanbusActions.EVENT, Event.valueOf("RESTART").getId().toString(), "-1"));
     });
 
     public enum SettingType {
