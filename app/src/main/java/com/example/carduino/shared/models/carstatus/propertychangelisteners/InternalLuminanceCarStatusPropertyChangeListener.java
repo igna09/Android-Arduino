@@ -42,7 +42,7 @@ public class InternalLuminanceCarStatusPropertyChangeListener extends PropertyCh
                 Settings.System.putInt(ContextsSingleton.getInstance().getApplicationContext().getContentResolver(),
                         Settings.System.SCREEN_BRIGHTNESS, mappedValue);
 
-                LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + lastReadingsAvg + ", valueToMap: " + valueToMap + ", min: " + lastReadingsMin + ", max: " + lastReadingsMax + ", mapped: " + mappedValue);
+//                LoggerUtilities.logMessage("InternalLuminanceCarStatusPropertyChangeListener", "avg: " + lastReadingsAvg + ", valueToMap: " + valueToMap + ", min: " + lastReadingsMin + ", max: " + lastReadingsMax + ", mapped: " + mappedValue);
             }
         }
     }
