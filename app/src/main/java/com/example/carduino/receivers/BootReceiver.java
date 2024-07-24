@@ -13,9 +13,8 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            LoggerUtilities.logMessage("BootReceiver", intent.getAction());
-            if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-                LoggerUtilities.logMessage("BootReceiver::onReceive()", "received ACTION_BOOT_COMPLETED intent");
+            LoggerUtilities.logMessage("BootReceiver::onReceive()", "received " + intent.getAction() + " intent");
+            if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) || Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
                 if(!ArduinoServiceUtilities.foregroundServiceRunning(context)) {
                     ArduinoServiceUtilities.startArduinoService(context);
                 }

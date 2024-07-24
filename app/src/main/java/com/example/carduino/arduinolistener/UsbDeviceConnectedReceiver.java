@@ -16,17 +16,14 @@ public class UsbDeviceConnectedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         LoggerUtilities.logMessage("UsbDeviceConnectedReceiver", "received event " + intent.getAction());
 
-        if (intent != null)
-        {
-            if ("android.hardware.usb.action.USB_DEVICE_ATTACHED".equals(intent.getAction())) {
-                if(!ArduinoServiceUtilities.foregroundServiceRunning(context)) {
-                    ArduinoServiceUtilities.startArduinoService(context);
-                } else {
-                    if(ArduinoSingleton.getInstance().getArduinoService() != null && !ArduinoSingleton.getInstance().getArduinoService().isConnected()) {
-                        UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                        if (device != null) {
-                            ArduinoSingleton.getInstance().getArduinoService().attemptConnect(device.getDeviceId(), false);
-                        }
+        if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(intent.getAction())) {
+            if (!ArduinoServiceUtilities.foregroundServiceRunning(context)) {
+                ArduinoServiceUtilities.startArduinoService(context);
+            } else {
+                if (ArduinoSingleton.getInstance().getArduinoService() != null && !ArduinoSingleton.getInstance().getArduinoService().isConnected()) {
+                    UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (device != null) {
+                        ArduinoSingleton.getInstance().getArduinoService().attemptConnect(device.getDeviceId(), false);
                     }
                 }
             }
